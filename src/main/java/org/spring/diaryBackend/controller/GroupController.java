@@ -1,6 +1,7 @@
 package org.spring.diaryBackend.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.spring.diaryBackend.dto.GroupMarksDTO;
 import org.spring.diaryBackend.model.Group;
 import org.spring.diaryBackend.service.GroupService;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,16 @@ public class GroupController {
     @GetMapping("all")
     public List<Group> getAllGroups() {
         return service.findAll();
+    }
+
+    @GetMapping("number/{group}")
+    public Group getByNumber(@PathVariable Long group) {
+        return service.findGroupByNumberGroup(group);
+    }
+
+    @GetMapping("marks")
+    public List<GroupMarksDTO> findGroupMarks() {
+        return service.getGroupMarks(2991L);
     }
 
     @PostMapping("save_group")
