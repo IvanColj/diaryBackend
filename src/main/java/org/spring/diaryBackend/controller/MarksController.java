@@ -31,13 +31,13 @@ public class MarksController {
         return service.findByStudentMarks(id_student);
     }
 
-    @GetMapping("object/{id_st}")
+    @GetMapping("subject/{id_st}")
     public List<Marks> getMarksObject(@PathVariable Long id_st) {
         return service.findByObjectMarks(id_st);
     }
 
     @GetMapping("student/{id_student}/subject/{id_st}")
-    public List<Marks> getMarksStudentsSubject(@PathVariable Long id_student, @PathVariable Long id_st) {
+    public Marks getMarksStudentsSubject(@PathVariable Long id_student, @PathVariable Long id_st) {
         return service.findByStudentAndSubject(id_student, id_st);
     }
 
@@ -64,5 +64,10 @@ public class MarksController {
     @PatchMapping("update")
     public Marks updateMarks(@RequestBody Marks marks) {
         return service.updateMarks(marks);
+    }
+
+    @PatchMapping ("update/student/{id_student}/subject/{id_st}/marks/{marks}/number/{number}")
+    public Marks updateMarksNumber(@PathVariable Long id_student, @PathVariable Long id_st, @PathVariable double marks, @PathVariable int number) {
+        return service.updateMarksNumber(id_student, id_st, marks, number);
     }
 }

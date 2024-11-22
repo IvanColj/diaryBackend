@@ -37,9 +37,9 @@ public class SimpleGroupService implements GroupService {
     }
 
     @Override
-    public List<GroupMarksDTO> getGroupMarks(Long numberGroup) {
+    public List<GroupMarksDTO> getGroupMarks(Long numberGroup, Long subject) {
         List<GroupMarksDTO> baseInfoList = repository.findBaseInfo(numberGroup);
-        List<Object[]> rawMarks = repository.findAllMarksGroup();
+        List<Object[]> rawMarks = repository.findAllMarksGroup(numberGroup, subject);
 
         Map<Long, List<Double>> marksByStudentId = rawMarks.stream()
                 .collect(Collectors.groupingBy(
@@ -52,7 +52,7 @@ public class SimpleGroupService implements GroupService {
         for (GroupMarksDTO student : baseInfoList) {
             Map<Long, List<Double>> studentMarksMap = new HashMap<>();
             studentMarksMap.put(student.getId_student(), marksByStudentId.getOrDefault(student.getId_student(), new ArrayList<>()));
-            student.setMarksBySubject(studentMarksMap);
+            student.setMarks(studentMarksMap.get(student.getId_student()));
         }
 
         return baseInfoList;

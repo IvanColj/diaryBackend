@@ -23,7 +23,7 @@ public interface MarksRepository extends JpaRepository<Marks, MarksId> {
     List<Marks> findByObjectMarks(@Param("marks_id_st") Long marks_id_st);
 
     @Query("SELECT m FROM Marks m JOIN FETCH m.marks mm WHERE m.id.id_student = :marks_id_student and m.id.id_st = :marks_id_st")
-    List<Marks> findByStudentAndSubject(@Param("marks_id_student") Long marks_id_student, @Param("marks_id_st") Long marks_id_st);
+    Marks findByStudentAndSubject(@Param("marks_id_student") Long marks_id_student, @Param("marks_id_st") Long marks_id_st);
 
     @Modifying
     @Transactional

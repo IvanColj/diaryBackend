@@ -15,6 +15,5 @@ import java.util.Map;
 public class StudentMarksDTO {
     private String name;
     private String last_name;
-    private Long id_student;
-    private Map<Long, List<Double>> marksBySubject;
+    private Map<Long, List<Double>> marksBySt_id;
 }

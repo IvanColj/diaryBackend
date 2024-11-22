@@ -31,9 +31,9 @@ public class GroupController {
         return service.findGroupByNumberGroup(group);
     }
 
-    @GetMapping("marks")
-    public List<GroupMarksDTO> findGroupMarks() {
-        return service.getGroupMarks(2991L);
+    @GetMapping("marks/group/{group}/subject/{subject}")
+    public List<GroupMarksDTO> findGroupMarks(@PathVariable Long group, @PathVariable Long subject) {
+        return service.getGroupMarks(group, subject);
     }
 
     @PostMapping("save_group")

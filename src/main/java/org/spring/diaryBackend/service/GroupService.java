@@ -8,7 +8,7 @@ public interface GroupService {
 
     List<Group> findByAllGroup(int offset, int limit);
     List<Group> findAll();
-    List<GroupMarksDTO> getGroupMarks(Long numberGroup);
+    List<GroupMarksDTO> getGroupMarks(Long numberGroup, Long subject);
     Group findGroupByNumberGroup(Long numberGroup);
     Group saveGroup(Group group);
     Group updateGroup(Group group);

@@ -45,12 +45,19 @@ public class SimpleMarksService implements MarksService {
     }
 
     @Override
-    public List<Marks> findByStudentAndSubject(Long id_student, Long id_st) {
+    public Marks findByStudentAndSubject(Long id_student, Long id_st) {
         return repository.findByStudentAndSubject(id_student, id_st);
     }
 
     @Override
     public Marks updateMarks(Marks marks) {
+        return repository.save(marks);
+    }
+
+    @Override
+    public Marks updateMarksNumber(Long id_student, Long id_st, double mark, int number) {
+        Marks marks = repository.findByStudentAndSubject(id_student, id_st);
+        marks.getMarks().set(number - 1, mark);
         return repository.save(marks);
     }
 

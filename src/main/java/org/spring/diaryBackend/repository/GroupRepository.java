@@ -16,11 +16,11 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             value = "select * from groups offset :offset limit :limit")
     List<Group> findByAllGroup(@Param("offset") int offset, @Param("limit") int limit);
 
-    @Query("select new org.spring.diaryBackend.dto.GroupMarksDTO(s.name, s.lastName, s.id, s.numberGroup, null) from Student s, Group g where s.numberGroup = g.numberGroup and g.numberGroup = 2991")
+    @Query("select new org.spring.diaryBackend.dto.GroupMarksDTO(s.name, s.lastName, s.id, null) from Student s, Group g where s.numberGroup = g.numberGroup and g.numberGroup = :numberGroup")
     List<GroupMarksDTO> findBaseInfo(@Param("numberGroup") Long numberGroup);
 
-    @Query("select m.id.id_student, m.marks from Marks m where m.id.id_st = 1 and m.id.id_student in (select s.id from Student s, Group g where s.numberGroup = g.numberGroup and g.numberGroup = 2991)")
-    List<Object[]> findAllMarksGroup();
+    @Query("select m.id.id_student, m.marks from Marks m where m.id.id_st = :id_st and m.id.id_student in (select s.id from Student s, Group g where s.numberGroup = g.numberGroup and g.numberGroup = :numberGroup)")
+    List<Object[]> findAllMarksGroup(@Param("numberGroup") Long numberGroup, @Param("id_st") Long id_st);
 
     @Modifying
     @Query(

@@ -49,7 +49,7 @@ public class SimpleStudentService implements StudentService {
                                 Collectors.toList()
                         )
                 ));
-        baseInfo.setMarksBySubject(id_st);
+        baseInfo.setMarksBySt_id(id_st);
         return baseInfo;
     }
 

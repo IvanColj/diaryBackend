@@ -9,11 +9,12 @@ public interface MarksService {
     List<Marks> findAllMarks();
     List<Marks> findByStudentMarks(Long student);
     List<Marks> findByObjectMarks(Long object);
-    List<Marks> findByStudentAndSubject(Long id_student, Long id_st);
+    Marks findByStudentAndSubject(Long id_student, Long id_st);
 
     Marks saveMarks(Marks marks);
     void saveMark(Long id_student, Long id_st, double mark);
     Marks updateMarks(Marks marks);
+    Marks updateMarksNumber(Long id_student, Long id_st, double mark, int number);
     void deleteMarksNumber(Long id_student, Long id_st, Long offset);
     void deleteMarks(Long id_student, Long id_st);
 
