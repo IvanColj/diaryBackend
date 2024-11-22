@@ -37,6 +37,11 @@ public class SimpleGroupService implements GroupService {
     }
 
     @Override
+    public List<Long> findBySubject(Long group) {
+        return repository.findBySubject(group);
+    }
+
+    @Override
     public List<GroupMarksDTO> getGroupMarks(Long numberGroup, Long subject) {
         List<GroupMarksDTO> baseInfoList = repository.findBaseInfo(numberGroup);
         List<Object[]> rawMarks = repository.findAllMarksGroup(numberGroup, subject);

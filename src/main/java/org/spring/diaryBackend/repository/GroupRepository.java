@@ -30,4 +30,9 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     void deleteNumberGroup(@Param("numberGroup")Long numberGroup);
 
     Group findGroupByNumberGroup(Long numberGroup);
+
+    @Query(
+            nativeQuery = true,
+            value = "select subject_teacher_id_st from subject_teacher_groups where groups = :group")
+    List<Long> findBySubject(@Param("group") Long group);
 }

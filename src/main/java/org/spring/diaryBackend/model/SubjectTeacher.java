@@ -17,7 +17,6 @@ public class SubjectTeacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_st;
-
     private Long id_teacher;
     private Long id_subject;
     @ElementCollection

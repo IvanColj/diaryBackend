@@ -36,6 +36,11 @@ public class GroupController {
         return service.getGroupMarks(group, subject);
     }
 
+    @GetMapping("subjects/group/{group}")
+    public List<Long> getBySubject(@PathVariable Long group) {
+        return service.findBySubject(group);
+    }
+
     @PostMapping("save_group")
     public Group createGroup(@RequestBody Group group) {
         return service.saveGroup(group);
