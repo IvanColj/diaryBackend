@@ -70,4 +70,9 @@ public class MarksController {
     public Marks updateMarksNumber(@PathVariable Long id_student, @PathVariable Long id_st, @PathVariable double marks, @PathVariable int number) {
         return service.updateMarksNumber(id_student, id_st, marks, number);
     }
+
+    @PostMapping("save/group/{group}/st/{st}")
+    public void saveMarksGroup(@PathVariable Long group, @PathVariable Long st) {
+        service.addMarksForGroup(group, st);
+    }
 }

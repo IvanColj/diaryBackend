@@ -72,4 +72,8 @@ public class SimpleMarksService implements MarksService {
         repository.deleteMarksNumber(id_student, id_st, offset - 1);
     }
 
+    @Override
+    public void addMarksForGroup(Long group, Long st_id) {
+        repository.addMarksForGroup(group, st_id);
+    }
 }

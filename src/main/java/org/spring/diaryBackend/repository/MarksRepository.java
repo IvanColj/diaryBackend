@@ -39,4 +39,12 @@ public interface MarksRepository extends JpaRepository<Marks, MarksId> {
             value = "insert into marks_marks (marks_id_st, marks_id_student, marks) VALUES (:marks_id_st, :marks_id_student, :mark)"
     )
     void saveMark(@Param("marks_id_student") Long id_student,@Param("marks_id_st") Long id_st,@Param("mark") double mark);
+
+    @Modifying
+    @Transactional
+    @Query(
+            nativeQuery = true,
+            value = "CALL insert_marks_for_group(:group_add, :st_id_new)"
+    )
+    void addMarksForGroup(@Param("group_add") Long group, @Param("st_id_new") Long st_id);
 }
