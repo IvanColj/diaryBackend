@@ -61,6 +61,7 @@ public class SimpleStudentService implements StudentService {
 
     @Override
     public Student updateStudent(Student student) {
+        student.setPassword(encoder.encode(student.getPassword()));
         return repository.save(student);
     }
 

@@ -33,6 +33,7 @@ public class SimpleTeacherService implements TeacherService {
 
     @Override
     public Teacher saveTeacher(Teacher teacher) {
+        teacher.setPassword(encoder.encode(teacher.getPassword()));
         return repository.save(teacher);
     }
 
