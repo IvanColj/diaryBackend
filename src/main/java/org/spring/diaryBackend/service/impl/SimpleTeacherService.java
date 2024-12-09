@@ -47,7 +47,6 @@ public class SimpleTeacherService implements TeacherService {
     public Teacher findByLoginOrPassword(String login, String password) {
         Teacher teacher = repository.findByLoginOrPassword(login, password);
         if (teacher != null && encoder.matches(password, teacher.getPassword())) {
-            teacher.setPassword("Teacher");
             return teacher;
         }
         else {

@@ -75,7 +75,6 @@ public class SimpleStudentService implements StudentService {
     public Student findByLoginOrPassword(String login, String password) {
         Student student = repository.findByLoginOrPassword(login, password);
         if (encoder.matches(password, student.getPassword())) {
-            student.setPassword("Student");
             return student;
         }
         else {
