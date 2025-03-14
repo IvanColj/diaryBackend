@@ -1,4 +1,4 @@
-package org.spring.diaryBackend.service.impl;
+package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.model.Marks;
