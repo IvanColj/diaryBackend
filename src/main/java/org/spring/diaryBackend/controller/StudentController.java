@@ -6,10 +6,11 @@ import org.spring.diaryBackend.model.Student;
 import org.spring.diaryBackend.service.StudentService;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/students")
+    @RequestMapping("/api/v1/students")
 @AllArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class StudentController {
@@ -35,6 +36,11 @@ public class StudentController {
     @GetMapping("login/{login}/password/{password}")
     public Student getByLogin(@PathVariable String login, @PathVariable String password) {
         return service.findByLoginOrPassword(login, password);
+    }
+
+    @GetMapping("fetchToGroup/{groupNumber}")
+    public List<Student> fetchStudents(@PathVariable Long groupNumber) throws IOException {
+        return service.fetchStudents(groupNumber);
     }
 
     @GetMapping("group/{group}")

@@ -56,8 +56,8 @@ public class SimpleGroupService implements GroupService {
                 ));
         for (GroupMarksDTO student : baseInfoList) {
             Map<Long, List<Double>> studentMarksMap = new HashMap<>();
-            studentMarksMap.put(student.getId_student(), marksByStudentId.getOrDefault(student.getId_student(), new ArrayList<>()));
-            student.setMarks(studentMarksMap.get(student.getId_student()));
+            studentMarksMap.put(student.getIdStudent(), marksByStudentId.getOrDefault(student.getIdStudent(), new ArrayList<>()));
+            student.setMarks(studentMarksMap.get(student.getIdStudent()));
         }
 
         return baseInfoList;

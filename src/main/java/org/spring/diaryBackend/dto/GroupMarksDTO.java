@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class GroupMarksDTO {
     private String name;
-    private String last_name;
-    private Long id_student;
+    private String lastName;
+    private Long idStudent;
     private List<Double> marks;
 }
