@@ -1,10 +1,6 @@
 package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.spring.diaryBackend.dto.StudentMarksDTO;
 import org.spring.diaryBackend.model.Student;
 import org.spring.diaryBackend.repository.StudentRepository;
@@ -14,8 +10,6 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,47 +34,6 @@ public class SimpleStudentService implements StudentService {
     @Override
     public List<Student> findByNumberGroup(Long group) {
         return repository.findByNumberGroup(group);
-    }
-
-    @Override
-    public List<Student> fetchStudents(Long groupNumber) throws IOException {
-        String url = "https://portal.novsu.ru/search/groups/r.2500.p.search.g.1991/i.2500/?page=search&grpname=" + groupNumber;
-        Document doc = Jsoup.connect(url).get();
-
-        Element table = doc.selectFirst("table.viewtable");
-        List<Student> students = new ArrayList<>();
-
-        if (table != null) {
-            Elements rows = table.select("tr");
-            for (int i = 1; i < rows.size(); i++) {
-                Element row = rows.get(i);
-                Elements cells = row.select("td");
-                if (cells.size() >= 3) {
-                    String fio = cells.get(1).text().trim();
-                    String[] fioParts = splitFio(fio);
-
-                    Student student = new Student();
-                    student.setSurname(fioParts[0]);
-                    student.setName(fioParts[1]);
-                    student.setLastName(fioParts[2]);
-                    student.setNumberGroup(groupNumber);
-
-                    students.add(student);
-                }
-            }
-        } else {
-            System.out.println("Таблица студентов не найдена на странице.");
-        }
-
-        return students;
-    }
-
-    private static String[] splitFio(String fio) {
-        String[] parts = fio.split("\\s+");
-        String surname = parts.length > 0 ? parts[0] : "";
-        String name = parts.length > 1 ? parts[1] : "";
-        String lastName = parts.length > 2 ? parts[2] : "";
-        return new String[]{surname, name, lastName};
     }
 
     @Override

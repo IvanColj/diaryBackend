@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class SimpleSTService implements STService {
-    STRepository repository;
+    private final STRepository repository;
 
     @Override
     public List<SubjectTeacher> findByAllSubjectTeacher(int offset, int limit) {

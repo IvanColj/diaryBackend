@@ -3,9 +3,11 @@ package org.spring.diaryBackend.controller;
 import lombok.RequiredArgsConstructor;
 import org.spring.diaryBackend.dto.GroupMarksDTO;
 import org.spring.diaryBackend.model.Group;
+import org.spring.diaryBackend.model.Student;
 import org.spring.diaryBackend.service.GroupService;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -29,6 +31,11 @@ public class GroupController {
     @GetMapping("number/{group}")
     public Group getByNumber(@PathVariable Long group) {
         return service.findGroupByNumberGroup(group);
+    }
+
+    @GetMapping("fetchToGroup/{groupNumber}")
+    public List<Student> fetchStudents(@PathVariable Long groupNumber) throws IOException {
+        return service.fetchStudentsGroup(groupNumber);
     }
 
     @GetMapping("marks/group/{group}/subject/{subject}")

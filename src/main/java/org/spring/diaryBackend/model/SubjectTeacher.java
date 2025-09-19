@@ -16,9 +16,9 @@ import java.util.List;
 public class SubjectTeacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_st;
-    private Long id_teacher;
-    private Long id_subject;
+    private Long id;
+    private Long idTeacher;
+    private Long idSubject;
     @ElementCollection
     private List<Long> groups;
 }

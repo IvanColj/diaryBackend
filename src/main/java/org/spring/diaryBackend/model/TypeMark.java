@@ -9,14 +9,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Setter
-@Entity
-public class Subject {
+@Getter
+public class TypeMark {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String subjectName;
+    private String name;
+    private Long weight;
 }

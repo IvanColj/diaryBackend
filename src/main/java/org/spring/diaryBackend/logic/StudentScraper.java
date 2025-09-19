@@ -54,7 +54,7 @@ public class StudentScraper {
 
     public static void main(String[] args) {
         try {
-            Long groupNumber = 2996L;
+            Long groupNumber = 2992L;
             List<Student> students = fetchStudents(groupNumber);
             for (Student s : students) {
                 System.out.printf("Фамилия: %s, Имя: %s, Отчество: %s, Группа: %d%n",
