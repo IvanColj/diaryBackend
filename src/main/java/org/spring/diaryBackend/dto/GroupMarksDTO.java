@@ -1,6 +1,10 @@
 package org.spring.diaryBackend.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.spring.diaryBackend.model.RegularMarks;
 
 import java.util.List;
 
@@ -9,8 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GroupMarksDTO {
-    private String name;
-    private String lastName;
     private Long idStudent;
-    private List<Double> marks;
+    private String lastName;
+    private String name;
+    private String surname;
+    private List<RegularMarks> marks;
 }

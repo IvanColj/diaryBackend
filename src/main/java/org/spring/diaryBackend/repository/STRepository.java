@@ -25,7 +25,7 @@ public interface STRepository extends JpaRepository<SubjectTeacher, Long> {
     @Transactional
     @Query(
             nativeQuery = true,
-            value = "insert into subject_teacher_groups (subject_teacher_id_st, groups) VALUES (:subject_teacher_id_st, :group)"
+            value = "insert into subject_teacher_groups (subject_teacher_id, groups) VALUES (:subject_teacher_id_st, :group)"
     )
     void addingSTGroup(@Param("subject_teacher_id_st") Long id_st,@Param("group") Long group);
 
@@ -33,13 +33,13 @@ public interface STRepository extends JpaRepository<SubjectTeacher, Long> {
     @Transactional
     @Query(
             nativeQuery = true,
-            value = "DELETE FROM subject_teacher_groups WHERE subject_teacher_id_st = :subject_teacher_id_st and groups = :group")
+            value = "DELETE FROM subject_teacher_groups WHERE subject_teacher_id = :subject_teacher_id_st and groups = :group")
     void deleteSTGroup(@Param("subject_teacher_id_st") Long id_st,@Param("group") Long group);
 
     @Modifying
     @Transactional
     @Query(
             nativeQuery = true,
-            value = "update subject_teacher_groups set groups = :newGroup WHERE subject_teacher_id_st = :subject_teacher_id_st and groups = :group")
+            value = "update subject_teacher_groups set groups = :newGroup WHERE subject_teacher_id = :subject_teacher_id_st and groups = :group")
     void updateSTGroup(@Param("subject_teacher_id_st") Long id_st, @Param("group") Long group, @Param("newGroup") Long newGroup);
 }

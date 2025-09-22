@@ -20,4 +20,5 @@ public class TypeMark {
     private Long id;
     private String name;
     private Long weight;
+    private Long idSt;
 }

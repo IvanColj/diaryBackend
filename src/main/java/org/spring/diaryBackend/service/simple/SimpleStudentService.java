@@ -2,6 +2,7 @@ package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.StudentMarksDTO;
+import org.spring.diaryBackend.model.RegularMarks;
 import org.spring.diaryBackend.model.Student;
 import org.spring.diaryBackend.repository.StudentRepository;
 import org.spring.diaryBackend.service.StudentService;
@@ -41,15 +42,15 @@ public class SimpleStudentService implements StudentService {
         StudentMarksDTO baseInfo = repository.findBaseInfo(id);
         List<Object[]> rawMarks = repository.findMarksStudentBySubject(id);
 
-        Map<Long, List<Double>> id_st = rawMarks.stream()
+        Map<Long, List<RegularMarks>> id_st = rawMarks.stream()
                 .collect(Collectors.groupingBy(
                         row -> (Long) row[0],
                         Collectors.mapping(
-                                row -> (Double) row[1],
+                                row -> (RegularMarks) row[1],
                                 Collectors.toList()
                         )
                 ));
-        baseInfo.setMarksBySt_id(id_st);
+        baseInfo.setMarksBySt(id_st);
         return baseInfo;
     }
 

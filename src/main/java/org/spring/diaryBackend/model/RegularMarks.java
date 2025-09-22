@@ -7,6 +7,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,8 +16,7 @@ import java.io.Serializable;
 @Getter
 @Embeddable
 public class RegularMarks implements Serializable {
-    private String date;
-    @Nullable
+    private LocalDate date;
     private Double value;
     @Nullable
     private Integer number;

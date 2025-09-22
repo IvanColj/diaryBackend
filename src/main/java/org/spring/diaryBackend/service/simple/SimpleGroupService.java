@@ -7,6 +7,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.spring.diaryBackend.dto.GroupMarksDTO;
 import org.spring.diaryBackend.model.Group;
+import org.spring.diaryBackend.model.RegularMarks;
 import org.spring.diaryBackend.model.Student;
 import org.spring.diaryBackend.repository.GroupRepository;
 import org.spring.diaryBackend.service.GroupService;
@@ -46,26 +47,26 @@ public class SimpleGroupService implements GroupService {
         return repository.findBySubject(group);
     }
 
-    @Override
-    public List<GroupMarksDTO> getGroupMarks(Long numberGroup, Long subject) {
-        List<GroupMarksDTO> baseInfoList = repository.findBaseInfo(numberGroup);
+    public List<GroupMarksDTO> getGroupMarksBySubject(Long numberGroup, Long subject) {
+        List<GroupMarksDTO> marksGroupBySubject = repository.findBaseInfo(numberGroup);
         List<Object[]> rawMarks = repository.findAllMarksGroup(numberGroup, subject);
 
-        Map<Long, List<Double>> marksByStudentId = rawMarks.stream()
+        Map<Long, List<RegularMarks>> marksByStudentId = rawMarks.stream()
                 .collect(Collectors.groupingBy(
                         row -> (Long) row[0],
                         Collectors.mapping(
-                                row -> (Double) row[1],
+                                row -> (RegularMarks) row[1],
                                 Collectors.toList()
                         )
                 ));
-        for (GroupMarksDTO student : baseInfoList) {
-            Map<Long, List<Double>> studentMarksMap = new HashMap<>();
-            studentMarksMap.put(student.getIdStudent(), marksByStudentId.getOrDefault(student.getIdStudent(), new ArrayList<>()));
-            student.setMarks(studentMarksMap.get(student.getIdStudent()));
+
+        for (GroupMarksDTO groupMarksDTO : marksGroupBySubject) {
+            Map<Long, List<RegularMarks>> studentMarksMap = new HashMap<>();
+            studentMarksMap.put(groupMarksDTO.getIdStudent(), marksByStudentId.getOrDefault(groupMarksDTO.getIdStudent(), new ArrayList<>()));
+            groupMarksDTO.setMarks(studentMarksMap.get(groupMarksDTO.getIdStudent()));
         }
 
-        return baseInfoList;
+        return marksGroupBySubject;
     }
 
     @Override
@@ -163,6 +164,7 @@ public class SimpleGroupService implements GroupService {
 
         for (Student addStudent : newStudents) {
             serviceStudent.saveStudent(addStudent);
+
         }
     }
 

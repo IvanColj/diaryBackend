@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.spring.diaryBackend.model.RegularMarks;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,8 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentMarksDTO {
+    private String lastName;
     private String name;
-    private String last_name;
-    private Map<Long, List<Double>> marksBySt_id;
+    private String surname;
+    private Map<Long, List<RegularMarks>> marksBySt;
 }

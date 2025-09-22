@@ -1,5 +1,6 @@
 package org.spring.diaryBackend.service;
 
+import org.spring.diaryBackend.logic.DelMarksGroup;
 import org.spring.diaryBackend.model.SemesterMarks;
 
 import java.util.List;
@@ -16,7 +17,8 @@ public interface MarksService {
     void saveMark(Long id_student, Long id_st, double mark);
     SemesterMarks updateMarks(SemesterMarks semesterMarks);
     SemesterMarks updateMarksNumber(Long id_student, Long id_st, Double markValue, int number);
-    void deleteMarksNumber(Long id_student, Long id_st, Long offset);
+    void deleteMarksGroupSt(DelMarksGroup delMarksGroup);
+    void deleteMarksNumber(Long id_student, Long id_st, Long number);
     void deleteMarks(Long id_student, Long id_st);
 
 }

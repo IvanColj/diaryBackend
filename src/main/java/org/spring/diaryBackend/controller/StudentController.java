@@ -47,17 +47,17 @@ public class StudentController {
         return service.getStudentMarks(id);
     }
 
-    @PostMapping("save_student")
+    @PostMapping("save")
     public Student saveStudent(@RequestBody Student student) {
         return service.saveStudent(student);
     }
 
-    @PutMapping("update_student")
+    @PutMapping("update")
     public Student updateStudent(@RequestBody Student student) {
         return service.updateStudent(student);
     }
 
-    @DeleteMapping("delete_student/{id}")
+    @DeleteMapping("delete/{id}")
     public void deleteStudent(@PathVariable Long id) {
         service.deleteStudent(id);
     }

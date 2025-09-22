@@ -1,6 +1,7 @@
 package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
+import org.spring.diaryBackend.logic.DelMarksGroup;
 import org.spring.diaryBackend.model.SemesterMarks;
 import org.spring.diaryBackend.service.MarksService;
 import org.springframework.web.bind.annotation.*;
@@ -46,9 +47,9 @@ public class MarksController {
         service.deleteMarks(id_student, id_st);
     }
 
-    @DeleteMapping("delete/student/{id_student}/subject/{id_st}/offset/{offset}")
-    public void deleteMarksNumber(@PathVariable Long id_student, @PathVariable Long id_st, @PathVariable Long offset) {
-        service.deleteMarksNumber(id_student, id_st, offset);
+    @DeleteMapping("delete/group")
+    public void deleteMarksNumber(@RequestBody DelMarksGroup delMarksGroup) {
+        service.deleteMarksGroupSt(delMarksGroup);
     }
 
     @PostMapping("save")

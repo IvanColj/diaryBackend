@@ -1,12 +1,14 @@
 package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
+import org.spring.diaryBackend.logic.DelMarksGroup;
 import org.spring.diaryBackend.model.SemesterMarks;
 import org.spring.diaryBackend.model.SemesterMarksId;
 import org.spring.diaryBackend.repository.MarksRepository;
 import org.spring.diaryBackend.service.MarksService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -62,18 +64,24 @@ public class SimpleMarksService implements MarksService {
     }
 
     @Override
+    public void deleteMarksGroupSt(DelMarksGroup delMarksGroup) {
+        delMarksGroup.getStudents().forEach(student -> deleteMarksNumber(student, delMarksGroup.getIdSt(), delMarksGroup.getNumber()));
+    }
+
+    @Override
     public void deleteMarks(Long id_student, Long id_st) {
         SemesterMarksId id = new SemesterMarksId(id_student, id_st);
         repository.deleteById(id);
     }
 
     @Override
-    public void deleteMarksNumber(Long id_student, Long id_st, Long offset) {
-        repository.deleteMarksNumber(id_student, id_st, offset);
+    public void deleteMarksNumber(Long id_student, Long id_st, Long number) {
+        repository.deleteMarksNumber(id_student, id_st, number);
     }
 
     @Override
     public void addMarksForGroup(Long group, Long st_id) {
-        repository.addMarksForGroup(group, st_id);
+        Long numberMark = repository.findLargestNumberRegularMarks(group, st_id);
+        repository.addRegularMarksForGroup(group, st_id, numberMark + 1, LocalDate.now());
     }
 }

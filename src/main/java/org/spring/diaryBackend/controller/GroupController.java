@@ -40,7 +40,7 @@ public class GroupController {
 
     @GetMapping("marks/group/{group}/subject/{subject}")
     public List<GroupMarksDTO> findGroupMarks(@PathVariable Long group, @PathVariable Long subject) {
-        return service.getGroupMarks(group, subject);
+        return service.getGroupMarksBySubject(group, subject);
     }
 
     @GetMapping("subjects/group/{group}")
@@ -48,17 +48,17 @@ public class GroupController {
         return service.findBySubject(group);
     }
 
-    @PostMapping("save_group")
+    @PostMapping("save")
     public Group createGroup(@RequestBody Group group) {
         return service.saveGroup(group);
     }
 
-    @PutMapping("update_group")
+    @PutMapping("update")
     public Group updateGroup(@RequestBody Group group) {
         return service.updateGroup(group);
     }
 
-    @DeleteMapping("delete_group/{group}")
+    @DeleteMapping("delete/{group}")
     public void deleteNumberGroup(@PathVariable Long group) {
         service.deleteNumberGroup(group);
     }

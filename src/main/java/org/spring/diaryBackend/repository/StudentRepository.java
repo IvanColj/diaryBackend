@@ -21,11 +21,11 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     )
     List<Student> findByNumberGroup(@Param("numberGroup") Long numberGroup);
 
-    @Query("select new org.spring.diaryBackend.dto.StudentMarksDTO(s.name, s.lastName, null) from Student s where s.id = :studentId")
+    @Query("select new org.spring.diaryBackend.dto.StudentMarksDTO(s.lastName, s.name, s.surname, null) from Student s where s.id = :studentId")
     StudentMarksDTO findBaseInfo(@Param("studentId") Long id);
 
     @Query("select m.id.idSt, m.regularMarks as marks from SemesterMarks m where m.id.idStudent = :studentId")
     List<Object[]> findMarksStudentBySubject(@Param("studentId") Long id);
 
-    Student findByLoginOrPassword(@Param("login") String login, String password);
+    Student findByLoginOrPassword(String login, String password);
 }
