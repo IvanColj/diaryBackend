@@ -6,6 +6,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.spring.diaryBackend.dto.GroupMarksDTO;
+import org.spring.diaryBackend.dto.STNameSubjectDTO;
+import org.spring.diaryBackend.logic.BeanUtils;
 import org.spring.diaryBackend.model.Group;
 import org.spring.diaryBackend.model.RegularMarks;
 import org.spring.diaryBackend.model.Student;
@@ -28,11 +30,6 @@ public class SimpleGroupService implements GroupService {
     private final GroupRepository repository;
 
     @Override
-    public List<Group> findByAllGroup(int offset, int limit) {
-        return repository.findByAllGroup(offset, limit);
-    }
-
-    @Override
     public List<Group> findAll() {
         return repository.findAll();
     }
@@ -43,7 +40,7 @@ public class SimpleGroupService implements GroupService {
     }
 
     @Override
-    public List<Long> findBySubject(Long group) {
+    public List<STNameSubjectDTO> findBySubject(Long group) {
         return repository.findBySubject(group);
     }
 
@@ -79,6 +76,7 @@ public class SimpleGroupService implements GroupService {
 
         List<Student> students = new ArrayList<>();
         Group group = extractGroupInfo(ul);
+        group.setNumberGroup(groupNumber);
 
         if (table != null) {
             Elements rows = table.select("tr");
@@ -118,7 +116,6 @@ public class SimpleGroupService implements GroupService {
             Elements liElements = ul.select("li");
             for (Element li : liElements) {
                 String text = li.text().trim();
-
                 if (text.startsWith("Форма обучения:")) {
                     group.setFormEducation(text.replace("Форма обучения:", "").trim());
                 } else if (text.startsWith("Курс:")) {
@@ -163,8 +160,9 @@ public class SimpleGroupService implements GroupService {
         }
 
         for (Student addStudent : newStudents) {
+            System.out.println("Всё хорошо");
             serviceStudent.saveStudent(addStudent);
-
+            System.out.println("Всё плохо");
         }
     }
 
@@ -175,8 +173,10 @@ public class SimpleGroupService implements GroupService {
     }
 
     @Override
-    public Group updateGroup(Group group) {
-        return repository.save(group);
+    public Group updateGroup(Group groupNew) {
+        Group groupUpdate = repository.findGroupByNumberGroup(groupNew.getNumberGroup());
+        BeanUtils.copyNonNullProperties(groupNew, groupUpdate);
+        return repository.save(groupUpdate);
     }
 
     @Override

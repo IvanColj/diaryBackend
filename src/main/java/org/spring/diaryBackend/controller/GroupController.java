@@ -2,6 +2,7 @@ package org.spring.diaryBackend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.spring.diaryBackend.dto.GroupMarksDTO;
+import org.spring.diaryBackend.dto.STNameSubjectDTO;
 import org.spring.diaryBackend.model.Group;
 import org.spring.diaryBackend.model.Student;
 import org.spring.diaryBackend.service.GroupService;
@@ -16,13 +17,6 @@ import java.util.List;
 public class GroupController {
     private final GroupService service;
 
-    @GetMapping
-    public List<Group> getByAllGroups(
-            @RequestParam(required = false, defaultValue = "0") int offset,
-            @RequestParam(required = false, defaultValue = "5") int limit) {
-        return service.findByAllGroup(offset, limit);
-    }
-
     @GetMapping("all")
     public List<Group> getAllGroups() {
         return service.findAll();
@@ -33,7 +27,7 @@ public class GroupController {
         return service.findGroupByNumberGroup(group);
     }
 
-    @GetMapping("fetchToGroup/{groupNumber}")
+    @GetMapping("add/{groupNumber}")
     public List<Student> fetchStudents(@PathVariable Long groupNumber) throws IOException {
         return service.fetchStudentsGroup(groupNumber);
     }
@@ -44,7 +38,7 @@ public class GroupController {
     }
 
     @GetMapping("subjects/group/{group}")
-    public List<Long> getBySubject(@PathVariable Long group) {
+    public List<STNameSubjectDTO> getBySubject(@PathVariable Long group) {
         return service.findBySubject(group);
     }
 
@@ -53,7 +47,7 @@ public class GroupController {
         return service.saveGroup(group);
     }
 
-    @PutMapping("update")
+    @PatchMapping("update")
     public Group updateGroup(@RequestBody Group group) {
         return service.updateGroup(group);
     }

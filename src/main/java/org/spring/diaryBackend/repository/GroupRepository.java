@@ -1,6 +1,7 @@
 package org.spring.diaryBackend.repository;
 
 import org.spring.diaryBackend.dto.GroupMarksDTO;
+import org.spring.diaryBackend.dto.STNameSubjectDTO;
 import org.spring.diaryBackend.model.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,11 +11,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
-
-    @Query(
-            nativeQuery = true,
-            value = "select * from groups offset :offset limit :limit")
-    List<Group> findByAllGroup(@Param("offset") int offset, @Param("limit") int limit);
 
     @Query("select new org.spring.diaryBackend.dto.GroupMarksDTO(s.id, s.lastName, s.name, s.surname, null) from Student s where s.numberGroup = :numberGroup")
     List<GroupMarksDTO> findBaseInfo(@Param("numberGroup") Long numberGroup);
@@ -38,7 +34,9 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     Group findGroupByNumberGroup(Long numberGroup);
 
     @Query(
-            nativeQuery = true,
-            value = "select subject_teacher_id_st from subject_teacher_groups where groups = :group")
-    List<Long> findBySubject(@Param("group") Long group);
+            value = """
+                    select DISTINCT new org.spring.diaryBackend.dto.STNameSubjectDTO(st.id, s.subjectName)
+                    FROM Subject s, SubjectTeacher st JOIN st.groups g
+                    WHERE s.id = st.idSubject and g = :group""")
+    List<STNameSubjectDTO> findBySubject(@Param("group") Long group);
 }
