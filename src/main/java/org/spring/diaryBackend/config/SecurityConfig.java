@@ -21,7 +21,7 @@ public class SecurityConfig {
         http.cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
             CorsConfiguration corsConfiguration = new CorsConfiguration();
             corsConfiguration.setAllowCredentials(true);
-            corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173"));
+            corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:3000", "http://localhost:8081"));
             corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
             corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
             corsConfiguration.setMaxAge(Duration.ofMinutes(5L));
