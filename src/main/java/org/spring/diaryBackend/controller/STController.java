@@ -1,6 +1,7 @@
 package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
+import org.spring.diaryBackend.dto.STGroupsDTO;
 import org.spring.diaryBackend.model.SubjectTeacher;
 import org.spring.diaryBackend.service.STService;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,11 @@ public class STController {
     @GetMapping("teacher/{id}")
     public List<SubjectTeacher> getTeachers(@PathVariable Long id) {
         return service.findByTeacher(id);
+    }
+
+    @GetMapping("teacherGroups/{id}")
+    public List<STGroupsDTO> getSTGroups(@PathVariable Long id) {
+        return service.findBySTGroups(id);
     }
 
     @GetMapping("id/{id}")

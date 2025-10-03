@@ -1,6 +1,8 @@
 package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
+import org.spring.diaryBackend.dto.STGroupDTO;
+import org.spring.diaryBackend.dto.STGroupsDTO;
 import org.spring.diaryBackend.model.SubjectTeacher;
 import org.spring.diaryBackend.repository.MarksRepository;
 import org.spring.diaryBackend.repository.STRepository;
@@ -8,7 +10,7 @@ import org.spring.diaryBackend.service.STService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -34,6 +36,25 @@ public class SimpleSTService implements STService {
     @Override
     public SubjectTeacher findById(Long id) {
         return stRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<STGroupsDTO> findBySTGroups(Long teacherId) {
+        List<STGroupDTO> stGroup = stRepository.findBySTGroup(teacherId);
+
+        Map<List<Object>, STGroupsDTO> map = new LinkedHashMap<>();
+
+        for (STGroupDTO item : stGroup) {
+            List<Object> key = Arrays.asList(item.getIdTeacher(), item.getIdSubject(), item.getSubjectName());
+            STGroupsDTO dto = map.get(key);
+            if (dto == null) {
+                dto = new STGroupsDTO(item.getIdTeacher(), item.getIdSubject(), item.getSubjectName(), new ArrayList<>());
+                map.put(key, dto);
+            }
+            dto.getGroups().add(item.getGroup());
+        }
+
+        return new ArrayList<>(map.values());
     }
 
     @Override

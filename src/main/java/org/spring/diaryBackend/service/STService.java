@@ -1,5 +1,6 @@
 package org.spring.diaryBackend.service;
 
+import org.spring.diaryBackend.dto.STGroupsDTO;
 import org.spring.diaryBackend.model.SubjectTeacher;
 
 import java.util.List;
@@ -8,6 +9,7 @@ public interface STService {
     List<SubjectTeacher> findByAllSubjectTeacher(int offset, int limit);
     List<SubjectTeacher> findAllSubjectTeacher();
     List<SubjectTeacher> findByTeacher(Long teacherId);
+    List<STGroupsDTO> findBySTGroups(Long teacherId);
 
     SubjectTeacher findById(Long id);
     SubjectTeacher saveSubjectTeacher(SubjectTeacher subjectTeacher);
