@@ -77,7 +77,7 @@ public class SimpleStudentService implements StudentService {
     @Override
     public Student findByLoginOrPassword(String login, String password) {
         Student student = repository.findByLoginOrPassword(login, password);
-        if (encoder.matches(password, student.getPassword())) {
+        if (student != null && encoder.matches(password, student.getPassword())) {
             return student;
         }
         else {
