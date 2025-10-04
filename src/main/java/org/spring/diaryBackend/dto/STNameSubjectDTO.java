@@ -12,4 +12,7 @@ import lombok.Setter;
 public class STNameSubjectDTO {
     Long idSt;
     String nameSubject;
+    String nameTeacher;
+    String lastnameTeacher;
+    String surnameTeacher;
 }
