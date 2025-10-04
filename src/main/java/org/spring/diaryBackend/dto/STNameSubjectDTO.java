@@ -11,6 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class STNameSubjectDTO {
     Long idSt;
+    Long idStudent;
+    Long idTeacher;
     String nameSubject;
     String nameTeacher;
     String lastnameTeacher;

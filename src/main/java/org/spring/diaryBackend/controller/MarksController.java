@@ -72,7 +72,7 @@ public class MarksController {
         return service.updateMarks(semesterMarks);
     }
 
-    @PatchMapping ("update/student/{id_student}/subject/{id_st}/marks/{marks}/number/{number}")
+    @PatchMapping ("update/student/{id_student}/st/{id_st}/marks/{marks}/number/{number}")
     public SemesterMarks updateMarksNumber(@PathVariable Long id_student, @PathVariable Long id_st, @PathVariable double marks, @PathVariable int number) {
         return service.updateMarksNumber(id_student, id_st, marks, number);
     }

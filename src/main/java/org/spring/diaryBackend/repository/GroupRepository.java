@@ -35,7 +35,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     @Query(
             value = """
-                    select DISTINCT new org.spring.diaryBackend.dto.STNameSubjectDTO(st.id, s.subjectName, t.name, t.surname, t.lastName)
+                    select DISTINCT new org.spring.diaryBackend.dto.STNameSubjectDTO(st.id, st.idSubject, st.idTeacher, s.subjectName, t.name, t.surname, t.lastName)
                     FROM Subject s, SubjectTeacher st JOIN st.groups g JOIN Teacher t on st.idTeacher = t.id
                     WHERE s.id = st.idSubject and g = :group""")
     List<STNameSubjectDTO> findBySubject(@Param("group") Long group);
