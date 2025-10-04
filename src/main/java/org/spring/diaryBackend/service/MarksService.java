@@ -16,7 +16,9 @@ public interface MarksService {
     SemesterMarks saveMarks(SemesterMarks semesterMarks);
     void saveMark(Long id_student, Long id_st, double mark);
     SemesterMarks updateMarks(SemesterMarks semesterMarks);
-    SemesterMarks updateMarksNumber(Long id_student, Long id_st, Double markValue, int number);
+    SemesterMarks updateMarksNumber(Long id_student, Long id_st, Double markValue, Integer number);
+
+    void deleteMarksNumberGroupST(Long number, Long group, Long st);
     void deleteMarksGroupSt(DelMarksGroup delMarksGroup);
     void deleteMarksNumber(Long id_student, Long id_st, Long number);
     void deleteMarks(Long id_student, Long id_st);

@@ -52,6 +52,11 @@ public class MarksController {
         service.deleteMarksGroupSt(delMarksGroup);
     }
 
+    @DeleteMapping("delete/number/{number}/group/{group}/st/{st}")
+    public void deleteMarksNumberGroupST(@PathVariable Long number, @PathVariable Long group, @PathVariable Long st) {
+        service.deleteMarksNumberGroupST(number, group, st);
+    }
+
     @PostMapping("save")
     public SemesterMarks saveMarks(@RequestBody SemesterMarks semesterMarks) {
         return service.saveMarks(semesterMarks);

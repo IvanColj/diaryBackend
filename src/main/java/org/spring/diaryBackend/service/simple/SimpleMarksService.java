@@ -7,6 +7,7 @@ import org.spring.diaryBackend.model.SemesterMarksId;
 import org.spring.diaryBackend.repository.MarksRepository;
 import org.spring.diaryBackend.service.MarksService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -57,7 +58,7 @@ public class SimpleMarksService implements MarksService {
     }
 
     @Override
-    public SemesterMarks updateMarksNumber(Long id_student, Long id_st, Double markValue, int number) {
+    public SemesterMarks updateMarksNumber(Long id_student, Long id_st, Double markValue, Integer number) {
         SemesterMarks semesterMarks = repository.findByStudentAndSubject(id_student, id_st);
         semesterMarks.getRegularMarks().get(number - 1).setValue(markValue);
         return repository.save(semesterMarks);
@@ -77,6 +78,12 @@ public class SimpleMarksService implements MarksService {
     @Override
     public void deleteMarksNumber(Long id_student, Long id_st, Long number) {
         repository.deleteMarksNumber(id_student, id_st, number);
+    }
+
+    @Override
+    @Transactional
+    public void deleteMarksNumberGroupST(Long number, Long group, Long st) {
+        repository.deleteMarksNumberGroupST(number, group, st);
     }
 
     @Override
