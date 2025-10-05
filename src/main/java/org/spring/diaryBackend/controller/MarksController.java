@@ -1,6 +1,7 @@
 package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
+import org.spring.diaryBackend.dto.UpdateMarkDTO;
 import org.spring.diaryBackend.logic.DelMarksGroup;
 import org.spring.diaryBackend.model.SemesterMarks;
 import org.spring.diaryBackend.service.MarksService;
@@ -72,9 +73,9 @@ public class MarksController {
         return service.updateMarks(semesterMarks);
     }
 
-    @PatchMapping ("update/student/{id_student}/st/{id_st}/marks/{marks}/number/{number}")
-    public SemesterMarks updateMarksNumber(@PathVariable Long id_student, @PathVariable Long id_st, @PathVariable double marks, @PathVariable int number) {
-        return service.updateMarksNumber(id_student, id_st, marks, number);
+    @PatchMapping ("updateOneMark")
+    public SemesterMarks updateMarksNumber(@RequestBody UpdateMarkDTO updateMarkDTO) {
+        return service.updateMarksNumber(updateMarkDTO);
     }
 
     @PostMapping("save/group/{group}/st/{st}")

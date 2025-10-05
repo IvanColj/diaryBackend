@@ -1,6 +1,7 @@
 package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
+import org.spring.diaryBackend.dto.UpdateMarkDTO;
 import org.spring.diaryBackend.logic.DelMarksGroup;
 import org.spring.diaryBackend.model.SemesterMarks;
 import org.spring.diaryBackend.model.SemesterMarksId;
@@ -58,9 +59,9 @@ public class SimpleMarksService implements MarksService {
     }
 
     @Override
-    public SemesterMarks updateMarksNumber(Long id_student, Long id_st, Double markValue, Integer number) {
-        SemesterMarks semesterMarks = repository.findByStudentAndSubject(id_student, id_st);
-        semesterMarks.getRegularMarks().get(number - 1).setValue(markValue);
+    public SemesterMarks updateMarksNumber(UpdateMarkDTO updateMarkDTO) {
+        SemesterMarks semesterMarks = repository.findByStudentAndSubject(updateMarkDTO.getStudent(), updateMarkDTO.getStId());
+        semesterMarks.getRegularMarks().get(updateMarkDTO.getNumber() - 1).setValue(updateMarkDTO.getMark());
         return repository.save(semesterMarks);
     }
 

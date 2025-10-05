@@ -1,5 +1,6 @@
 package org.spring.diaryBackend.service;
 
+import org.spring.diaryBackend.dto.UpdateMarkDTO;
 import org.spring.diaryBackend.logic.DelMarksGroup;
 import org.spring.diaryBackend.model.SemesterMarks;
 
@@ -16,7 +17,7 @@ public interface MarksService {
     SemesterMarks saveMarks(SemesterMarks semesterMarks);
     void saveMark(Long id_student, Long id_st, double mark);
     SemesterMarks updateMarks(SemesterMarks semesterMarks);
-    SemesterMarks updateMarksNumber(Long id_student, Long id_st, Double markValue, Integer number);
+    SemesterMarks updateMarksNumber(UpdateMarkDTO updateMarkDTO);
 
     void deleteMarksNumberGroupST(Long number, Long group, Long st);
     void deleteMarksGroupSt(DelMarksGroup delMarksGroup);

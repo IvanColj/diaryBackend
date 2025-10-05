@@ -1,5 +1,6 @@
 package org.spring.diaryBackend.service.simple;
 
+import com.ibm.icu.text.Transliterator;
 import lombok.AllArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -8,6 +9,7 @@ import org.jsoup.select.Elements;
 import org.spring.diaryBackend.dto.GroupMarksDTO;
 import org.spring.diaryBackend.dto.STNameSubjectDTO;
 import org.spring.diaryBackend.logic.BeanUtils;
+import org.spring.diaryBackend.logic.GenerateSecurePassword;
 import org.spring.diaryBackend.model.Group;
 import org.spring.diaryBackend.model.RegularMarks;
 import org.spring.diaryBackend.model.Student;
@@ -15,6 +17,7 @@ import org.spring.diaryBackend.repository.GroupRepository;
 import org.spring.diaryBackend.service.GroupService;
 import org.spring.diaryBackend.service.StudentService;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Primary
 public class SimpleGroupService implements GroupService {
+    private final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
     private final StudentService serviceStudent;
     private final GroupRepository repository;
 
@@ -74,7 +78,12 @@ public class SimpleGroupService implements GroupService {
         Element table = doc.selectFirst("table.viewtable");
         Element ul = doc.selectFirst("#npe_instance_2500_npe_content > ul");
 
-        List<Student> students = new ArrayList<>();
+        List<Student> studentsAdd = new ArrayList<>();
+        List<Student> studentsReturn = new ArrayList<>();
+        String CYRILLIC_TO_LATIN = "Russian-Latin/BGN";
+        Transliterator toLatinTrans = Transliterator.getInstance(CYRILLIC_TO_LATIN);
+        String password;
+
         Group group = extractGroupInfo(ul);
         group.setNumberGroup(groupNumber);
 
@@ -92,21 +101,39 @@ public class SimpleGroupService implements GroupService {
                     student.setName(fioParts[1]);
                     student.setLastName(fioParts[2]);
                     student.setNumberGroup(groupNumber);
-                    students.add(student);
+                    student.setLogin(toLatinTrans.transliterate(fioParts[0]) +
+                            toLatinTrans.transliterate(String.valueOf(fioParts[1].charAt(0))) +
+                            toLatinTrans.transliterate(String.valueOf(fioParts[2].charAt(0))));
+                    password = GenerateSecurePassword.generatePassword(10);
+                    student.setPassword(password);
+                    studentsReturn.add(student);
+
+                    Student studentCopy = new Student(
+                            student.getId(),
+                            student.getName(),
+                            student.getSurname(),
+                            student.getLastName(),
+                            student.getNumberGroup(),
+                            student.getLogin(),
+                            student.getPassword(),
+                            student.getEmail()
+                    );
+                    studentCopy.setPassword(encoder.encode(password));
+                    studentsAdd.add(studentCopy);
                 }
             }
         }
 
         if (findGroupByNumberGroup(group.getNumberGroup()) == null) {
             saveGroup(group);
-            for (Student addStudent : students) {
+            for (Student addStudent : studentsAdd) {
                 serviceStudent.saveStudent(addStudent);
             }
         } else {
-            newStudentOldGroup(students, group);
+            newStudentOldGroup(studentsAdd, group);
         }
 
-        return students;
+        return studentsReturn;
     }
 
     private Group extractGroupInfo(Element ul) {
