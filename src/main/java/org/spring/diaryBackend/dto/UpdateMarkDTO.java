@@ -13,5 +13,5 @@ public class UpdateMarkDTO {
     Long student;
     Long stId;
     Double mark;
-    Integer number;
+    Long number;
 }

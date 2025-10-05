@@ -1,6 +1,7 @@
 package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
+import org.spring.diaryBackend.model.Subject;
 import org.spring.diaryBackend.model.Teacher;
 import org.spring.diaryBackend.service.TeacherService;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,11 @@ public class TeacherController {
     @GetMapping("login/{login}/password/{password}")
     public Teacher getByLogin(@PathVariable String login, @PathVariable String password) {
         return service.findByLoginOrPassword(login, password);
+    }
+
+    @GetMapping("subjects/{id}")
+    public List<Subject> findByAllSubject(@PathVariable Long id) {
+        return service.findByAllSubject(id);
     }
 
     @PostMapping("save")

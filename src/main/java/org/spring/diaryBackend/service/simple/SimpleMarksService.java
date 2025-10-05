@@ -29,7 +29,7 @@ public class SimpleMarksService implements MarksService {
     }
 
     @Override
-    public void saveMark(Long id_student, Long id_st, double mark) {
+    public void saveMark(Long id_student, Long id_st, Double mark) {
         repository.saveMark(id_student, id_st, mark);
     }
 
@@ -61,7 +61,7 @@ public class SimpleMarksService implements MarksService {
     @Override
     public SemesterMarks updateMarksNumber(UpdateMarkDTO updateMarkDTO) {
         SemesterMarks semesterMarks = repository.findByStudentAndSubject(updateMarkDTO.getStudent(), updateMarkDTO.getStId());
-        semesterMarks.getRegularMarks().get(updateMarkDTO.getNumber() - 1).setValue(updateMarkDTO.getMark());
+        semesterMarks.getRegularMarks().get((int) (updateMarkDTO.getNumber() - 1L)).setValue(updateMarkDTO.getMark());
         return repository.save(semesterMarks);
     }
 

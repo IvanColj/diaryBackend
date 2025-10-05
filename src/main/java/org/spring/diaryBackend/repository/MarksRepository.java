@@ -59,7 +59,7 @@ public interface MarksRepository extends JpaRepository<SemesterMarks, SemesterMa
             nativeQuery = true,
             value = "insert into marks_marks (marks_id_st, marks_id_student, marks) VALUES (:marks_id_st, :marks_id_student, :mark)"
     )
-    void saveMark(@Param("marks_id_student") Long id_student,@Param("marks_id_st") Long id_st,@Param("mark") double mark);
+    void saveMark(@Param("marks_id_student") Long id_student,@Param("marks_id_st") Long id_st,@Param("mark") Double mark);
 
     @Modifying
     @Transactional

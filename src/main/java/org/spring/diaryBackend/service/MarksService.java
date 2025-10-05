@@ -15,7 +15,7 @@ public interface MarksService {
     void addMarksForGroup(Long group, Long st_id);
     SemesterMarks findByStudentAndSubject(Long id_student, Long id_st);
     SemesterMarks saveMarks(SemesterMarks semesterMarks);
-    void saveMark(Long id_student, Long id_st, double mark);
+    void saveMark(Long id_student, Long id_st, Double mark);
     SemesterMarks updateMarks(SemesterMarks semesterMarks);
     SemesterMarks updateMarksNumber(UpdateMarkDTO updateMarkDTO);
 

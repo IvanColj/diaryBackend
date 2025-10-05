@@ -19,7 +19,7 @@ public class RegularMarks implements Serializable {
     private LocalDate date;
     private Double value;
     @Nullable
-    private Integer number;
+    private Long number;
 
     private String homework;
 

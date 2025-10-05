@@ -1,6 +1,7 @@
 package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
+import org.spring.diaryBackend.model.Subject;
 import org.spring.diaryBackend.model.Teacher;
 import org.spring.diaryBackend.repository.TeacherRepository;
 import org.spring.diaryBackend.service.TeacherService;
@@ -24,6 +25,11 @@ public class SimpleTeacherService implements TeacherService {
     @Override
     public List<Teacher> findAllTeacher() {
         return repository.findAll();
+    }
+
+    @Override
+    public List<Subject> findByAllSubject(Long id) {
+        return repository.findByAllSubject(id);
     }
 
     @Override
