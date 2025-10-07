@@ -1,6 +1,7 @@
 package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
+import org.spring.diaryBackend.logic.BeanUtils;
 import org.spring.diaryBackend.model.Subject;
 import org.spring.diaryBackend.model.Teacher;
 import org.spring.diaryBackend.repository.TeacherRepository;
@@ -45,8 +46,12 @@ public class SimpleTeacherService implements TeacherService {
 
     @Override
     public Teacher updateTeacher(Teacher teacher) {
-        teacher.setPassword(encoder.encode(teacher.getPassword()));
-        return repository.save(teacher);
+        Teacher teacherUpdate = findTeacherById(teacher.getId());
+        BeanUtils.copyNonNullProperties(teacher, teacherUpdate);
+        if (teacher.getPassword() != null) {
+            teacherUpdate.setPassword(encoder.encode(teacher.getPassword()));
+        }
+        return repository.save(teacherUpdate);
     }
 
     @Override

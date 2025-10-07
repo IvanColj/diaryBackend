@@ -2,7 +2,9 @@ package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.UpdateMarkDTO;
+import org.spring.diaryBackend.logic.BeanUtils;
 import org.spring.diaryBackend.logic.DelMarksGroup;
+import org.spring.diaryBackend.model.RegularMarks;
 import org.spring.diaryBackend.model.SemesterMarks;
 import org.spring.diaryBackend.model.SemesterMarksId;
 import org.spring.diaryBackend.repository.MarksRepository;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -39,7 +42,23 @@ public class SimpleMarksService implements MarksService {
     }
 
     @Override
-    public SemesterMarks updateMarks(SemesterMarks semesterMarks) {
+    public SemesterMarks updateMarks(SemesterMarks updateSemesterMarks) {
+        SemesterMarks semesterMarks = repository.findByStudentAndSubject(updateSemesterMarks.getId().getIdStudent(), updateSemesterMarks.getId().getIdSt());
+
+        List<RegularMarks> regularMarksList = semesterMarks.getRegularMarks();
+        int numberMark = Math.toIntExact(updateSemesterMarks.getRegularMarks().get(0).getNumber());
+
+        for (RegularMarks regularMarks : regularMarksList) {
+            if (regularMarks.getNumber() != null && regularMarks.getNumber() == numberMark) {
+                BeanUtils.copyNonNullProperties(updateSemesterMarks.getRegularMarks().get(0), regularMarks);
+            }
+        }
+        if (!Objects.equals(updateSemesterMarks.getCertification(), semesterMarks.getCertification())) {
+            semesterMarks.setCertification(updateSemesterMarks.getCertification());
+        }
+
+        semesterMarks.setRegularMarks(regularMarksList);
+
         return repository.save(semesterMarks);
     }
 

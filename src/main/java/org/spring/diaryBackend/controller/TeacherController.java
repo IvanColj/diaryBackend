@@ -47,7 +47,7 @@ public class TeacherController {
         return service.saveTeacher(teacher);
     }
 
-    @PutMapping("update")
+    @PatchMapping("update")
     public Teacher updateTeacher(@RequestBody Teacher teacher) {
         return service.updateTeacher(teacher);
     }
