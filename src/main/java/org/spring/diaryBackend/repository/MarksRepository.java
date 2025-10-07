@@ -12,10 +12,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface MarksRepository extends JpaRepository<SemesterMarks, SemesterMarksId> {
-    @Query(
-            nativeQuery = true,
-            value = "SELECT id_st, id_student, certification FROM marks OFFSET :offset LIMIT :limit")
-    List<SemesterMarks> findByAllMarks(@Param("offset") int offset, @Param("limit") int limit);
 
     @Query("SELECT m FROM SemesterMarks m JOIN FETCH m.regularMarks mm WHERE m.id.idStudent = :marks_id_student")
     List<SemesterMarks> findByStudentMarks(@Param("marks_id_student") Long marks_id_student);
@@ -52,14 +48,6 @@ public interface MarksRepository extends JpaRepository<SemesterMarks, SemesterMa
             value = "CALL delete_marks_number(:number, :st, :group)"
     )
     void deleteMarksNumberGroupST(@Param("number") Long number, @Param("group") Long group, @Param("st") Long st);
-
-    @Modifying
-    @Transactional
-    @Query(
-            nativeQuery = true,
-            value = "insert into marks_marks (marks_id_st, marks_id_student, marks) VALUES (:marks_id_st, :marks_id_student, :mark)"
-    )
-    void saveMark(@Param("marks_id_student") Long id_student,@Param("marks_id_st") Long id_st,@Param("mark") Double mark);
 
     @Modifying
     @Transactional

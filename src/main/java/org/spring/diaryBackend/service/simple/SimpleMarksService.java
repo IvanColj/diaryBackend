@@ -19,23 +19,8 @@ public class SimpleMarksService implements MarksService {
     private final MarksRepository repository;
 
     @Override
-    public List<SemesterMarks> findByAllMarks(int offset, int limit) {
-        return repository.findByAllMarks(offset, limit);
-    }
-
-    @Override
     public List<SemesterMarks> findAllMarks() {
         return repository.findAll();
-    }
-
-    @Override
-    public void saveMark(Long id_student, Long id_st, Double mark) {
-        repository.saveMark(id_student, id_st, mark);
-    }
-
-    @Override
-    public SemesterMarks saveMarks(SemesterMarks semesterMarks) {
-        return repository.save(semesterMarks);
     }
 
     @Override
@@ -61,7 +46,12 @@ public class SimpleMarksService implements MarksService {
     @Override
     public SemesterMarks updateMarksNumber(UpdateMarkDTO updateMarkDTO) {
         SemesterMarks semesterMarks = repository.findByStudentAndSubject(updateMarkDTO.getStudent(), updateMarkDTO.getStId());
-        semesterMarks.getRegularMarks().get((int) (updateMarkDTO.getNumber() - 1L)).setValue(updateMarkDTO.getMark());
+        semesterMarks.getRegularMarks().forEach(regularMarks ->
+        {
+            if (regularMarks.getNumber() != null && regularMarks.getNumber() == Math.toIntExact(updateMarkDTO.getNumber())) {
+                regularMarks.setValue(updateMarkDTO.getMark());
+            }
+        });
         return repository.save(semesterMarks);
     }
 

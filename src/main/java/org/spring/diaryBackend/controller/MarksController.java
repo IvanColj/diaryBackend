@@ -16,13 +16,6 @@ import java.util.List;
 public class MarksController {
     private final MarksService service;
 
-    @GetMapping
-    public List<SemesterMarks> findByAllMarks(
-        @RequestParam(required = false, defaultValue = "0") int offset,
-        @RequestParam(required = false, defaultValue = "5") int limit) {
-            return service.findByAllMarks(offset, limit);
-    }
-
     @GetMapping("all")
     public List<SemesterMarks> getAllMarks() {
         return service.findAllMarks();
@@ -56,16 +49,6 @@ public class MarksController {
     @DeleteMapping("delete/number/{number}/group/{group}/st/{st}")
     public void deleteMarksNumberGroupST(@PathVariable Long number, @PathVariable Long group, @PathVariable Long st) {
         service.deleteMarksNumberGroupST(number, group, st);
-    }
-
-    @PostMapping("save")
-    public SemesterMarks saveMarks(@RequestBody SemesterMarks semesterMarks) {
-        return service.saveMarks(semesterMarks);
-    }
-
-    @PostMapping("save/student/{id_student}/subject/{id_st}/marks/{marks}")
-    public void saveMarksMarks(@PathVariable Long id_student, @PathVariable Long id_st, @PathVariable double marks) {
-        service.saveMark(id_student, id_st, marks);
     }
 
     @PatchMapping("update")
