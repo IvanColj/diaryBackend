@@ -70,6 +70,8 @@ public class SimpleGroupService implements GroupService {
         return marksGroupBySubject;
     }
 
+
+
     @Override
     public List<Student> fetchStudentsGroup(Long groupNumber) throws IOException {
         String url = "https://portal.novsu.ru/search/groups/r.2500.p.search.g.1991/i.2500/?page=search&grpname=" + groupNumber;
