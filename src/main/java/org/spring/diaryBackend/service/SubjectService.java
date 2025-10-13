@@ -1,13 +1,13 @@
 package org.spring.diaryBackend.service;
 
-import org.spring.diaryBackend.model.Subject;
+import org.spring.diaryBackend.dto.entity.SubjectDTO;
+
 import java.util.List;
 
 public interface SubjectService {
-    List<Subject> findByAllSubject(int offset, int limit);
-    List<Subject> findAllSubject();
-    Subject findById(Long id);
-    Subject saveSubject(Subject subject);
-    Subject updateSubject(Subject subject);
+    List<SubjectDTO> findAllSubject();
+    SubjectDTO findById(Long id);
+    SubjectDTO saveSubject(SubjectDTO subject);
+    SubjectDTO updateSubject(SubjectDTO subject);
     void deleteSubject(Long id);
 }

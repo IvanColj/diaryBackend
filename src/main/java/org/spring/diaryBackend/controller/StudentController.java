@@ -1,8 +1,8 @@
 package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
-import org.spring.diaryBackend.dto.StudentMarksDTO;
-import org.spring.diaryBackend.model.Student;
+import org.spring.diaryBackend.dto.entity.StudentDTO;
+import org.spring.diaryBackend.dto.other.StudentMarksDTO;
 import org.spring.diaryBackend.service.StudentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,52 +13,40 @@ import java.util.List;
 @AllArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class StudentController {
-    private final StudentService service;
+    private final StudentService studentService;
 
     @GetMapping
-    public List<Student> findByAllStudents(
-            @RequestParam(required = false, defaultValue = "0") int offset,
-            @RequestParam(required = false, defaultValue = "5") int limit) {
-        return service.findByAllStudent(offset, limit);
-    }
-
-    @GetMapping("all")
-    public List<Student> findAllStudent() {
-        return service.findAllStudent();
+    public List<StudentDTO> findAllStudent() {
+        return studentService.findAllStudent();
     }
 
     @GetMapping("id/{id}")
-    public Student getById(@PathVariable Long id) {
-        return service.findById(id);
+    public StudentDTO getById(@PathVariable Long id) {
+        return studentService.findById(id);
     }
 
     @GetMapping("login/{login}/password/{password}")
-    public Student getByLogin(@PathVariable String login, @PathVariable String password) {
-        return service.findByLoginOrPassword(login, password);
+    public StudentDTO getByLogin(@PathVariable String login, @PathVariable String password) {
+        return studentService.findByLoginOrPassword(login, password);
     }
 
     @GetMapping("group/{group}")
-    public List<Student> getByGroup(@PathVariable Long group) {
-        return service.findByNumberGroup(group);
+    public List<StudentDTO> getByGroup(@PathVariable Long group) {
+        return studentService.findByIdGroup(group);
     }
 
     @GetMapping("marks/id/{id}")
     public StudentMarksDTO getGroupMarks(@PathVariable Long id) {
-        return service.getStudentMarks(id);
+        return studentService.getStudentMarks(id);
     }
 
-    @PostMapping("save")
-    public Student saveStudent(@RequestBody Student student) {
-        return service.saveStudent(student);
-    }
-
-    @PutMapping("update")
-    public Student updateStudent(@RequestBody Student student) {
-        return service.updateStudent(student);
+    @PatchMapping("update")
+    public StudentDTO updateStudent(@RequestBody StudentDTO student) {
+        return studentService.updateStudent(student);
     }
 
     @DeleteMapping("delete/{id}")
     public void deleteStudent(@PathVariable Long id) {
-        service.deleteStudent(id);
+        studentService.deleteStudent(id);
     }
 }

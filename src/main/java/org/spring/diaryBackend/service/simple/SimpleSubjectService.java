@@ -1,47 +1,52 @@
 package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
+import org.spring.diaryBackend.dto.entity.SubjectDTO;
+import org.spring.diaryBackend.mapper.SubjectDTOMapper;
 import org.spring.diaryBackend.model.Subject;
 import org.spring.diaryBackend.repository.SubjectRepository;
 import org.spring.diaryBackend.service.SubjectService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class SimpleSubjectService implements SubjectService {
-    private final SubjectRepository repository;
+    private final SubjectRepository subjectRepository;
+    private final SubjectDTOMapper subjectDTOMapper;
 
     @Override
-    public List<Subject> findByAllSubject(int offset, int limit) {
-        return repository.findByAllSubject(offset, limit);
+    public List<SubjectDTO> findAllSubject() {
+        return subjectRepository.findAll().stream().map(subjectDTOMapper).toList();
     }
 
     @Override
-    public List<Subject> findAllSubject() {
-        return repository.findAll();
+    public SubjectDTO findById(Long id) {
+        return subjectRepository.findById(id).map(subjectDTOMapper).orElse(null);
     }
 
     @Override
-    public Subject findById(Long id) {
-        Optional<Subject> subject = repository.findById(id);
-        return subject.orElse(null);
+    public SubjectDTO saveSubject(SubjectDTO subjectNew) {
+        Subject subject = new Subject();
+        subject.setSubjectName(subjectNew.getSubjectName());
+        return subjectDTOMapper.apply(subjectRepository.save(subject));
     }
 
     @Override
-    public Subject saveSubject(Subject subject) {
-        return repository.save(subject);
-    }
-
-    @Override
-    public Subject updateSubject(Subject subject) {
-        return repository.save(subject);
+    public SubjectDTO updateSubject(SubjectDTO subjectNew) {
+        Subject subjectUpdate = subjectRepository.findById(subjectNew.getId()).orElse(null);
+        if (subjectUpdate == null) {
+            return new SubjectDTO();
+        }
+        if (subjectNew.getSubjectName() != null) {
+            subjectUpdate.setSubjectName(subjectNew.getSubjectName());
+        }
+        return subjectDTOMapper.apply(subjectRepository.save(subjectUpdate));
     }
 
     @Override
     public void deleteSubject(Long id) {
-        repository.deleteById(id);
+        subjectRepository.deleteById(id);
     }
 }

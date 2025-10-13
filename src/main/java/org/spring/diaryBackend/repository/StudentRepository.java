@@ -1,6 +1,7 @@
 package org.spring.diaryBackend.repository;
 
-import org.spring.diaryBackend.dto.StudentMarksDTO;
+// import org.spring.diaryBackend.dto.StudentMarksDTO;
+import org.spring.diaryBackend.dto.other.StudentMarksDTO;
 import org.spring.diaryBackend.model.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,20 +13,15 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query(
             nativeQuery = true,
-            value = "select * from students offset :offset limit :limit")
-    List<Student> findByAllStudent(@Param("offset") int offset, @Param("limit") int limit);
-
-    @Query(
-            nativeQuery = true,
-            value = "select * from students where number_group = :numberGroup"
+            value = "SELECT * FROM student WHERE id_group = :id_group"
     )
-    List<Student> findByNumberGroup(@Param("numberGroup") Long numberGroup);
+    List<Student> findByIdGroup(@Param("id_group") Long idGroup);
 
-    @Query("select new org.spring.diaryBackend.dto.StudentMarksDTO(s.lastName, s.name, s.surname, null) from Student s where s.id = :studentId")
-    StudentMarksDTO findBaseInfo(@Param("studentId") Long id);
+    @Query("SELECT NEW org.spring.diaryBackend.dto.other.StudentMarksDTO(s.lastName, s.name, s.patronymic, NULL) FROM Student s WHERE s.id = :idStudent")
+    StudentMarksDTO findBaseInfo(@Param("idStudent") Long id);
 
-    @Query("select m.id.idSt, m.regularMarks as marks from SemesterMarks m where m.id.idStudent = :studentId")
-    List<Object[]> findMarksStudentBySubject(@Param("studentId") Long id);
+    @Query("SELECT m.id.idSt, m.regularMarks FROM SemesterMark m WHERE m.idStudent.id = :idStudent")
+    List<Object[]> findMarksStudentBySubject(@Param("idStudent") Long idStudent);
 
     Student findByLoginOrPassword(String login, String password);
 }

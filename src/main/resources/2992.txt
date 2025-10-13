@@ -1,0 +1,184 @@
+[
+  {
+    "lastName": "Абрамов",
+    "name": "Кирилл",
+    "patronymic": "Денисович",
+    "login": "AbramovKD",
+    "password": "2NiwajGWsw"
+  },
+  {
+    "lastName": "Андреев",
+    "name": "Никита",
+    "patronymic": "Игоревич",
+    "login": "AndreyevNI",
+    "password": "duSZ6GwTUw"
+  },
+  {
+    "lastName": "Васильев",
+    "name": "Алексей",
+    "patronymic": "Валерьевич",
+    "login": "VasilʹyevAV",
+    "password": "8qdNNCuvJP"
+  },
+  {
+    "lastName": "Васильев",
+    "name": "Дмитрий",
+    "patronymic": "Романович",
+    "login": "VasilʹyevDR",
+    "password": "2HQLd5yKeQ"
+  },
+  {
+    "lastName": "Давтян",
+    "name": "Егор",
+    "patronymic": "Каренович",
+    "login": "DavtyanYeK",
+    "password": "ENYtTHiL6J"
+  },
+  {
+    "lastName": "Загайный",
+    "name": "Семён",
+    "patronymic": "Олегович",
+    "login": "ZagaynyySO",
+    "password": "LDyUYOxRm5"
+  },
+  {
+    "lastName": "Загоскин",
+    "name": "Александр",
+    "patronymic": "Иванович",
+    "login": "ZagoskinAI",
+    "password": "GDJRsBELCK"
+  },
+  {
+    "lastName": "Капустинская",
+    "name": "Софья",
+    "patronymic": "Алексеевна",
+    "login": "KapustinskayaSA",
+    "password": "j0bBnKpCD6"
+  },
+  {
+    "lastName": "Крючков",
+    "name": "Захар",
+    "patronymic": "Владимирович",
+    "login": "KryuchkovZV",
+    "password": "EDZdEV3bOL"
+  },
+  {
+    "lastName": "Лунёв",
+    "name": "Александр",
+    "patronymic": "Иванович",
+    "login": "LunëvAI",
+    "password": "pbWyy6IZL6"
+  },
+  {
+    "lastName": "Матвеев",
+    "name": "Дмитрий",
+    "patronymic": "Сергеевич",
+    "login": "MatveyevDS",
+    "password": "rBWUhwZcYT"
+  },
+  {
+    "lastName": "Матийчук",
+    "name": "Андрей",
+    "patronymic": "Дмитриевич",
+    "login": "MatiychukAD",
+    "password": "4WZDkHHNUH"
+  },
+  {
+    "lastName": "Орлов",
+    "name": "Алексей",
+    "patronymic": "Александрович",
+    "login": "OrlovAA",
+    "password": "1nblOGc5kG"
+  },
+  {
+    "lastName": "Павлов",
+    "name": "Михаил",
+    "patronymic": "Александрович",
+    "login": "PavlovMA",
+    "password": "of8sUAvd7j"
+  },
+  {
+    "lastName": "Перлова",
+    "name": "Екатерина",
+    "patronymic": "Андреевна",
+    "login": "PerlovaYeA",
+    "password": "eB32V0s5tA"
+  },
+  {
+    "lastName": "Попов",
+    "name": "Игорь",
+    "patronymic": "Денисович",
+    "login": "PopovID",
+    "password": "nhvhSysCzq"
+  },
+  {
+    "lastName": "Потапов",
+    "name": "Никита",
+    "patronymic": "Олегович",
+    "login": "PotapovNO",
+    "password": "nyotonccyl"
+  },
+  {
+    "lastName": "Рожковский",
+    "name": "Максим",
+    "patronymic": "Александрович",
+    "login": "RozhkovskiyMA",
+    "password": "Pi5kJFAKvD"
+  },
+  {
+    "lastName": "Ряхов",
+    "name": "Вячеслав",
+    "patronymic": "Дмитриевич",
+    "login": "RyakhovVD",
+    "password": "vNvaYOYNT1"
+  },
+  {
+    "lastName": "Савичева",
+    "name": "Анна",
+    "patronymic": "Григорьевна",
+    "login": "SavichevaAG",
+    "password": "BRLyhTBxug"
+  },
+  {
+    "lastName": "Смирнов",
+    "name": "Николай",
+    "patronymic": "Александрович",
+    "login": "SmirnovNA",
+    "password": "LciH9MYwA9"
+  },
+  {
+    "lastName": "Темнева",
+    "name": "Альбина",
+    "patronymic": "Руслановна",
+    "login": "TemnevaAR",
+    "password": "rIZMv2Ajei"
+  },
+  {
+    "lastName": "Шатиль",
+    "name": "Таисия",
+    "patronymic": "Анатольевна",
+    "login": "ShatilʹTA",
+    "password": "jFUZOKYok9"
+  },
+  {
+    "lastName": "Шевякова",
+    "name": "Алина",
+    "patronymic": "Ильинична",
+    "login": "ShevyakovaAI",
+    "password": "BZSLvraBfn"
+  },
+  {
+    "lastName": "Шкиперова",
+    "name": "Валерия",
+    "patronymic": "Анатольевна",
+    "login": "ShkiperovaVA",
+    "password": "VRcpcbFWvP"
+  },
+  {
+    "lastName": "Шкиперова",
+    "name": "Виктория",
+    "patronymic": "Анатольевна",
+    "login": "ShkiperovaVA",
+    "password": "uU0gJwYUiS"
+  }
+]

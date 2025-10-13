@@ -1,9 +1,15 @@
 package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
-import org.spring.diaryBackend.dto.StudentMarksDTO;
-import org.spring.diaryBackend.model.RegularMarks;
+import org.spring.diaryBackend.dto.entity.RegularMarkDTO;
+import org.spring.diaryBackend.dto.entity.StudentDTO;
+import org.spring.diaryBackend.dto.other.StudentMarksDTO;
+import org.spring.diaryBackend.mapper.RegularMarkDTOMapper;
+import org.spring.diaryBackend.mapper.StudentDTOMapper;
+import org.spring.diaryBackend.model.RegularMark;
 import org.spring.diaryBackend.model.Student;
+import org.spring.diaryBackend.model.StudentGroup;
+import org.spring.diaryBackend.repository.StudentGroupRepository;
 import org.spring.diaryBackend.repository.StudentRepository;
 import org.spring.diaryBackend.service.StudentService;
 import org.springframework.context.annotation.Primary;
@@ -13,40 +19,39 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 @Primary
 public class SimpleStudentService implements StudentService {
-    private final StudentRepository repository;
+    private final StudentRepository studentRepository;
+    private final StudentGroupRepository studentGroupRepository;
+    private final StudentDTOMapper studentDTOMapper;
     private final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
 
-    public List<Student> findByAllStudent(int offset, int limit) {
-        return repository.findByAllStudent(offset, limit);
+    private final RegularMarkDTOMapper regularMarkDTOMapper;
+
+    @Override
+    public List<StudentDTO> findAllStudent() {
+        return studentRepository.findAll().stream().map(studentDTOMapper).toList();
     }
 
     @Override
-    public List<Student> findAllStudent() {
-        return repository.findAll();
-    }
-
-    @Override
-    public List<Student> findByNumberGroup(Long group) {
-        return repository.findByNumberGroup(group);
+    public List<StudentDTO> findByIdGroup(Long idGroup) {
+        return studentRepository.findByIdGroup(idGroup).stream().map(studentDTOMapper).toList();
     }
 
     @Override
     public StudentMarksDTO getStudentMarks(Long id) {
-        StudentMarksDTO baseInfo = repository.findBaseInfo(id);
-        List<Object[]> rawMarks = repository.findMarksStudentBySubject(id);
+        StudentMarksDTO baseInfo = studentRepository.findBaseInfo(id);
+        List<Object[]> rawMarks = studentRepository.findMarksStudentBySubject(id);
 
-        Map<Long, List<RegularMarks>> id_st = rawMarks.stream()
+        Map<Long, List<RegularMarkDTO>> id_st = rawMarks.stream()
                 .collect(Collectors.groupingBy(
                         row -> (Long) row[0],
                         Collectors.mapping(
-                                row -> (RegularMarks) row[1],
+                                row -> regularMarkDTOMapper.apply((RegularMark) row[1]),
                                 Collectors.toList()
                         )
                 ));
@@ -55,39 +60,93 @@ public class SimpleStudentService implements StudentService {
     }
 
     @Override
-    public Student saveStudent(Student student) {
-        if (student.getPassword() != null) {
-            student.setPassword(encoder.encode(student.getPassword()));
+    public void saveStudent(StudentDTO studentDTO) {
+        Student student;
+        if (studentDTO.getId() != null) {
+            student = studentRepository.findById(studentDTO.getId())
+                    .orElse(new Student());
+        } else {
+            student = new Student();
         }
-        return repository.save(student);
+
+        student.setLastName(studentDTO.getLastName());
+        student.setName(studentDTO.getName());
+        student.setPatronymic(studentDTO.getPatronymic());
+        student.setLogin(studentDTO.getLogin());
+        student.setPassword(studentDTO.getPassword());
+        student.setTelephone(studentDTO.getTelephone());
+        student.setBirthDate(studentDTO.getBirthDate());
+        student.setAddress(studentDTO.getAddress());
+        student.setEmail(studentDTO.getEmail());
+
+        if (studentDTO.getIdGroup() != null) {
+            StudentGroup group = studentGroupRepository.findStudentGroupByIdGroup(studentDTO.getIdGroup());
+            student.setIdGroup(group);
+        } else {
+            student.setIdGroup(null);
+        }
+
+        studentDTOMapper.apply(studentRepository.save(student));
     }
 
     @Override
-    public Student updateStudent(Student student) {
-        student.setPassword(encoder.encode(student.getPassword()));
-        return repository.save(student);
+    public StudentDTO updateStudent(StudentDTO studentNew) {
+        Student student = studentRepository.findById(studentNew.getId()).orElse(null);
+        if (student == null) {
+            return new StudentDTO();
+        }
+        if (studentNew.getLastName() != null) {
+            student.setLastName(studentNew.getLastName());
+        }
+        if (studentNew.getName() != null) {
+            student.setName(studentNew.getName());
+        }
+        if (studentNew.getPatronymic() != null) {
+            student.setPatronymic(studentNew.getPatronymic());
+        }
+        if (studentNew.getIdGroup() != null) {
+            student.setIdGroup(studentGroupRepository.findStudentGroupByIdGroup(studentNew.getIdGroup()));
+        }
+        if (studentNew.getLogin() != null) {
+            student.setLogin(studentNew.getLogin());
+        }
+        if (studentNew.getPassword() != null) {
+            student.setPassword(encoder.encode(studentNew.getPassword()));
+        }
+        if (studentNew.getTelephone() != null) {
+            student.setTelephone(studentNew.getTelephone());
+        }
+        if (studentNew.getBirthDate() != null) {
+            student.setBirthDate(studentNew.getBirthDate());
+        }
+        if (studentNew.getAddress() != null) {
+            student.setAddress(studentNew.getAddress());
+        }
+        if (studentNew.getEmail() != null) {
+            student.setEmail(studentNew.getEmail());
+        }
+        return studentDTOMapper.apply(studentRepository.save(student));
     }
 
     @Override
-    public Student findById(Long id) {
-        Optional<Student> optionalEntity = repository.findById(id);
-        return optionalEntity.orElse(null);
+    public StudentDTO findById(Long id) {
+        return studentRepository.findById(id).map(studentDTOMapper).orElse(null);
     }
 
     @Override
-    public Student findByLoginOrPassword(String login, String password) {
-        Student student = repository.findByLoginOrPassword(login, password);
+    public StudentDTO findByLoginOrPassword(String login, String password) {
+        Student student = studentRepository.findByLoginOrPassword(login, password);
         if (student != null && encoder.matches(password, student.getPassword())) {
-            return student;
+            return studentDTOMapper.apply(student);
         }
         else {
-            return new Student();
+            return new StudentDTO();
         }
     }
 
     @Override
     @Transactional
     public void deleteStudent(Long id) {
-        repository.deleteById(id);
+        studentRepository.deleteById(id);
     }
 }

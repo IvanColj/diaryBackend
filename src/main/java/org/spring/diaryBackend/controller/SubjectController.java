@@ -1,7 +1,7 @@
 package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
-import org.spring.diaryBackend.model.Subject;
+import org.spring.diaryBackend.dto.entity.SubjectDTO;
 import org.spring.diaryBackend.service.SubjectService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,29 +15,22 @@ public class SubjectController {
     private SubjectService service;
 
     @GetMapping
-    public List<Subject> getByAllSubjects(
-            @RequestParam(required = false, defaultValue = "0") int offset,
-            @RequestParam(required = false, defaultValue = "5") int limit) {
-        return service.findByAllSubject(offset, limit);
-    }
-
-    @GetMapping("all")
-    public List<Subject> getAllSubjects() {
+    public List<SubjectDTO> getAllSubjects() {
         return service.findAllSubject();
     }
 
     @GetMapping("id/{id}")
-    public Subject getById(@PathVariable Long id) {
+    public SubjectDTO getById(@PathVariable Long id) {
         return service.findById(id);
     }
 
     @PostMapping("save")
-    public Subject save(@RequestBody Subject subject) {
+    public SubjectDTO save(@RequestBody SubjectDTO subject) {
         return service.saveSubject(subject);
     }
 
     @PatchMapping("update")
-    public Subject update(@RequestBody Subject subject) {
+    public SubjectDTO update(@RequestBody SubjectDTO subject) {
         return service.updateSubject(subject);
     }
 

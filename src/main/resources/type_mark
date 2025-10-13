@@ -1,0 +1,26 @@
+CREATE OR REPLACE PROCEDURE new_type_mark_st(IN st_id bigint)
+    LANGUAGE plpgsql
+AS
+$$
+DECLARE
+BEGIN
+    INSERT INTO type_mark (id_st, name, weight)
+    VALUES (st_id, 'Лекция', 1),
+           (st_id, 'Практическая работа', 2),
+           (st_id, 'Самостоятелья работа', 3),
+           (st_id, 'Контрольная работа', 4),
+           (st_id, 'Домашняя работа', 2),
+           (st_id, 'Тест', 2);
+END;
+$$;
+
+DO
+$$
+    DECLARE
+        st_id INT := 1;
+    BEGIN
+        CALL new_type_mark_st(st_id);
+    END
+$$;
+
+INSERT INTO staff_job_position (id_staff, id_staff_position) VALUES (1, 1);

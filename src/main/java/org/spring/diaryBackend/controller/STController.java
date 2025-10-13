@@ -1,8 +1,8 @@
 package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
-import org.spring.diaryBackend.dto.STGroupsDTO;
-import org.spring.diaryBackend.model.SubjectTeacher;
+import org.spring.diaryBackend.dto.entity.SubjectTeacherDTO;
+import org.spring.diaryBackend.dto.other.STGroupsDTO;
 import org.spring.diaryBackend.service.STService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,19 +16,12 @@ public class STController {
     private final STService service;
 
     @GetMapping
-    public List<SubjectTeacher> getSubjectTeachers(
-            @RequestParam(required = false, defaultValue = "0") int offset,
-            @RequestParam(required = false, defaultValue = "5") int limit) {
-        return service.findByAllSubjectTeacher(offset, limit);
-    }
-
-    @GetMapping("all")
-    public List<SubjectTeacher> getAllSubjectTeachers() {
+    public List<SubjectTeacherDTO> getAllSubjectTeachers() {
         return service.findAllSubjectTeacher();
     }
 
     @GetMapping("teacher/{id}")
-    public List<SubjectTeacher> getTeachers(@PathVariable Long id) {
+    public List<SubjectTeacherDTO> getTeachers(@PathVariable Long id) {
         return service.findByTeacher(id);
     }
 
@@ -38,12 +31,12 @@ public class STController {
     }
 
     @GetMapping("id/{id}")
-    public SubjectTeacher getSubjectTeacher(@PathVariable Long id) {
+    public SubjectTeacherDTO getSubjectTeacher(@PathVariable Long id) {
         return service.findById(id);
     }
 
     @PostMapping("save")
-    public SubjectTeacher saveSubjectTeacher(@RequestBody SubjectTeacher subjectTeacher) {
+    public SubjectTeacherDTO saveSubjectTeacher(@RequestBody SubjectTeacherDTO subjectTeacher) {
         return service.saveSubjectTeacher(subjectTeacher);
     }
 
@@ -52,17 +45,12 @@ public class STController {
         service.addingSTGroup(id, group);
     }
 
-    @PatchMapping("update/id/{id}/group/{group}/newGroup/{newGroup}")
-    public void updateGroup(@PathVariable Long id, @PathVariable Long group, @PathVariable Long newGroup) {
-        service.updateSTGroup(id, group, newGroup);
-    }
-
     @PatchMapping("update")
-    public SubjectTeacher updateSubjectTeacher(@RequestBody SubjectTeacher subjectTeacher) {
+    public SubjectTeacherDTO updateSubjectTeacher(@RequestBody SubjectTeacherDTO subjectTeacher) {
         return service.updateSubjectTeacher(subjectTeacher);
     }
 
-    @DeleteMapping("delete/id/{id}")
+    @DeleteMapping("delete/{id}")
     public void deleteSubjectTeacher(@PathVariable Long id) {
         service.deleteSubjectTeacher(id);
     }

@@ -1,20 +1,19 @@
 package org.spring.diaryBackend.service;
 
-import org.spring.diaryBackend.dto.StudentMarksDTO;
-import org.spring.diaryBackend.model.Student;
+import org.spring.diaryBackend.dto.entity.StudentDTO;
+import org.spring.diaryBackend.dto.other.StudentMarksDTO;
 
 import java.util.List;
 
 
 public interface StudentService {
-    List<Student> findByAllStudent(int offset, int limit);
-    List<Student> findAllStudent();
-    List<Student> findByNumberGroup(Long group);
+    List<StudentDTO> findAllStudent();
+    List<StudentDTO> findByIdGroup(Long group);
 
     StudentMarksDTO getStudentMarks(Long id);
-    Student saveStudent(Student student);
-    Student updateStudent(Student student);
-    Student findById(Long id);
-    Student findByLoginOrPassword(String login, String password);
+    void saveStudent(StudentDTO student);
+    StudentDTO updateStudent(StudentDTO studentDTO);
+    StudentDTO findById(Long id);
+    StudentDTO findByLoginOrPassword(String login, String password);
     void deleteStudent(Long id);
 }

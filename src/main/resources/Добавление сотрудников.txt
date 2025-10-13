@@ -1,0 +1,147 @@
+package org.spring.diaryBackend.logic;
+
+
+import lombok.AllArgsConstructor;
+import org.spring.diaryBackend.dto.entity.StaffDTO;
+import org.spring.diaryBackend.service.StaffService;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+@Component
+@AllArgsConstructor
+public class saveStaff implements CommandLineRunner {
+    private final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
+    private final StaffService staffService;
+
+    @Override
+    public void run(String... args) {
+        List<StaffDTO> staffDTOS =
+                Arrays.asList(
+                        new StaffDTO(null, "Шульцев", "Владимир", "Александрович", "ShultsevVA", null, null, null),
+                        new StaffDTO(null, "Иванова", "Любовь", "Николаевна", "IvanovaLN", null, null, null),
+                        new StaffDTO(null, "Чернега", "Анна", "Михайловна", "ChernegaAM", null, null, null),
+                        new StaffDTO(null, "Храмченкова", "Мария", "Евгеньевна", "HramchenkovaME", null, null, null),
+                        new StaffDTO(null, "Исаева", "Елена", "Сергеевна", "IsaevaES", null, null, null),
+                        new StaffDTO(null, "Чвырина", "Ольга", "Николаевна", "ChvyrinaON", null, null, null),
+                        new StaffDTO(null, "Пшеничная", "Мария", "Алексеевна", "PshenichnayaMA", null, null, null),
+                        new StaffDTO(null, "Игнатьева", "Ольга", "Владимировна", "IgnatevaOV", null, null, null),
+                        new StaffDTO(null, "Самуйлова", "Мария", "Сергеевна", "SamuylovaMS", null, null, null),
+                        new StaffDTO(null, "Шелепова", "Ирина", "Анатольевна", "ShelepovaIA", null, null, null),
+                        new StaffDTO(null, "Кумушкина", "Наталья", "Юрьевна", "KumushkinaNY", null, null, null),
+                        new StaffDTO(null, "Макшеева", "Елена", "Юрьевна", "MaksheevaEY", null, null, null),
+                        new StaffDTO(null, "Голубева", "Галина", "Анатольевна", "GolubevaGA", null, null, null),
+                        new StaffDTO(null, "Абрамов", "Владимир", "Олегович", "AbramovVO", null, null, null),
+                        new StaffDTO(null, "Александров", "Павел", "Сергеевич", "AlexandrovPS", null, null, null),
+                        new StaffDTO(null, "Алексеева", "Юлия", "Владимировна", "AlekseevaYV", null, null, null),
+                        new StaffDTO(null, "Алексеева", "Анна", "Александровна", "AlekseevaAA", null, null, null),
+                        new StaffDTO(null, "Алексеева", "Любовь", "Геннадьевна", "AlekseevaLG", null, null, null),
+                        new StaffDTO(null, "Алексеев", "Пётр", "Сергеевич", "AlekseevPS", null, null, null),
+                        new StaffDTO(null, "Алмашина", "Анна", "Юрьевна", "AlmashinaAY", null, null, null),
+                        new StaffDTO(null, "Андреев", "Игорь", "Алексеевич", "AndreevIA", null, null, null),
+                        new StaffDTO(null, "Антохина", "Анна", "Александровна", "AntohinaAA", null, null, null),
+                        new StaffDTO(null, "Арсентьева", "Александра", "Сергеевна", "ArsentevaAS", null, null, null),
+                        new StaffDTO(null, "Баранов", "Роман", "Александрович", "BaranovRA", null, null, null),
+                        new StaffDTO(null, "Базарова", "Екатерина", "Васильевна", "BazarovaEV", null, null, null),
+                        new StaffDTO(null, "Бесстрахов", "Иван", "Александрович", "BestrahovIA", null, null, null),
+                        new StaffDTO(null, "Боголюбова", "Полина", "Александровна", "BogolyubovaPA", null, null, null),
+                        new StaffDTO(null, "Богданов", "Михаил", "Михайлович", "BogdanovMM", null, null, null),
+                        new StaffDTO(null, "Большакова", "Елена", "Борисовна", "BolshakovaEB", null, null, null),
+                        new StaffDTO(null, "Бочкова", "Анастасия", "Александровна", "BochkovaAA", null, null, null),
+                        new StaffDTO(null, "Бурбах", "Владимир", "Витальевич", "BurbahVV", null, null, null),
+                        new StaffDTO(null, "Буткин", "Иван", "Алексеевич", "ButkinIA", null, null, null),
+                        new StaffDTO(null, "Варфоломеева", "Полина", "Вадимовна", "VarfolomeevaPV", null, null, null),
+                        new StaffDTO(null, "Васильева", "Анна", "Александровна", "VasilevaAA", null, null, null),
+                        new StaffDTO(null, "Васильева", "Юлия", "Владимировна", "VasilevaYV", null, null, null),
+                        new StaffDTO(null, "Воробьев", "Максим", "Александрович", "VorobevMA", null, null, null),
+                        new StaffDTO(null, "Гареева", "Татьяна", "Юрьевна", "GareevaTY", null, null, null),
+                        new StaffDTO(null, "Гулида", "Татьяна", "Михайловна", "GulidaTM", null, null, null),
+                        new StaffDTO(null, "Даниловских", "Михаил", "Геннадьевич", "DanilovskihMG", null, null, null),
+                        new StaffDTO(null, "Долгова", "Татьяна", "Васильевна", "DolgovaTV", null, null, null),
+                        new StaffDTO(null, "Егорова", "Ольга", "Викторовна", "EgorovaOV", null, null, null),
+                        new StaffDTO(null, "Ефимова", "Евгения", "Анатольевна", "EfimovaEA", null, null, null),
+                        new StaffDTO(null, "Зотов", "Андрей", "Станиславович", "ZotovAS", null, null, null),
+                        new StaffDTO(null, "Иванов", "Андрис", "", "IvanovA", null, null, null),
+                        new StaffDTO(null, "Иванов", "Владислав", "Николаевич", "IvanovVN", null, null, null),
+                        new StaffDTO(null, "Иванов", "Николай", "Николаевич", "IvanovNN", null, null, null),
+                        new StaffDTO(null, "Ильин", "Владислав", "Русланович", "IlinVR", null, null, null),
+                        new StaffDTO(null, "Карпина", "Дарья", "Андреевна", "KarpinaDA", null, null, null),
+                        new StaffDTO(null, "Клейменов", "Андрей", "Владимирович", "KleimenovAV", null, null, null),
+                        new StaffDTO(null, "Козлова", "Олеся", "Александровна", "KozlovaOA", null, null, null),
+                        new StaffDTO(null, "Колосов", "Владимир", "Валентинович", "KolosovVV", null, null, null),
+                        new StaffDTO(null, "Комар", "Ирина", "Игоревна", "KomarII", null, null, null),
+                        new StaffDTO(null, "Комаров", "Вячеслав", "Сергеевич", "KomarovVS", null, null, null),
+                        new StaffDTO(null, "Коротков", "Алексей", "Викторович", "KorotkovAV", null, null, null),
+                        new StaffDTO(null, "Корчков", "Никита", "Владимирович", "KorchkovNV", null, null, null),
+                        new StaffDTO(null, "Крежова", "Екатерина", "Дмитриевна", "KrezhovaED", null, null, null),
+                        new StaffDTO(null, "Кривый", "Алла", "Яковлевна", "KrivoyAY", null, null, null),
+                        new StaffDTO(null, "Кругликов", "Артем", "Юрьевич", "KruglikovAY", null, null, null),
+                        new StaffDTO(null, "Курносов", "Дмитрий", "Михайлович", "KurnosovDM", null, null, null),
+                        new StaffDTO(null, "Кручинина", "Ольга", "Анатольевна", "KruchininaOA", null, null, null),
+                        new StaffDTO(null, "Крючкова", "Раиса", "Савельевна", "KryuchkovaRS", null, null, null),
+                        new StaffDTO(null, "Кузина", "Анна", "Сергеевна", "KuzinaAS", null, null, null),
+                        new StaffDTO(null, "Кузнецова", "Татьяна", "Федоровна", "KuznecovaTF", null, null, null),
+                        new StaffDTO(null, "Лебедева", "Галина", "Вячеславовна", "LebedevaGV", null, null, null),
+                        new StaffDTO(null, "Ледащева", "Татьяна", "Алексеевна", "LadashevaTA", null, null, null),
+                        new StaffDTO(null, "Лесков", "Роман", "Афанасьевич", "LeskovRA", null, null, null),
+                        new StaffDTO(null, "Лукашик", "Екатерина", "Александровна", "LukashikEA", null, null, null),
+                        new StaffDTO(null, "Лукин", "Артем", "Сергеевич", "LukinAS", null, null, null),
+                        new StaffDTO(null, "Мандрикова", "Милана", "Максимовна", "MandrikovaMM", null, null, null),
+                        new StaffDTO(null, "Митцев", "Ярослав", "Андреевич", "MitcevYA", null, null, null),
+                        new StaffDTO(null, "Морозова", "Яна", "Романовна", "MorozovaYR", null, null, null),
+                        new StaffDTO(null, "Овчинников", "Кирилл", "Егорович", "OvchinnikovKE", null, null, null),
+                        new StaffDTO(null, "Осипова", "Алина", "Алексеевна", "OsipovaAA", null, null, null),
+                        new StaffDTO(null, "Павлушов", "Никита", "Валерьевич", "PavlushovNV", null, null, null),
+                        new StaffDTO(null, "Пахомова", "Людмила", "Дмитриевна", "PahomovaLD", null, null, null),
+                        new StaffDTO(null, "Петров", "Валерий", "Федорович", "PetrovVF", null, null, null),
+                        new StaffDTO(null, "Петрова", "София", "Владимировна", "PetrovaSV", null, null, null),
+                        new StaffDTO(null, "Петрушевская", "Светлана", "Геннадьевна", "PetrushevskayaSG", null, null, null),
+                        new StaffDTO(null, "Пименова", "Тамара", "Михайловна", "PimenovaTM", null, null, null),
+                        new StaffDTO(null, "Плаксина", "Ирина", "Айратовна", "PlaksinaIA", null, null, null),
+                        new StaffDTO(null, "Попов", "Владимир", "Сергеевич", "PopovVS", null, null, null),
+                        new StaffDTO(null, "Поротникова", "Екатерина", "Николаевна", "PorotnikovaEN", null, null, null),
+                        new StaffDTO(null, "Росси", "Маргарита", "Евгеньевна", "RossiME", null, null, null),
+                        new StaffDTO(null, "Россиин", "Сергей", "Борисович", "RossiinSB", null, null, null),
+                        new StaffDTO(null, "Савина", "Оксана", "Ивановна", "SavinaOI", null, null, null),
+                        new StaffDTO(null, "Савинова", "Марина", "Александровна", "SavinovaMA", null, null, null),
+                        new StaffDTO(null, "Сазонова", "Наталья", "Владимировна", "SazonovaNV", null, null, null),
+                        new StaffDTO(null, "Севастьянов", "Даниил", "Андреевич", "SevastyanovDA", null, null, null),
+                        new StaffDTO(null, "Семенов", "Дмитрий", "Владимирович", "SemenovDV", null, null, null),
+                        new StaffDTO(null, "Семенов", "Евгений", "Викторович", "SemenovEV", null, null, null),
+                        new StaffDTO(null, "Сизова", "Анна", "Эдуардовна", "SizovaAE", null, null, null),
+                        new StaffDTO(null, "Скачек", "Наталья", "Григорьевна", "SkachekNG", null, null, null),
+                        new StaffDTO(null, "Смолин", "Иван", "Григорьевич", "SmolinIG", null, null, null),
+                        new StaffDTO(null, "Сырых", "Екатерина", "Ивановна", "SyryhEI", null, null, null),
+                        new StaffDTO(null, "Таранец", "Ирина", "Викторовна", "TaranecIV", null, null, null),
+                        new StaffDTO(null, "Федоренков", "Кирилл", "Олегович", "FedorenkovKO", null, null, null),
+                        new StaffDTO(null, "Филиппов", "Иван", "Иванович", "FilippovII", null, null, null),
+                        new StaffDTO(null, "Фролова", "Таисия", "Александровна", "FrolovaTA", null, null, null),
+                        new StaffDTO(null, "Хаванов", "Александр", "Юрьевич", "HavanovAY", null, null, null),
+                        new StaffDTO(null, "Химмельрайх", "Анна", "Викторовна", "HimmelrahAV", null, null, null),
+                        new StaffDTO(null, "Цымбалюк", "Лариса", "Николаевна", "CymbalyukLN", null, null, null),
+                        new StaffDTO(null, "Шаркова", "Мария", "Александровна", "SharkovaMA", null, null, null),
+                        new StaffDTO(null, "Шатерникова", "Ольга", "Олеговна", "ShaternikovaOO", null, null, null),
+                        new StaffDTO(null, "Ширина", "Тамара", "Сергеевна", "ShirinaTS", null, null, null),
+                        new StaffDTO(null, "Шульцев", "Александр", "Владимирович", "ShultsevAV", null, null, null),
+                        new StaffDTO(null, "Яковлев", "Игорь", "Николаевич", "YakovlevIN", null, null, null)
+                );
+
+        List<String> passwords = new ArrayList<>();
+
+        for (StaffDTO staffDTO : staffDTOS) {
+            String password = GenerateSecurePassword.generatePassword(10);
+            passwords.add(password);
+            staffDTO.setPassword(encoder.encode(password));
+            staffService.saveStaff(staffDTO);
+        }
+
+        for (String password : passwords) {
+            System.out.println(password);
+        }
+    }
+
+}
