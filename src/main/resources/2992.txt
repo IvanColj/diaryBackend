@@ -171,14 +171,14 @@
     "lastName": "Шкиперова",
     "name": "Валерия",
     "patronymic": "Анатольевна",
-    "login": "ShkiperovaVA",
+    "login": "ShkiperovaVA1",
     "password": "VRcpcbFWvP"
   },
   {
     "lastName": "Шкиперова",
     "name": "Виктория",
     "patronymic": "Анатольевна",
-    "login": "ShkiperovaVA",
+    "login": "ShkiperovaVA2",
     "password": "uU0gJwYUiS"
   }
 ]
