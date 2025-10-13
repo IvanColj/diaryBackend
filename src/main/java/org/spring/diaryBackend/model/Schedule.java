@@ -33,13 +33,13 @@ public class Schedule {
     @JoinColumn(name = "id_st")
     private SubjectTeacher idSt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_group")
-    private StudentGroup group;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subgroup")
-    private Staff subgroup;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "id_group")
+//    private StudentGroup group;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "subgroup")
+//    private Staff subgroup;
 
     @OneToMany(mappedBy = "idSchedule")
     private Set<Lesson> lessons = new LinkedHashSet<>();
