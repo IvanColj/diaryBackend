@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.spring.diaryBackend.model.RegularMarkId;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -13,7 +15,7 @@ import org.spring.diaryBackend.model.RegularMarkId;
 public class RegularMarkDTO {
     RegularMarkId id;
     Double value;
-    Long idChange;
     Long idLesson;
-    Long idTypeMark;
+    TypeMarkDTO typeMark;
+    List<ChangeDTO> changes;
 }

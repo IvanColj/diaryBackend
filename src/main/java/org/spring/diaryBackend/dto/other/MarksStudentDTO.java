@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.spring.diaryBackend.dto.entity.ChangeDTO;
+import org.spring.diaryBackend.dto.entity.TypeMarkDTO;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,7 +16,7 @@ import lombok.Setter;
 public class MarksStudentDTO {
     Long number;
     Double value;
-    Long idChange;
     Long idLesson;
-    Long idTypeMark;
+    TypeMarkDTO typeMark;
+    List<ChangeDTO> changes;
 }

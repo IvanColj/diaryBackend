@@ -1,5 +1,6 @@
 package org.spring.diaryBackend.mapper;
 
+import lombok.RequiredArgsConstructor;
 import org.spring.diaryBackend.dto.entity.RegularMarkDTO;
 import org.spring.diaryBackend.model.RegularMark;
 import org.springframework.stereotype.Service;
@@ -7,7 +8,13 @@ import org.springframework.stereotype.Service;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class RegularMarkDTOMapper implements Function<RegularMark, RegularMarkDTO> {
+
+    private final TypeMarkDTOMapper typeMarkDTOMapper;
+
+    private final ChangeDTOMapper changeDTOMapper;
+
     @Override
     public RegularMarkDTO apply(RegularMark regularMark) {
         if (regularMark == null) {
@@ -16,9 +23,9 @@ public class RegularMarkDTOMapper implements Function<RegularMark, RegularMarkDT
         return new RegularMarkDTO(
                 regularMark.getId(),
                 regularMark.getValue(),
-                regularMark.getIdChange() != null ? regularMark.getIdChange().getId() : null,
                 regularMark.getIdLesson() != null ? regularMark.getIdLesson().getId() : null,
-                regularMark.getIdTypeMark() != null ? regularMark.getIdTypeMark().getId() : null
+                regularMark.getIdTypeMark() != null ? typeMarkDTOMapper.apply(regularMark.getIdTypeMark()) : null,
+                regularMark.getChanges().stream().map(changeDTOMapper).toList()
         );
     }
 }

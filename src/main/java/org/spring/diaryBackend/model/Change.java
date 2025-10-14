@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -19,7 +19,7 @@ public class Change {
     private Long id;
 
     @Column(name = "date_time")
-    private Instant dateTime;
+    private LocalDateTime dateTime;
 
     @Column(name = "action", length = Integer.MAX_VALUE)
     private String action;
@@ -34,7 +34,7 @@ public class Change {
     @Column(name = "new_value")
     private Double newValue;
 
-    @OneToMany(mappedBy = "idChange")
+    @ManyToMany(mappedBy = "changes")
     private Set<RegularMark> regularMarks = new LinkedHashSet<>();
 
 }

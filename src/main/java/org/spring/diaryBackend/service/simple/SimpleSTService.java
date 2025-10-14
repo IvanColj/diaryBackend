@@ -26,8 +26,6 @@ public class SimpleSTService implements STService {
 
     private final STDTOMapper stdtoMapper;
 
-//    private final MarksRepository marksRepository;
-
     @Override
     public List<SubjectTeacherDTO> findAllSubjectTeacher() {
         return stRepository.findAll().stream().map(stdtoMapper).toList();
