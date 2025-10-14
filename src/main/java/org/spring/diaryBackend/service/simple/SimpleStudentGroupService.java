@@ -90,7 +90,6 @@ public class SimpleStudentGroupService implements StudentGroupService {
             Map<Long, List<RegularMarkDTO>> studentMarksMap = new HashMap<>();
             studentMarksMap.put(groupMarksDTO.getIdStudent(), marksByStudentId.getOrDefault(groupMarksDTO.getIdStudent(), new ArrayList<>()));
 
-            // TODO
             List<MarksStudentDTO> marksStudentDTOS = studentMarksMap.
                     get(groupMarksDTO.getIdStudent()).stream().
                     map(regularMarkDTO -> new MarksStudentDTO(
