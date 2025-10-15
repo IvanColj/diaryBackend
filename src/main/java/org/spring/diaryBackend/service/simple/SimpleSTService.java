@@ -64,8 +64,10 @@ public class SimpleSTService implements STService {
     public SubjectTeacherDTO saveSubjectTeacher(SubjectTeacherDTO subjectTeacherDTO) {
         SubjectTeacher subjectTeacher = new SubjectTeacher();
         subjectTeacher.setIdSubject(subjectRepository.findById(subjectTeacherDTO.getIdSubject()).orElse(null));
-        subjectTeacher.setIdTeacher(staffRepository.findById(subjectTeacherDTO.getIdTeacher()).orElse(null));
-        if (subjectTeacher.getIdSubject() == null || subjectTeacher.getIdTeacher() == null) {
+        subjectTeacher.setTeachers(subjectTeacherDTO.getTeachers().stream().map(
+                idTeacher -> staffRepository.findById(idTeacher).orElse(null)
+        ).collect(Collectors.toSet()));
+        if (subjectTeacher.getIdSubject() == null || subjectTeacher.getTeachers() == null) {
             return new SubjectTeacherDTO();
         } else {
             return stdtoMapper.apply(stRepository.save(subjectTeacher));
@@ -81,8 +83,10 @@ public class SimpleSTService implements STService {
         if (subjectTeacherNew.getIdSubject() != null) {
             subjectTeacherUpdate.setIdSubject(subjectRepository.findById(subjectTeacherNew.getIdSubject()).orElse(null));
         }
-        if (subjectTeacherNew.getIdTeacher() != null) {
-            subjectTeacherUpdate.setIdTeacher(staffRepository.findById(subjectTeacherNew.getIdTeacher()).orElse(null));
+        if (subjectTeacherNew.getTeachers() != null) {
+            subjectTeacherUpdate.setTeachers(subjectTeacherNew.getTeachers().stream().map(
+                    idTeacher -> staffRepository.findById(idTeacher).orElse(null)
+            ).collect(Collectors.toSet()));
         }
         if (subjectTeacherNew.getGroups() != null) {
             subjectTeacherUpdate.setGroups(
@@ -90,7 +94,7 @@ public class SimpleSTService implements STService {
                             .stream()
                             .map(studentGroupRepository::findStudentGroupByIdGroup).collect(Collectors.toSet()));
         }
-        if (subjectTeacherUpdate.getIdSubject() == null || subjectTeacherUpdate.getIdTeacher() == null) {
+        if (subjectTeacherUpdate.getIdSubject() == null || subjectTeacherUpdate.getTeachers() == null) {
             return new SubjectTeacherDTO();
         }
         return stdtoMapper.apply(stRepository.save(subjectTeacherUpdate));

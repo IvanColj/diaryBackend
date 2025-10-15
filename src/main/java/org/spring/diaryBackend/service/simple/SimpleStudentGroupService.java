@@ -96,6 +96,7 @@ public class SimpleStudentGroupService implements StudentGroupService {
                     regularMarkDTO.getId().getNumber(),
                     regularMarkDTO.getValue(),
                     regularMarkDTO.getIdLesson(),
+                    regularMarkDTO.getIdSubgroup(),
                     regularMarkDTO.getTypeMark(),
                     regularMarkDTO.getChanges()
             )).toList();

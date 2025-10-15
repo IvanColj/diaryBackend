@@ -17,6 +17,7 @@ public class MarksStudentDTO {
     Long number;
     Double value;
     Long idLesson;
+    Long idSubgroup;
     TypeMarkDTO typeMark;
     List<ChangeDTO> changes;
 }

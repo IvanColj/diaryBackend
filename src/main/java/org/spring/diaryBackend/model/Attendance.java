@@ -24,4 +24,9 @@ public class Attendance {
 
     @Column(name = "comment", length = Integer.MAX_VALUE)
     private String comment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_subgroup")
+    private Subgroup idSubgroup;
+
 }

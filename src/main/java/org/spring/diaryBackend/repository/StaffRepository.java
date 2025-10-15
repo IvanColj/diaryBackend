@@ -15,10 +15,12 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
     Staff findByLoginOrPassword(@Param("login") String login, String password);
 
     @Query("""
-                    SELECT s
-                    FROM SubjectTeacher st JOIN Subject s ON s.id = st.idSubject.id
-                    WHERE st.idTeacher.id = :id
-                    """)
+    SELECT s
+    FROM SubjectTeacher st
+        JOIN st.idSubject s
+        JOIN st.teachers t
+    WHERE t.id = :id
+    """)
     List<Subject> findByAllSubject(@Param("id") Long id);
 
     @Modifying

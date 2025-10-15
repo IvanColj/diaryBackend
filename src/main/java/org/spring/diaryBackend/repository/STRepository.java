@@ -14,14 +14,22 @@ public interface STRepository extends JpaRepository<SubjectTeacher, Long> {
 
     @Query(
             nativeQuery = true,
-            value = "SELECT * FROM subject_teacher WHERE id_teacher = :id_teacher")
+            value = "SELECT * FROM subject_teacher st JOIN teachers_st ts ON st.id = ts.id_st where ts.id_teacher = :id_teacher")
     List<SubjectTeacher> findByTeacher(@Param("id_teacher") Long idTeacher);
 
     @Query("""
-            SELECT DISTINCT NEW org.spring.diaryBackend.dto.other.STGroupDTO(st.idTeacher.id, st.idSubject.id, s.subjectName, g.id)
-                FROM Subject s, SubjectTeacher st JOIN st.groups g
-                WHERE s.id = st.idSubject.id AND st.idTeacher.id = :idTeacher
-            """)
+    SELECT DISTINCT NEW org.spring.diaryBackend.dto.other.STGroupDTO(
+        t.id,
+        s.id,
+        s.subjectName,
+        g.id
+    )
+    FROM SubjectTeacher st
+        JOIN st.teachers t
+        JOIN st.idSubject s
+        JOIN st.groups g
+    WHERE t.id = :idTeacher
+    """)
     List<STGroupDTO> findBySTGroup(@Param("idTeacher") Long idTeacher);
 
     @Modifying

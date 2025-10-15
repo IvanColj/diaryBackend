@@ -44,5 +44,5 @@ public class Staff {
     private Set<StaffPosition> staffPositions = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "idTeacher")
-    private Set<SubjectTeacher> subjectTeachers = new LinkedHashSet<>();
+    private Set<Subgroup> subgroups  = new LinkedHashSet<>();
 }

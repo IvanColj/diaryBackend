@@ -16,6 +16,7 @@ public class RegularMarkDTO {
     RegularMarkId id;
     Double value;
     Long idLesson;
+    Long idSubgroup;
     TypeMarkDTO typeMark;
     List<ChangeDTO> changes;
 }

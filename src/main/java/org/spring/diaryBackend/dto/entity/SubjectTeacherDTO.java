@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class SubjectTeacherDTO {
     Long id;
-    Long idTeacher;
+    List<Long> teachers;
     Long idSubject;
     List<Long> groups;
 }

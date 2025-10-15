@@ -54,8 +54,19 @@ public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long
 
     @Query(
             value = """
-                    select DISTINCT new org.spring.diaryBackend.dto.other.STNameSubjectDTO(st.id, st.idSubject.id, s.subjectName, st.idTeacher.id, f.lastName, f.name, f.patronymic)
-                    FROM Subject s, SubjectTeacher st JOIN st.groups g JOIN Staff f on st.idTeacher.id = f.id
-                    WHERE s.id = st.idSubject.id and g.id = :group""")
+                    select DISTINCT new org.spring.diaryBackend.dto.other.STNameSubjectDTO(
+                        st.id,
+                        st.idSubject.id,
+                        s.subjectName,
+                        t.id,
+                        f.lastName,
+                        f.name,
+                        f.patronymic)
+                   FROM SubjectTeacher st
+                        JOIN st.teachers t
+                        JOIN st.idSubject s
+                        JOIN st.groups g
+                        JOIN Staff f ON t.id = f.id
+                        WHERE s.id = st.idSubject.id AND g.id = :group""")
     List<STNameSubjectDTO> findBySubject(@Param("group") Long group);
 }

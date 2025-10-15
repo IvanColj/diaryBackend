@@ -20,6 +20,12 @@ public class Path {
     @Column(name = "path_to_file")
     private String pathToFile;
 
+    @Column(name = "access_student")
+    private Boolean accessStudent;
+
+    @Column(name = "access_teacher")
+    private Boolean accessTeacher;
+
     @ManyToMany(mappedBy = "paths")
     private Set<Supplement> supplements = new LinkedHashSet<>();
 

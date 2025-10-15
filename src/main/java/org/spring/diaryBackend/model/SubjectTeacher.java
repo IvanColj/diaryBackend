@@ -21,16 +21,16 @@ public class SubjectTeacher {
     @JoinColumn(name = "id_subject")
     private Subject idSubject;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_teacher")
-    private Staff idTeacher;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "subject_teacher_groups",
+    @ManyToMany
+    @JoinTable(name = "teachers_st",
             joinColumns = @JoinColumn(name = "id_st"),
-            inverseJoinColumns = @JoinColumn(name = "id_group")
-    )
+            inverseJoinColumns = @JoinColumn(name = "id_teacher"))
+    private Set<Staff> teachers = new LinkedHashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "subject_teacher_groups",
+            joinColumns = @JoinColumn(name = "id_st"),
+            inverseJoinColumns = @JoinColumn(name = "id_group"))
     private Set<StudentGroup> groups = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "idSt")
@@ -41,4 +41,8 @@ public class SubjectTeacher {
 
     @OneToMany(mappedBy = "idSt")
     private Set<TypeMark> typeMarks = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "idSt")
+    private Set<Subgroup> subgroups  = new LinkedHashSet<>();
+
 }
