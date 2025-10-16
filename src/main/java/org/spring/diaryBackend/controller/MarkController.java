@@ -22,16 +22,6 @@ public class MarkController {
         return service.findAllMarks();
     }
 
-    @GetMapping("student/{id_student}")
-    public List<SemesterMarkDTO> getMarksStudents(@PathVariable Long id_student) {
-        return service.findByStudentMarks(id_student);
-    }
-
-    @GetMapping("subject/{id_st}")
-    public List<SemesterMarkDTO> getMarksObject(@PathVariable Long id_st) {
-        return service.SubjectMarksDTO(id_st);
-    }
-
     @GetMapping("student/{id_student}/subject/{id_st}")
     public List<SubjectMarksDTO> getMarksStudentsSubject(@PathVariable Long id_student, @PathVariable Long id_st) {
         return service.findByStudentAndSubject(id_student, id_st);

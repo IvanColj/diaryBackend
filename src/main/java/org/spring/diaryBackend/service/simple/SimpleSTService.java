@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.SubjectTeacherDTO;
 import org.spring.diaryBackend.dto.other.STGroupDTO;
 import org.spring.diaryBackend.dto.other.STGroupsDTO;
+import org.spring.diaryBackend.dto.other.STNumberMarkTypeMarkDTO;
 import org.spring.diaryBackend.mapper.entity.STDTOMapper;
 import org.spring.diaryBackend.model.SubjectTeacher;
 import org.spring.diaryBackend.repository.STRepository;
@@ -39,6 +40,11 @@ public class SimpleSTService implements STService {
     @Override
     public SubjectTeacherDTO findById(Long id) {
         return stRepository.findById(id).map(stdtoMapper).orElse(null);
+    }
+
+    @Override
+    public List<STNumberMarkTypeMarkDTO> findByStNumberMarkType(Long idSt) {
+        return stRepository.findByStNumberMarkTypeMark(idSt);
     }
 
     @Override

@@ -36,21 +36,6 @@ public class SimpleMarkService implements MarkService {
     }
 
     @Override
-    public List<SemesterMarkDTO> findByStudentMarks(Long id) {
-        return markRepository.findByStudentMarks(id).stream().map(semesterMarkDTOMapper).toList();
-    }
-
-    @Override
-    public List<SemesterMarkDTO> SubjectMarksDTO(Long idObject) {
-        return List.of();
-    }
-
-//    @Override
-//    public List<SemesterMarkDTO> findByObjectMarks(Long object) {
-//        return markRepository.findByObjectMarks(object).stream().map(semesterMarkDTOMapper).toList();
-//    }
-
-    @Override
     public List<SubjectMarksDTO> findByStudentAndSubject(Long id_student, Long id_st) {
         return markRepository.findByStudentSubject(id_student, id_st).stream().map(subjectMarksDTOMapper).toList();
     }

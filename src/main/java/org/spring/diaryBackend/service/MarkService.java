@@ -10,10 +10,6 @@ import java.util.List;
 public interface MarkService {
     List<SemesterMarkDTO> findAllMarks();
 
-    List<SemesterMarkDTO> findByStudentMarks(Long idStudent);
-
-    List<SemesterMarkDTO> SubjectMarksDTO(Long idObject);
-
     void addMarksForGroup(Long idGroup, Long idSt);
 
     List<SubjectMarksDTO> findByStudentAndSubject(Long idStudent, Long idSt);

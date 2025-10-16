@@ -3,6 +3,7 @@ package org.spring.diaryBackend.controller;
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.SubjectTeacherDTO;
 import org.spring.diaryBackend.dto.other.STGroupsDTO;
+import org.spring.diaryBackend.dto.other.STNumberMarkTypeMarkDTO;
 import org.spring.diaryBackend.service.STService;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,11 @@ public class STController {
     @GetMapping("id/{id}")
     public SubjectTeacherDTO getSubjectTeacher(@PathVariable Long id) {
         return service.findById(id);
+    }
+
+    @GetMapping("typeMark/id/{id}")
+    public List<STNumberMarkTypeMarkDTO> findByStNumberMarkType(@PathVariable Long id) {
+        return service.findByStNumberMarkType(id);
     }
 
     @PostMapping("save")

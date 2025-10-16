@@ -14,12 +14,6 @@ import java.util.List;
 
 public interface MarkRepository extends JpaRepository<SemesterMark, SemesterMarkId> {
 
-    @Query("SELECT m FROM SemesterMark m JOIN m.regularMarks mm WHERE m.id.idStudent = :idStudent")
-    List<SemesterMark> findByStudentMarks(@Param("idStudent") Long idStudent);
-
-    @Query("SELECT m FROM SemesterMark m JOIN m.regularMarks mm WHERE m.id.idSt = :idSt")
-    List<SemesterMark> findByObjectMarks(@Param("idSt") Long idSt);
-
     @Query("SELECT m FROM SemesterMark m JOIN m.regularMarks mm WHERE m.id.idStudent = :idStudent and m.id.idSt = :idSt")
     SemesterMark findByStudentAndSubject(@Param("idStudent") Long idStudent, @Param("idSt") Long idSt);
 

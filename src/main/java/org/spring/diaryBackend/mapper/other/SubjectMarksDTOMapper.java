@@ -1,6 +1,7 @@
 package org.spring.diaryBackend.mapper.other;
 
 import org.spring.diaryBackend.dto.other.SubjectMarksDTO;
+import org.spring.diaryBackend.model.Change;
 import org.spring.diaryBackend.model.RegularMark;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,9 @@ public class SubjectMarksDTOMapper implements Function<RegularMark, SubjectMarks
                 regularMark.getIdLesson().getIdSupplement().getComment() : null,
                 regularMark.getIdTypeMark().getName(),
                 regularMark.getIdLesson() != null ?
-                regularMark.getIdLesson().getDate() : null
+                regularMark.getIdLesson().getDate() : null,
+                regularMark.getChanges() != null ?
+                regularMark.getChanges().stream().map(Change::getId).toList() : null
         );
     }
 }

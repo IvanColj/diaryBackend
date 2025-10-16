@@ -1,6 +1,7 @@
 package org.spring.diaryBackend.repository;
 
 import org.spring.diaryBackend.dto.other.STGroupDTO;
+import org.spring.diaryBackend.dto.other.STNumberMarkTypeMarkDTO;
 import org.spring.diaryBackend.model.SubjectTeacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,19 +19,28 @@ public interface STRepository extends JpaRepository<SubjectTeacher, Long> {
     List<SubjectTeacher> findByTeacher(@Param("id_teacher") Long idTeacher);
 
     @Query("""
-    SELECT DISTINCT NEW org.spring.diaryBackend.dto.other.STGroupDTO(
-        t.id,
-        s.id,
-        s.subjectName,
-        g.id
-    )
-    FROM SubjectTeacher st
-        JOIN st.teachers t
-        JOIN st.idSubject s
-        JOIN st.groups g
-    WHERE t.id = :idTeacher
-    """)
+            SELECT DISTINCT NEW org.spring.diaryBackend.dto.other.STGroupDTO(
+                t.id,
+                s.id,
+                s.subjectName,
+                g.id
+            )
+            FROM SubjectTeacher st
+                JOIN st.teachers t
+                JOIN st.idSubject s
+                JOIN st.groups g
+            WHERE t.id = :idTeacher
+            """)
     List<STGroupDTO> findBySTGroup(@Param("idTeacher") Long idTeacher);
+
+
+    @Query("""
+                SELECT DISTINCT NEW org.spring.diaryBackend.dto.other.STNumberMarkTypeMarkDTO(
+                            rm.id.number, tm.name, tm.weight
+                ) FROM RegularMark rm JOIN TypeMark tm ON rm.idTypeMark.id = tm.id
+                WHERE rm.id.semesterMarkIdSt = :idSt ORDER BY tm.weight, tm.name, rm.id.number
+            """)
+    List<STNumberMarkTypeMarkDTO> findByStNumberMarkTypeMark(@Param("idSt") Long idSt);
 
     @Modifying
     @Transactional
