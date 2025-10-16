@@ -10,8 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class STGroupDTO {
-    Long idTeacher;
-    Long idSubject;
-    String subjectName;
-    Long group;
+    private Long idTeacher;
+    private Long idSubject;
+    private String subjectName;
+    private Long group;
 }

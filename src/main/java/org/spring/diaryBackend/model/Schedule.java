@@ -41,6 +41,9 @@ public class Schedule {
     @JoinColumn(name = "subgroup")
     private Staff subgroup;
 
+    @JoinColumn(name = "replacement")
+    private Boolean replacement;
+
     @OneToMany(mappedBy = "idSchedule")
     private Set<Lesson> lessons = new LinkedHashSet<>();
 

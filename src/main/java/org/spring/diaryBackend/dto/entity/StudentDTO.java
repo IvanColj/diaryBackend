@@ -12,15 +12,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentDTO {
-    Long id;
-    String lastName;
-    String name;
-    String patronymic;
-    Long idGroup;
-    String login;
-    String password;
-    String telephone;
-    LocalDate birthDate;
-    String address;
-    String email;
+    private Long id;
+    private String lastName;
+    private String name;
+    private String patronymic;
+    private Long idGroup;
+    private String login;
+    private String password;
+    private String telephone;
+    private LocalDate birthDate;
+    private String address;
+    private String email;
 }

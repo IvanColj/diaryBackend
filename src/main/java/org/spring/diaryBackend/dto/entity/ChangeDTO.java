@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChangeDTO {
-    Long id;
-    LocalDateTime dateTime;
-    String action;
-    Long idSupplement;
-    Boolean teacherOrStudent;
-    Double newValue;
+    private Long id;
+    private LocalDateTime dateTime;
+    private String action;
+    private Long idSupplement;
+    private Boolean teacherOrStudent;
+    private Double oldValue;
 }

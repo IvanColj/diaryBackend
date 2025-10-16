@@ -2,10 +2,12 @@ package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.SemesterMarkDTO;
+import org.spring.diaryBackend.dto.other.SubjectMarksDTO;
 import org.spring.diaryBackend.dto.other.UpdateMarkDTO;
 import org.spring.diaryBackend.logic.BeanUtils;
 import org.spring.diaryBackend.logic.DelMarksGroup;
-import org.spring.diaryBackend.mapper.SemesterMarkDTOMapper;
+import org.spring.diaryBackend.mapper.entity.SemesterMarkDTOMapper;
+import org.spring.diaryBackend.mapper.other.SubjectMarksDTOMapper;
 import org.spring.diaryBackend.model.RegularMark;
 import org.spring.diaryBackend.model.SemesterMark;
 import org.spring.diaryBackend.model.SemesterMarkId;
@@ -26,6 +28,8 @@ public class SimpleMarkService implements MarkService {
 
     private final SemesterMarkDTOMapper semesterMarkDTOMapper;
 
+    private final SubjectMarksDTOMapper subjectMarksDTOMapper;
+
     @Override
     public List<SemesterMarkDTO> findAllMarks() {
         return markRepository.findAll().stream().map(semesterMarkDTOMapper).toList();
@@ -37,13 +41,18 @@ public class SimpleMarkService implements MarkService {
     }
 
     @Override
-    public List<SemesterMarkDTO> findByObjectMarks(Long object) {
-        return markRepository.findByObjectMarks(object).stream().map(semesterMarkDTOMapper).toList();
+    public List<SemesterMarkDTO> SubjectMarksDTO(Long idObject) {
+        return List.of();
     }
 
+//    @Override
+//    public List<SemesterMarkDTO> findByObjectMarks(Long object) {
+//        return markRepository.findByObjectMarks(object).stream().map(semesterMarkDTOMapper).toList();
+//    }
+
     @Override
-    public SemesterMarkDTO findByStudentAndSubject(Long id_student, Long id_st) {
-        return semesterMarkDTOMapper.apply(markRepository.findByStudentAndSubject(id_student, id_st));
+    public List<SubjectMarksDTO> findByStudentAndSubject(Long id_student, Long id_st) {
+        return markRepository.findByStudentSubject(id_student, id_st).stream().map(subjectMarksDTOMapper).toList();
     }
 
     @Override
@@ -68,18 +77,18 @@ public class SimpleMarkService implements MarkService {
     }
 
     @Override
-    public SemesterMarkDTO updateMarksNumber(UpdateMarkDTO updateMarkDTO) {
+    public void updateMarksNumber(UpdateMarkDTO updateMarkDTO) {
         SemesterMark semesterMarks = markRepository.findByStudentAndSubject(updateMarkDTO.getIdStudent(), updateMarkDTO.getIdSt());
         if (semesterMarks == null) {
-            return new SemesterMarkDTO();
+            return;
         }
         semesterMarks.getRegularMarks().stream().toList().forEach(regularMarks ->
         {
-            if (regularMarks.getId().getNumber() != null && regularMarks.getId().getNumber() == Math.toIntExact(updateMarkDTO.getNumber())) {
+            if (regularMarks.getId().getNumber() != null && regularMarks.getId().getNumber().equals(updateMarkDTO.getNumber())) {
                 regularMarks.setValue(updateMarkDTO.getMark());
             }
         });
-        return semesterMarkDTOMapper.apply(markRepository.save(semesterMarks));
+        markRepository.save(semesterMarks);
     }
 
     @Override

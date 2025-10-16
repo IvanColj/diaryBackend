@@ -10,11 +10,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class STNameSubjectDTO {
-    Long idSt;
-    Long idSubject;
-    String nameSubject;
-    Long idTeacher;
-    String lastnameTeacher;
-    String nameTeacher;
-    String patronymicTeacher;
+    private Long idSt;
+    private Long idSubject;
+    private String nameSubject;
+    private Long idTeacher;
+    private String lastnameTeacher;
+    private String nameTeacher;
+    private String patronymicTeacher;
 }

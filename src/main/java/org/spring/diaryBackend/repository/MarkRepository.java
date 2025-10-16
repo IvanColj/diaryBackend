@@ -1,5 +1,6 @@
 package org.spring.diaryBackend.repository;
 
+import org.spring.diaryBackend.model.RegularMark;
 import org.spring.diaryBackend.model.SemesterMark;
 import org.spring.diaryBackend.model.SemesterMarkId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +22,9 @@ public interface MarkRepository extends JpaRepository<SemesterMark, SemesterMark
 
     @Query("SELECT m FROM SemesterMark m JOIN m.regularMarks mm WHERE m.id.idStudent = :idStudent and m.id.idSt = :idSt")
     SemesterMark findByStudentAndSubject(@Param("idStudent") Long idStudent, @Param("idSt") Long idSt);
+
+    @Query("SELECT m.regularMarks FROM SemesterMark m JOIN m.regularMarks mm WHERE m.id.idStudent = :idStudent and m.id.idSt = :idSt")
+    List<RegularMark> findByStudentSubject(@Param("idStudent") Long idStudent, @Param("idSt") Long idSt);
 
     @Query(
             nativeQuery = true,

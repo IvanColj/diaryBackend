@@ -2,7 +2,7 @@ package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
-import org.spring.diaryBackend.dto.other.StudentMarksDTO;
+import org.spring.diaryBackend.dto.other.StudentMarksAllSubjectDTO;
 import org.spring.diaryBackend.service.StudentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +36,7 @@ public class StudentController {
     }
 
     @GetMapping("marks/id/{id}")
-    public StudentMarksDTO getGroupMarks(@PathVariable Long id) {
+    public List<StudentMarksAllSubjectDTO> getGroupMarks(@PathVariable Long id) {
         return studentService.getStudentMarks(id);
     }
 

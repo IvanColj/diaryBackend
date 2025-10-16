@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.SubjectTeacherDTO;
 import org.spring.diaryBackend.dto.other.STGroupDTO;
 import org.spring.diaryBackend.dto.other.STGroupsDTO;
-import org.spring.diaryBackend.mapper.STDTOMapper;
+import org.spring.diaryBackend.mapper.entity.STDTOMapper;
 import org.spring.diaryBackend.model.SubjectTeacher;
 import org.spring.diaryBackend.repository.STRepository;
 import org.spring.diaryBackend.repository.StaffRepository;

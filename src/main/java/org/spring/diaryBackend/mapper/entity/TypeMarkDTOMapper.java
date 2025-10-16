@@ -1,4 +1,4 @@
-package org.spring.diaryBackend.mapper;
+package org.spring.diaryBackend.mapper.entity;
 
 import org.spring.diaryBackend.dto.entity.TypeMarkDTO;
 import org.spring.diaryBackend.model.TypeMark;

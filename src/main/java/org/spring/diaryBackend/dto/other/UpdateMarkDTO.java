@@ -10,8 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateMarkDTO {
-    Long idStudent;
-    Long idSt;
-    Double mark;
-    Long number;
+    private Long idStudent;
+    private Long idSt;
+    private Double mark;
+    private Long number;
 }

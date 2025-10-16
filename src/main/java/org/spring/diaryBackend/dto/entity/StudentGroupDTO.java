@@ -10,12 +10,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentGroupDTO {
-    Long id;
-    Long numberGroup;
-    Long admissionYear;
-    Long idCurator;
-    Long course;
-    String formEducation;
-    String profile;
-    String specialty;
+    private Long id;
+    private Long numberGroup;
+    private Long admissionYear;
+    private Long idCurator;
+    private Long course;
+    private String formEducation;
+    private String profile;
+    private String specialty;
 }

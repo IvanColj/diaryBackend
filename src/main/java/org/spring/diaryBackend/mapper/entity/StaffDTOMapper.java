@@ -1,4 +1,4 @@
-package org.spring.diaryBackend.mapper;
+package org.spring.diaryBackend.mapper.entity;
 
 import lombok.RequiredArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StaffDTO;

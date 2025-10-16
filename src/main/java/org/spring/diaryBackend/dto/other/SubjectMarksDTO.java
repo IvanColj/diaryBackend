@@ -5,15 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class STGroupsDTO {
-    private Long idTeacher;
-    private Long idSubject;
-    private String subjectName;
-    private List<Long> idGroups;
+public class SubjectMarksDTO {
+    private Long number;
+    private Double value;
+    private String comment;
+    private String typeMark;
+    private LocalDate dateLesson;
 }

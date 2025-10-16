@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SemesterMarkDTO {
-    SemesterMarkId id;
-    Double certification;
-    List<RegularMarkDTO> regularMarks;
+    private SemesterMarkId id;
+    private Double certification;
+    private List<RegularMarkDTO> regularMarks;
 }

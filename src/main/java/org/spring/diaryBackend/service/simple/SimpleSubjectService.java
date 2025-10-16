@@ -2,7 +2,7 @@ package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.SubjectDTO;
-import org.spring.diaryBackend.mapper.SubjectDTOMapper;
+import org.spring.diaryBackend.mapper.entity.SubjectDTOMapper;
 import org.spring.diaryBackend.model.Subject;
 import org.spring.diaryBackend.repository.SubjectRepository;
 import org.spring.diaryBackend.service.SubjectService;

@@ -13,9 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegularMarkDTO {
-    RegularMarkId id;
-    Double value;
-    Long idLesson;
-    TypeMarkDTO typeMark;
-    List<ChangeDTO> changes;
+    private RegularMarkId id;
+    private Double value;
+    private Long idLesson;
+    private TypeMarkDTO typeMark;
+    private List<ChangeDTO> changes;
 }

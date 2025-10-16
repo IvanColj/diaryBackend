@@ -12,8 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubjectTeacherDTO {
-    Long id;
-    List<Long> teachers;
-    Long idSubject;
-    List<Long> groups;
+    private Long id;
+    private List<Long> teachers;
+    private Long idSubject;
+    private List<Long> groups;
 }

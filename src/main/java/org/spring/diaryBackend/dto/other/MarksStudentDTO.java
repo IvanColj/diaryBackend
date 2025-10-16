@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MarksStudentDTO {
-    Long number;
-    Double value;
+    private Long number;
+    private Double value;
 }

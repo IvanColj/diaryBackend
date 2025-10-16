@@ -1,4 +1,4 @@
-package org.spring.diaryBackend.mapper;
+package org.spring.diaryBackend.mapper.entity;
 
 import lombok.RequiredArgsConstructor;
 import org.spring.diaryBackend.dto.entity.ChangeDTO;
@@ -19,7 +19,7 @@ public class ChangeDTOMapper implements Function<Change, ChangeDTO> {
                 change.getIdSupplement() != null ?
                         change.getIdSupplement().getId() : null,
                 change.getTeacherOrStudent(),
-                change.getNewValue()
+                change.getOldValue()
         );
     }
 }

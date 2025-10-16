@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StaffPositionDTO {
-    Long id;
-    String name;
+    private Long id;
+    private String name;
 }

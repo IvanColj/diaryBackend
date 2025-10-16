@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TypeMarkDTO {
-    String name;
-    Long weight;
+    private String name;
+    private Long weight;
 }

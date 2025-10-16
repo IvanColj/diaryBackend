@@ -12,12 +12,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StaffDTO {
-    Long id;
-    String patronymic;
-    String name;
-    String lastName;
-    String login;
-    String password;
-    String email;
-    List<StaffPositionDTO> StaffPosition;
+    private Long id;
+    private String patronymic;
+    private String name;
+    private String lastName;
+    private String login;
+    private String password;
+    private String email;
+    private List<StaffPositionDTO> StaffPosition;
 }

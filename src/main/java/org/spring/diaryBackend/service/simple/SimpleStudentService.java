@@ -1,11 +1,13 @@
 package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
-import org.spring.diaryBackend.dto.entity.RegularMarkDTO;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
-import org.spring.diaryBackend.dto.other.StudentMarksDTO;
-import org.spring.diaryBackend.mapper.RegularMarkDTOMapper;
-import org.spring.diaryBackend.mapper.StudentDTOMapper;
+import org.spring.diaryBackend.dto.other.MarksStudentDTO;
+import org.spring.diaryBackend.dto.other.STNameSubjectDTO;
+import org.spring.diaryBackend.dto.other.StudentMarksAllSubjectDTO;
+import org.spring.diaryBackend.mapper.entity.RegularMarkDTOMapper;
+import org.spring.diaryBackend.mapper.entity.StudentDTOMapper;
+import org.spring.diaryBackend.mapper.other.MarksStudentDTOMapper;
 import org.spring.diaryBackend.model.RegularMark;
 import org.spring.diaryBackend.model.Student;
 import org.spring.diaryBackend.model.StudentGroup;
@@ -17,6 +19,7 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,6 +35,8 @@ public class SimpleStudentService implements StudentService {
 
     private final RegularMarkDTOMapper regularMarkDTOMapper;
 
+    private final MarksStudentDTOMapper marksStudentDTOMapper;
+
     @Override
     public List<StudentDTO> findAllStudent() {
         return studentRepository.findAll().stream().map(studentDTOMapper).toList();
@@ -43,20 +48,35 @@ public class SimpleStudentService implements StudentService {
     }
 
     @Override
-    public StudentMarksDTO getStudentMarks(Long id) {
-        StudentMarksDTO baseInfo = studentRepository.findBaseInfo(id);
+    public List<StudentMarksAllSubjectDTO> getStudentMarks(Long id) {
+        List<STNameSubjectDTO> stNameSubjectDTOS = studentRepository.findBySubject(id);
+        List<StudentMarksAllSubjectDTO> studentMarksAllSubjectDTOS = new ArrayList<>();
+        stNameSubjectDTOS.forEach(stNameSubjectDTO -> studentMarksAllSubjectDTOS.add(new StudentMarksAllSubjectDTO(
+                stNameSubjectDTO,
+                null
+                ))
+        );
+
         List<Object[]> rawMarks = studentRepository.findMarksStudentBySubject(id);
 
-        Map<Long, List<RegularMarkDTO>> id_st = rawMarks.stream()
+        Map<Long, List<MarksStudentDTO>> stMarks = rawMarks.stream()
                 .collect(Collectors.groupingBy(
                         row -> (Long) row[0],
                         Collectors.mapping(
-                                row -> regularMarkDTOMapper.apply((RegularMark) row[1]),
+                                row -> marksStudentDTOMapper.apply(regularMarkDTOMapper.apply((RegularMark) row[1])),
                                 Collectors.toList()
                         )
                 ));
-        baseInfo.setMarksBySt(id_st);
-        return baseInfo;
+
+
+        studentMarksAllSubjectDTOS.forEach(
+                studentMarksAllSubjectDTO -> {
+                    studentMarksAllSubjectDTO.setMarksBySt(
+                            stMarks.get(studentMarksAllSubjectDTO.getStNameSubjectDTO().getIdSt())
+                    );
+                }
+        );
+        return studentMarksAllSubjectDTOS;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package org.spring.diaryBackend.mapper;
+package org.spring.diaryBackend.mapper.entity;
 
 import org.spring.diaryBackend.dto.entity.SubjectTeacherDTO;
 import org.spring.diaryBackend.model.Staff;

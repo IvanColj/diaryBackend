@@ -13,8 +13,9 @@ import org.spring.diaryBackend.dto.other.GroupMarksDTO;
 import org.spring.diaryBackend.dto.other.MarksStudentDTO;
 import org.spring.diaryBackend.dto.other.STNameSubjectDTO;
 import org.spring.diaryBackend.logic.GenerateSecurePassword;
-import org.spring.diaryBackend.mapper.RegularMarkDTOMapper;
-import org.spring.diaryBackend.mapper.StudentGroupDTOMapper;
+import org.spring.diaryBackend.mapper.entity.RegularMarkDTOMapper;
+import org.spring.diaryBackend.mapper.entity.StudentGroupDTOMapper;
+import org.spring.diaryBackend.mapper.other.MarksStudentDTOMapper;
 import org.spring.diaryBackend.model.RegularMark;
 import org.spring.diaryBackend.model.StudentGroup;
 import org.spring.diaryBackend.repository.StaffRepository;
@@ -41,6 +42,8 @@ public class SimpleStudentGroupService implements StudentGroupService {
     private final StudentGroupDTOMapper studentGroupDTOMapper;
 
     private final RegularMarkDTOMapper regularMarkDTOMapper;
+
+    private final MarksStudentDTOMapper marksStudentDTOMapper;
 
     @Override
     public List<StudentGroupDTO> findAll() {
@@ -86,10 +89,7 @@ public class SimpleStudentGroupService implements StudentGroupService {
 
             List<MarksStudentDTO> marksStudentDTOS = studentMarksMap.
                     get(groupMarksDTO.getIdStudent()).stream().
-                    map(regularMarkDTO -> new MarksStudentDTO(
-                    regularMarkDTO.getId().getNumber(),
-                    regularMarkDTO.getValue()
-            )).toList();
+                    map(marksStudentDTOMapper).toList();
             groupMarksDTO.setMarks(marksStudentDTOS);
         }
 
