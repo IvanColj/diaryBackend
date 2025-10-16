@@ -31,8 +31,4 @@ public class Subgroup {
 
     @OneToMany(mappedBy = "idSubgroup")
     private Set<Attendance> attendances = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "idSubgroup")
-    private Set<RegularMark> regularMarks = new LinkedHashSet<>();
-
 }

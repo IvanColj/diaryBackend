@@ -71,12 +71,6 @@ public class SimpleStudentGroupService implements StudentGroupService {
     public List<GroupMarksDTO> getGroupMarksBySubject(Long numberGroup, Long subject) {
         List<GroupMarksDTO> marksGroupBySubject = studentGroupRepository.findBaseInfo(numberGroup);
         List<Object[]> rawMarks = studentGroupRepository.findAllMarksGroup(numberGroup, subject);
-        Map<Long, Double> certificationByStudentId = rawMarks.stream()
-                .filter(row -> row[0] != null && row[2] != null)
-                .collect(Collectors.toMap(
-                        row -> (Long) row[0],
-                        row -> (Double) row[2]
-                ));
         Map<Long, List<RegularMarkDTO>> marksByStudentId = rawMarks.stream()
                 .collect(Collectors.groupingBy(
                         row -> (Long) row[0],
@@ -94,14 +88,9 @@ public class SimpleStudentGroupService implements StudentGroupService {
                     get(groupMarksDTO.getIdStudent()).stream().
                     map(regularMarkDTO -> new MarksStudentDTO(
                     regularMarkDTO.getId().getNumber(),
-                    regularMarkDTO.getValue(),
-                    regularMarkDTO.getIdLesson(),
-                    regularMarkDTO.getIdSubgroup(),
-                    regularMarkDTO.getTypeMark(),
-                    regularMarkDTO.getChanges()
+                    regularMarkDTO.getValue()
             )).toList();
             groupMarksDTO.setMarks(marksStudentDTOS);
-            groupMarksDTO.setCertification(certificationByStudentId.get(groupMarksDTO.getIdStudent()));
         }
 
         return marksGroupBySubject;

@@ -44,9 +44,4 @@ public class RegularMark {
             inverseJoinColumns = @JoinColumn(name = "id_change")
     )
     private Set<Change> changes = new LinkedHashSet<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_subgroup")
-    private Subgroup idSubgroup;
-
 }

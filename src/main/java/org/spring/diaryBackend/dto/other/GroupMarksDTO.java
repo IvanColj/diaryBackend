@@ -15,7 +15,6 @@ public class GroupMarksDTO {
     private Long idStudent;
     private String lastName;
     private String name;
-    private String surname;
+    private String patronymic;
     private List<MarksStudentDTO> marks;
-    private Double certification;
 }

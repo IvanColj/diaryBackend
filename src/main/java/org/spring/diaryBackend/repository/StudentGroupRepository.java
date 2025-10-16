@@ -12,12 +12,12 @@ import java.util.List;
 
 public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long> {
 
-    @Query("SELECT NEW org.spring.diaryBackend.dto.other.GroupMarksDTO(s.id, s.lastName, s.name, s.patronymic, null, null) FROM Student s WHERE s.idGroup.id = :idGroup")
+    @Query("SELECT NEW org.spring.diaryBackend.dto.other.GroupMarksDTO(s.id, s.lastName, s.name, s.patronymic, null) FROM Student s WHERE s.idGroup.id = :idGroup")
     List<GroupMarksDTO> findBaseInfo(@Param("idGroup") Long idGroup);
 
     @Query(
     """
-            SELECT m.id.idStudent, rm, m.certification
+            SELECT m.id.idStudent, rm
             FROM SemesterMark m
             JOIN m.regularMarks rm
             JOIN Student s ON m.id.idStudent = s.id

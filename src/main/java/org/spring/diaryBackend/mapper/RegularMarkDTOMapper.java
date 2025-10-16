@@ -24,7 +24,6 @@ public class RegularMarkDTOMapper implements Function<RegularMark, RegularMarkDT
                 regularMark.getId(),
                 regularMark.getValue(),
                 regularMark.getIdLesson() != null ? regularMark.getIdLesson().getId() : null,
-                regularMark.getIdSubgroup() != null ? regularMark.getIdSubgroup().getId() : null,
                 regularMark.getIdTypeMark() != null ? typeMarkDTOMapper.apply(regularMark.getIdTypeMark()) : null,
                 regularMark.getChanges().stream().map(changeDTOMapper).toList()
         );
