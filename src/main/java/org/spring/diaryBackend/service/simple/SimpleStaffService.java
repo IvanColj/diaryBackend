@@ -56,6 +56,11 @@ public class SimpleStaffService implements StaffService {
     }
 
     @Override
+    public void deleteStaffJob(Long idStaff, Long idJob) {
+        staffRepository.deleteStaffJob(idStaff, idJob);
+    }
+
+    @Override
     public StaffDTO updateStaff(StaffDTO staffNew) {
         Staff staffUpdate = staffRepository.findById(staffNew.getId()).orElse(null);
         if (staffUpdate == null) {

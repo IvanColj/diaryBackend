@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Setter
@@ -18,5 +17,4 @@ public class SubjectMarksDTO {
     private String comment;
     private String typeMark;
     private LocalDate dateLesson;
-    private List<Long> idChanges;
 }

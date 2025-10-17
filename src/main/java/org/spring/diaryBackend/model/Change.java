@@ -31,8 +31,8 @@ public class Change {
     @Column(name = "teacher_or_student")
     private Boolean teacherOrStudent;
 
-    @Column(name = "old_value")
-    private Double oldValue;
+    @Column(name = "new_value")
+    private Double newValue;
 
     @ManyToMany(mappedBy = "changes")
     private Set<RegularMark> regularMarks = new LinkedHashSet<>();

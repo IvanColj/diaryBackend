@@ -17,5 +17,5 @@ public class ChangeDTO {
     private String action;
     private Long idSupplement;
     private Boolean teacherOrStudent;
-    private Double oldValue;
+    private Double newValue;
 }

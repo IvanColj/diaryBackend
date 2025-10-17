@@ -27,7 +27,15 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
     @Transactional
     @Query(
             nativeQuery = true,
-            value = "INSERT INTO staff_job_position (id_staff, id_staff_position) VALUES (:idStaff, :idJob)"
+            value = "INSERT INTO staff_job_position (id_staff, id_staff_position) VALUES (:id_staff, :id_job)"
     )
-    void addStaffJob(@Param("idStaff") Long idStaff, @Param("idJob") Long idJob);
+    void addStaffJob(@Param("id_staff") Long idStaff, @Param("id_job") Long idJob);
+
+    @Modifying
+    @Transactional
+    @Query(
+            nativeQuery = true,
+            value = "DELETE FROM staff_job_position WHERE id_staff = :id_staff AND id_staff_position = :id_job"
+    )
+    void deleteStaffJob(@Param("id_staff") Long idStaff, @Param("id_job") Long idJob);
 }

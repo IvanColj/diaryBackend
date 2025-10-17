@@ -19,7 +19,7 @@ public class ChangeDTOMapper implements Function<Change, ChangeDTO> {
                 change.getIdSupplement() != null ?
                         change.getIdSupplement().getId() : null,
                 change.getTeacherOrStudent(),
-                change.getOldValue()
+                change.getNewValue()
         );
     }
 }

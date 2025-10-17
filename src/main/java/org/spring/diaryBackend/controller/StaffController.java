@@ -40,6 +40,12 @@ public class StaffController {
         staffService.addStaffJob(idStaff, idJob);
     }
 
+    @DeleteMapping("deleteJob/id/{idStaff}/job/{idJob}")
+    public void deleteStaffJob(@PathVariable Long idStaff, @PathVariable Long idJob) {
+        staffService.deleteStaffJob(idStaff, idJob);
+    }
+
+
     @PostMapping("save")
     public StaffDTO createStaff(@RequestBody StaffDTO staffDTO) {
         return staffService.saveStaff(staffDTO);

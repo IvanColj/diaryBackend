@@ -1,9 +1,11 @@
 package org.spring.diaryBackend.service;
 
-import org.spring.diaryBackend.model.Change;
+import org.spring.diaryBackend.dto.entity.ChangeDTO;
 
 import java.util.List;
 
 public interface ChangeService {
-    List<Change> findAllChange();
+    List<ChangeDTO> findAllChange();
+
+    List<ChangeDTO> findByAllChangeMark(Long idSt, Long idStudent, Long numberMark);
 }

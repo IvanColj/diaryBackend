@@ -1,13 +1,25 @@
 package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.spring.diaryBackend.dto.entity.ChangeDTO;
+import org.spring.diaryBackend.service.ChangeService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/v1/change")
+@RequestMapping("/api/v1/changes")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ChangeController {
+    private final ChangeService changeService;
+
+    @GetMapping
+    public List<ChangeDTO> findAll() {
+        return changeService.findAllChange();
+    }
+    @GetMapping("mark/st/{idSt}/student/{idStudent}/number/{number}")
+    public List<ChangeDTO> findAllChangeMark(@PathVariable Long idSt, @PathVariable Long idStudent,@PathVariable Long number) {
+        return changeService.findByAllChangeMark(idSt, idStudent, number);
+    }
 }

@@ -18,6 +18,8 @@ public interface StaffService {
 
     void addStaffJob(Long idStaff, Long idJob);
 
+    void deleteStaffJob(Long idStaff, Long idJob);
+
     StaffDTO findByLoginOrPassword(String login, String password);
 
     void deleteStaff(Long id);
