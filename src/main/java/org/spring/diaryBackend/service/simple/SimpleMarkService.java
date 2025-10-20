@@ -2,6 +2,8 @@ package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.SemesterMarkDTO;
+import org.spring.diaryBackend.dto.other.ColumnMarkDTO;
+import org.spring.diaryBackend.dto.other.FilesDTO;
 import org.spring.diaryBackend.dto.other.SubjectMarksDTO;
 import org.spring.diaryBackend.dto.other.UpdateMarkDTO;
 import org.spring.diaryBackend.logic.BeanUtils;
@@ -12,6 +14,7 @@ import org.spring.diaryBackend.model.RegularMark;
 import org.spring.diaryBackend.model.SemesterMark;
 import org.spring.diaryBackend.model.SemesterMarkId;
 import org.spring.diaryBackend.repository.MarkRepository;
+import org.spring.diaryBackend.repository.SupplementRepository;
 import org.spring.diaryBackend.service.MarkService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +32,19 @@ public class SimpleMarkService implements MarkService {
     private final SemesterMarkDTOMapper semesterMarkDTOMapper;
 
     private final SubjectMarksDTOMapper subjectMarksDTOMapper;
+
+    private final SupplementRepository supplementRepository;
+
+    @Override
+    public ColumnMarkDTO findColumnMarkInfo(Long idStudent, Long idSt, Long number) {
+        ColumnMarkDTO columnMarkDTO = markRepository.findColumnMarkInfo(idStudent, idSt, number);
+        if (columnMarkDTO != null) {
+            List<FilesDTO> filesDTOS = supplementRepository.findAllFilesSupplement(columnMarkDTO.getIdSupplement());
+            columnMarkDTO.setFiles(filesDTOS);
+            return columnMarkDTO;
+        }
+        return null;
+    }
 
     @Override
     public List<SemesterMarkDTO> findAllMarks() {

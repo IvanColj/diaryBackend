@@ -26,7 +26,12 @@ public class Path {
     @Column(name = "access_teacher")
     private Boolean accessTeacher;
 
+    @Column(name = "name_file")
+    private String nameFile;
+
     @ManyToMany(mappedBy = "paths")
     private Set<Supplement> supplements = new LinkedHashSet<>();
 
+    @ManyToMany(mappedBy = "paths")
+    private Set<Staff> staffs = new LinkedHashSet<>();
 }

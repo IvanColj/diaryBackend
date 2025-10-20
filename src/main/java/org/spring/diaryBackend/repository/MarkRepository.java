@@ -1,5 +1,6 @@
 package org.spring.diaryBackend.repository;
 
+import org.spring.diaryBackend.dto.other.ColumnMarkDTO;
 import org.spring.diaryBackend.model.RegularMark;
 import org.spring.diaryBackend.model.SemesterMark;
 import org.spring.diaryBackend.model.SemesterMarkId;
@@ -19,6 +20,14 @@ public interface MarkRepository extends JpaRepository<SemesterMark, SemesterMark
 
     @Query("SELECT m.regularMarks FROM SemesterMark m JOIN m.regularMarks mm WHERE m.id.idStudent = :idStudent and m.id.idSt = :idSt")
     List<RegularMark> findByStudentSubject(@Param("idStudent") Long idStudent, @Param("idSt") Long idSt);
+
+    @Query("""
+            SELECT NEW org.spring.diaryBackend.dto.other.ColumnMarkDTO(
+            l.date, rm.idTypeMark.name, s.id, s.comment, null
+            ) FROM RegularMark rm JOIN Lesson l ON rm.idLesson.id = l.id JOIN Supplement s ON l.idSupplement.id = s.id
+            WHERE rm.id.semesterMarkIdSt = :idSt AND rm.id.semesterMarkIdStudent = :idStudent AND rm.id.number = :number
+""")
+    ColumnMarkDTO findColumnMarkInfo(@Param("idStudent") Long idStudent, @Param("idSt") Long idSt, @Param("number") Long number);
 
     @Query(
             nativeQuery = true,

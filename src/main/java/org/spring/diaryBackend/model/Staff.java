@@ -43,6 +43,14 @@ public class Staff {
     )
     private Set<StaffPosition> staffPositions = new LinkedHashSet<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "path_staff",
+            joinColumns = @JoinColumn(name = "id_staff"),
+            inverseJoinColumns = @JoinColumn(name = "id_path")
+    )
+    private Set<Path> paths = new LinkedHashSet<>();
+
     @OneToMany(mappedBy = "idTeacher")
     private Set<Subgroup> subgroups  = new LinkedHashSet<>();
 }
