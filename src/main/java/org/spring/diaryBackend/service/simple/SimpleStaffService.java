@@ -45,7 +45,7 @@ public class SimpleStaffService implements StaffService {
         staff.setName(staffDTO.getName());
         staff.setPatronymic(staffDTO.getPatronymic());
         staff.setLogin(staffDTO.getLogin());
-        staff.setPassword(staffDTO.getPassword());
+        staff.setPassword(encoder.encode(staffDTO.getPassword()));
         staff.setEmail(staffDTO.getEmail());
         return staffDTOMapper.apply(staffRepository.save(staff));
     }

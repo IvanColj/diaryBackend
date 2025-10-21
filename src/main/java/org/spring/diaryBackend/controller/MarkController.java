@@ -16,45 +16,45 @@ import java.util.List;
 @RequestMapping("/api/v1/marks")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class MarkController {
-    private final MarkService service;
+    private final MarkService markService;
 
     @GetMapping
     public List<SemesterMarkDTO> getAllMarks() {
-        return service.findAllMarks();
+        return markService.findAllMarks();
     }
 
     @GetMapping("student/{id_student}/subject/{id_st}")
     public List<SubjectMarksDTO> getMarksStudentsSubject(@PathVariable Long id_student, @PathVariable Long id_st) {
-        return service.findByStudentAndSubject(id_student, id_st);
+        return markService.findByStudentAndSubject(id_student, id_st);
     }
 
     @GetMapping("info/student/{idStudent}/st/{idSt}/number/{number}")
     public ColumnMarkDTO findColumnMarkInfo(@PathVariable Long idStudent, @PathVariable Long idSt, @PathVariable Long number) {
-        return service.findColumnMarkInfo(idStudent, idSt, number);
+        return markService.findColumnMarkInfo(idStudent, idSt, number);
     }
 
     @DeleteMapping("delete/group")
     public void deleteMarksNumber(@RequestBody DelMarksGroup delMarksGroup) {
-        service.deleteMarksGroupSt(delMarksGroup);
+        markService.deleteMarksGroupSt(delMarksGroup);
     }
 
     @DeleteMapping("delete/group/{idGroup}/st/{idSt}/number/{number}")
     public void deleteMarksNumberGroupST(@PathVariable Long idGroup, @PathVariable Long idSt, @PathVariable Long number) {
-        service.deleteMarksNumberGroupST(idGroup, idSt, number);
+        markService.deleteMarksNumberGroupST(idGroup, idSt, number);
     }
 
     @PatchMapping("update")
     public SemesterMarkDTO updateMarks(@RequestBody SemesterMarkDTO semesterMarks) {
-        return service.updateMarks(semesterMarks);
+        return markService.updateMarks(semesterMarks);
     }
 
     @PatchMapping ("updateOneMark")
     public void updateMarksNumber(@RequestBody UpdateMarkDTO updateMarkDTO) {
-        service.updateMarksNumber(updateMarkDTO);
+        markService.updateMarksNumber(updateMarkDTO);
     }
 
     @PostMapping("save/group/{group}/st/{st}")
     public void saveMarksGroup(@PathVariable Long group, @PathVariable Long st) {
-        service.addMarksForGroup(group, st);
+        markService.addMarksForGroup(group, st);
     }
 }

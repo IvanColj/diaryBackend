@@ -35,7 +35,7 @@ public class Schedule {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_group")
-    private StudentGroup group;
+    private StudentGroup idGroup;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subgroup")
