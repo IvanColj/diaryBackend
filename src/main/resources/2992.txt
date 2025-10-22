@@ -178,7 +178,7 @@
     "lastName": "Шкиперова",
     "name": "Виктория",
     "patronymic": "Анатольевна",
-    "login": "ShkiperovaVA2",
+    "login": "ShkiperovaVA",
     "password": "uU0gJwYUiS"
   }
 ]
