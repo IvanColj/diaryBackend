@@ -13,7 +13,7 @@ public class ScheduleDTO {
     private String dayWeek;
     private String typeWeek;
     private Long numPair;
-    private Long room;
+    private String room;
     private Long idSt;
     private Long idGroup;
     private Long subgroup;

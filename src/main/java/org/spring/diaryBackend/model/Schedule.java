@@ -27,7 +27,7 @@ public class Schedule {
     private Long numPair;
 
     @Column(name = "room")
-    private Long room;
+    private String room;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_st")
