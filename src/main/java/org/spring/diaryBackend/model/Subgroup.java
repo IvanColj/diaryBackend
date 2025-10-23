@@ -25,9 +25,11 @@ public class Subgroup {
     @JoinColumn(name = "id_teacher")
     private Staff idTeacher;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_student")
-    private Student idStudent;
+    @ManyToMany
+    @JoinTable(name = "subgroup_student",
+            joinColumns = @JoinColumn(name = "id_subgroup"),
+            inverseJoinColumns = @JoinColumn(name = "id_student"))
+    private Set<Student> students = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "idSubgroup")
     private Set<Attendance> attendances = new LinkedHashSet<>();

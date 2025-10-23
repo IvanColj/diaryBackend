@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.ScheduleDTO;
 import org.spring.diaryBackend.mapper.entity.ScheduleDTOMapper;
 import org.spring.diaryBackend.model.Schedule;
-import org.spring.diaryBackend.repository.STRepository;
-import org.spring.diaryBackend.repository.ScheduleRepository;
-import org.spring.diaryBackend.repository.StaffRepository;
-import org.spring.diaryBackend.repository.StudentGroupRepository;
+import org.spring.diaryBackend.model.Student;
+import org.spring.diaryBackend.model.Subgroup;
+import org.spring.diaryBackend.repository.*;
 import org.spring.diaryBackend.service.ScheduleService;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +25,10 @@ public class SimpleScheduleService implements ScheduleService {
 
     private final StaffRepository staffRepository;
 
+    private final SubgroupRepository subgroupRepository;
+
+    private final StudentRepository studentRepository;
+
     @Override
     public List<ScheduleDTO> findAllSchedule() {
         return scheduleRepository.findAll().stream().map(scheduleDTOMapper).toList();
@@ -33,7 +36,26 @@ public class SimpleScheduleService implements ScheduleService {
 
     @Override
     public List<ScheduleDTO> findScheduleWeekGroup(Long id) {
-        return scheduleRepository.findScheduleWeekGroup(id);
+        List<ScheduleDTO> scheduleDTOS = scheduleRepository.findScheduleWeekGroup(id);
+        Subgroup subgroup;
+        Student student;
+        for (ScheduleDTO scheduleDTO : scheduleDTOS) {
+            if (scheduleDTO.getSubgroup() != null) {
+                subgroup = subgroupRepository.findByIdStAndIdTeacher(scheduleDTO.getIdSt(), scheduleDTO.getSubgroup());
+                if (subgroup.getStudents() != null) {
+                    student = studentRepository.findByIdGroup(scheduleDTO.getIdGroup()).get(0);
+                    if (subgroup.getStudents().contains(student)) {
+                        scheduleDTO.setSubgroup(1L);
+                    }
+                    else {
+                        scheduleDTO.setSubgroup(2L);
+                    }
+                }
+
+            }
+        }
+        return scheduleDTOS;
+//        return scheduleRepository.findScheduleWeekGroup(id);
     }
 
     @Override

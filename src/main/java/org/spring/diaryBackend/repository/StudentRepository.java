@@ -12,7 +12,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query(
             nativeQuery = true,
-            value = "SELECT * FROM student WHERE id_group = :id_group"
+            value = "SELECT * FROM student WHERE id_group = :id_group ORDER BY last_name, name, patronymic"
     )
     List<Student> findByIdGroup(@Param("id_group") Long idGroup);
 

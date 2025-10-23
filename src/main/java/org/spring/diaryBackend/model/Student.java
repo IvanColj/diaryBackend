@@ -55,6 +55,6 @@ public class Student {
     @OneToMany(mappedBy = "idStudent")
     private Set<SemesterMark> semesterMarks = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "idStudent")
-    private Set<Subgroup> subgroups  = new LinkedHashSet<>();
+    @ManyToMany(mappedBy = "students")
+    private Set<Subgroup> subgroups = new LinkedHashSet<>();
 }
