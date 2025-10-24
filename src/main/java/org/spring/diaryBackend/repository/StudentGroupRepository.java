@@ -15,6 +15,7 @@ public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long
     @Query("SELECT NEW org.spring.diaryBackend.dto.other.GroupMarksDTO(s.id, s.lastName, s.name, s.patronymic, null) FROM Student s WHERE s.idGroup.id = :idGroup")
     List<GroupMarksDTO> findBaseInfo(@Param("idGroup") Long idGroup);
 
+    // TODO , rm.idTypeMark.weight
     @Query(
     """
             SELECT m.id.idStudent, rm
@@ -22,7 +23,7 @@ public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long
             JOIN m.regularMarks rm
             JOIN Student s ON m.id.idStudent = s.id
             WHERE m.id.idSt = :idSt
-            AND s.idGroup.id = :idGroup ORDER BY rm.id.number, rm.idTypeMark.weight
+            AND s.idGroup.id = :idGroup ORDER BY rm.id.number
             """)
     List<Object[]> findAllMarksGroup(@Param("idGroup") Long idGroup,
                                      @Param("idSt") Long idSt);

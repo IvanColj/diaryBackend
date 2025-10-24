@@ -2,10 +2,10 @@ package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.SemesterMarkDTO;
+import org.spring.diaryBackend.dto.other.CRUDMarksDTO;
 import org.spring.diaryBackend.dto.other.ColumnMarkDTO;
 import org.spring.diaryBackend.dto.other.SubjectMarksDTO;
 import org.spring.diaryBackend.dto.other.UpdateMarkDTO;
-import org.spring.diaryBackend.logic.DelMarksGroup;
 import org.spring.diaryBackend.service.MarkService;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,14 +33,14 @@ public class MarkController {
         return markService.findColumnMarkInfo(idStudent, idSt, number);
     }
 
-    @DeleteMapping("delete/group")
-    public void deleteMarksNumber(@RequestBody DelMarksGroup delMarksGroup) {
-        markService.deleteMarksGroupSt(delMarksGroup);
-    }
+//    @DeleteMapping("delete/group")
+//    public void deleteMarksNumber(@RequestBody DelMarksGroup delMarksGroup) {
+//        markService.deleteMarksGroupSt(delMarksGroup);
+//    }
 
-    @DeleteMapping("delete/group/{idGroup}/st/{idSt}/number/{number}")
-    public void deleteMarksNumberGroupST(@PathVariable Long idGroup, @PathVariable Long idSt, @PathVariable Long number) {
-        markService.deleteMarksNumberGroupST(idGroup, idSt, number);
+    @DeleteMapping("delete/group")
+    public void deleteMarksNumberGroupST(@RequestBody CRUDMarksDTO crudMarksDTO) {
+        markService.deleteMarksNumberGroupST(crudMarksDTO);
     }
 
     @PatchMapping("update")
@@ -53,8 +53,8 @@ public class MarkController {
         markService.updateMarksNumber(updateMarkDTO);
     }
 
-    @PostMapping("save/group/{group}/st/{st}")
-    public void saveMarksGroup(@PathVariable Long group, @PathVariable Long st) {
-        markService.addMarksForGroup(group, st);
+    @PostMapping("save/group")
+    public void saveMarksGroup(@RequestBody CRUDMarksDTO crudMarksDTO) {
+        markService.addMarksForGroup(crudMarksDTO);
     }
 }

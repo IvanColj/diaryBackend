@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 import org.spring.diaryBackend.dto.entity.RegularMarkDTO;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
 import org.spring.diaryBackend.dto.entity.StudentGroupDTO;
+import org.spring.diaryBackend.dto.other.CRUDMarksDTO;
 import org.spring.diaryBackend.dto.other.GroupMarksDTO;
 import org.spring.diaryBackend.dto.other.MarksStudentDTO;
 import org.spring.diaryBackend.dto.other.STNameSubjectDTO;
@@ -17,9 +18,11 @@ import org.spring.diaryBackend.mapper.entity.RegularMarkDTOMapper;
 import org.spring.diaryBackend.mapper.entity.StudentGroupDTOMapper;
 import org.spring.diaryBackend.mapper.other.MarksStudentDTOMapper;
 import org.spring.diaryBackend.model.RegularMark;
+import org.spring.diaryBackend.model.Student;
 import org.spring.diaryBackend.model.StudentGroup;
 import org.spring.diaryBackend.repository.StaffRepository;
 import org.spring.diaryBackend.repository.StudentGroupRepository;
+import org.spring.diaryBackend.repository.SubgroupRepository;
 import org.spring.diaryBackend.service.StudentGroupService;
 import org.spring.diaryBackend.service.StudentService;
 import org.springframework.context.annotation.Primary;
@@ -44,6 +47,8 @@ public class SimpleStudentGroupService implements StudentGroupService {
     private final RegularMarkDTOMapper regularMarkDTOMapper;
 
     private final MarksStudentDTOMapper marksStudentDTOMapper;
+
+    private final SubgroupRepository subgroupRepository;
 
     @Override
     public List<StudentGroupDTO> findAll() {
@@ -71,9 +76,9 @@ public class SimpleStudentGroupService implements StudentGroupService {
     }
 
     @Override
-    public List<GroupMarksDTO> getGroupMarksBySubject(Long numberGroup, Long subject) {
-        List<GroupMarksDTO> marksGroupBySubject = studentGroupRepository.findBaseInfo(numberGroup);
-        List<Object[]> rawMarks = studentGroupRepository.findAllMarksGroup(numberGroup, subject);
+    public List<GroupMarksDTO> getGroupMarksBySubject(CRUDMarksDTO crudMarksDTO) {
+        List<GroupMarksDTO> marksGroupBySubject = studentGroupRepository.findBaseInfo(crudMarksDTO.getIdGroup());
+        List<Object[]> rawMarks = studentGroupRepository.findAllMarksGroup(crudMarksDTO.getIdGroup(), crudMarksDTO.getIdSt());
         Map<Long, List<RegularMarkDTO>> marksByStudentId = rawMarks.stream()
                 .collect(Collectors.groupingBy(
                         row -> (Long) row[0],
@@ -91,6 +96,12 @@ public class SimpleStudentGroupService implements StudentGroupService {
                     get(groupMarksDTO.getIdStudent()).stream().
                     map(marksStudentDTOMapper).toList();
             groupMarksDTO.setMarks(marksStudentDTOS);
+        }
+        if (crudMarksDTO.getIdTeacher() != null) {
+            List<Long> studentsId = subgroupRepository.findByIdStAndIdTeacher(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher()).getStudents().stream().map(Student::getId).toList();
+            return marksGroupBySubject.stream()
+                    .filter(groupMarksDTO -> studentsId.contains(groupMarksDTO.getIdStudent()))
+                    .toList();
         }
 
         return marksGroupBySubject;

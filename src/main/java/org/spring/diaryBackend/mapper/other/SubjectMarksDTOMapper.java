@@ -15,7 +15,8 @@ public class SubjectMarksDTOMapper implements Function<RegularMark, SubjectMarks
                 regularMark.getValue(),
                 regularMark.getIdLesson() != null ?
                 regularMark.getIdLesson().getIdSupplement().getComment() : null,
-                regularMark.getIdTypeMark().getName(),
+                regularMark.getIdTypeMark() != null ?
+                regularMark.getIdTypeMark().getName() : null,
                 regularMark.getIdLesson() != null ?
                 regularMark.getIdLesson().getDate() : null
         );

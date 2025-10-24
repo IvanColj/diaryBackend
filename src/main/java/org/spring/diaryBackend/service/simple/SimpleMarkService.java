@@ -2,19 +2,13 @@ package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.SemesterMarkDTO;
-import org.spring.diaryBackend.dto.other.ColumnMarkDTO;
-import org.spring.diaryBackend.dto.other.FilesDTO;
-import org.spring.diaryBackend.dto.other.SubjectMarksDTO;
-import org.spring.diaryBackend.dto.other.UpdateMarkDTO;
+import org.spring.diaryBackend.dto.other.*;
 import org.spring.diaryBackend.logic.BeanUtils;
 import org.spring.diaryBackend.logic.DelMarksGroup;
 import org.spring.diaryBackend.mapper.entity.SemesterMarkDTOMapper;
 import org.spring.diaryBackend.mapper.other.SubjectMarksDTOMapper;
-import org.spring.diaryBackend.model.RegularMark;
-import org.spring.diaryBackend.model.SemesterMark;
-import org.spring.diaryBackend.model.SemesterMarkId;
-import org.spring.diaryBackend.repository.MarkRepository;
-import org.spring.diaryBackend.repository.SupplementRepository;
+import org.spring.diaryBackend.model.*;
+import org.spring.diaryBackend.repository.*;
 import org.spring.diaryBackend.service.MarkService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +28,12 @@ public class SimpleMarkService implements MarkService {
     private final SubjectMarksDTOMapper subjectMarksDTOMapper;
 
     private final SupplementRepository supplementRepository;
+
+    private final SubgroupRepository subgroupRepository;
+
+    private final StudentRepository studentRepository;
+
+    private final ChangeRepository changeRepository;
 
     @Override
     public ColumnMarkDTO findColumnMarkInfo(Long idStudent, Long idSt, Long number) {
@@ -106,17 +106,37 @@ public class SimpleMarkService implements MarkService {
 
     @Override
     @Transactional
-    public void deleteMarksNumberGroupST(Long idGroup, Long idSt, Long number) {
-        markRepository.deleteMarksNumberGroupST(idGroup, idSt, number);
+    public void deleteMarksNumberGroupST(CRUDMarksDTO crudMarksDTO) {
+        if (crudMarksDTO.getIdTeacher() != null) {
+            markRepository.deleteMarksNumberSubGroupST(crudMarksDTO.getIdSt(), crudMarksDTO.getIdGroup(), crudMarksDTO.getIdTeacher(), crudMarksDTO.getNumber());
+        }
+        else {
+            markRepository.deleteMarksNumberGroupST(crudMarksDTO.getIdSt(), crudMarksDTO.getIdGroup(), crudMarksDTO.getNumber());
+        }
     }
 
     @Override
-    public void addMarksForGroup(Long idGroup, Long idSt) {
-        Long numberMark = markRepository.findLargestNumberRegularMarks(idGroup, idSt);
+    public void addMarksForGroup(CRUDMarksDTO crudMarksDTO) {
+        Long numberMark = markRepository.findLargestNumberRegularMarks(crudMarksDTO.getIdGroup(), crudMarksDTO.getIdSt());
         if (numberMark == null) {
             numberMark = 0L;
         }
-        markRepository.addRegularMarksForGroup(idGroup, idSt, numberMark + 1, null, LocalDateTime.now());
-        System.out.println(LocalDateTime.now());
+        if (crudMarksDTO.getIdTeacher() != null) {
+            Change change = new Change();
+            change.setDateTime(LocalDateTime.now());
+            change.setAction("добавление оценки");
+            change.setTeacherOrStudent(true);
+            Long idChange = changeRepository.save(change).getId();
+            Subgroup subgroup = subgroupRepository.findByIdStAndIdTeacher(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher());
+            List<Student> students = studentRepository.findByIdGroup(crudMarksDTO.getIdGroup());
+            for (Student student : students) {
+                if (subgroup.getStudents().contains(student)) {
+                    markRepository.insertMarksNumber(crudMarksDTO.getIdSt(), student.getId(), numberMark + 1, null, idChange);
+                }
+            }
+        }
+        else {
+            markRepository.addRegularMarksForGroup(crudMarksDTO.getIdGroup(), crudMarksDTO.getIdSt(), numberMark + 1, null, LocalDateTime.now());
+        }
     }
 }

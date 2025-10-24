@@ -1,6 +1,7 @@
 package org.spring.diaryBackend.service;
 
 import org.spring.diaryBackend.dto.entity.SemesterMarkDTO;
+import org.spring.diaryBackend.dto.other.CRUDMarksDTO;
 import org.spring.diaryBackend.dto.other.ColumnMarkDTO;
 import org.spring.diaryBackend.dto.other.SubjectMarksDTO;
 import org.spring.diaryBackend.dto.other.UpdateMarkDTO;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface MarkService {
     List<SemesterMarkDTO> findAllMarks();
 
-    void addMarksForGroup(Long idGroup, Long idSt);
+    void addMarksForGroup(CRUDMarksDTO crudMarksDTO);
 
     ColumnMarkDTO findColumnMarkInfo(Long idStudent, Long idSt, Long number);
 
@@ -21,7 +22,7 @@ public interface MarkService {
 
     void updateMarksNumber(UpdateMarkDTO updateMarkDTO);
 
-    void deleteMarksNumberGroupST(Long idGroup, Long idSt, Long number);
+    void deleteMarksNumberGroupST(CRUDMarksDTO crudMarksDTO);
 
     void deleteMarksGroupSt(DelMarksGroup delMarksGroup);
 

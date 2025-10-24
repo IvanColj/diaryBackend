@@ -21,6 +21,7 @@ public interface MarkRepository extends JpaRepository<SemesterMark, SemesterMark
     @Query("SELECT m.regularMarks FROM SemesterMark m JOIN m.regularMarks mm WHERE m.id.idStudent = :idStudent and m.id.idSt = :idSt")
     List<RegularMark> findByStudentSubject(@Param("idStudent") Long idStudent, @Param("idSt") Long idSt);
 
+    // TODO l.date, rm.idTypeMark.name
     @Query("""
             SELECT NEW org.spring.diaryBackend.dto.other.ColumnMarkDTO(
             l.date, rm.idTypeMark.name, s.id, s.comment, null
@@ -60,7 +61,23 @@ public interface MarkRepository extends JpaRepository<SemesterMark, SemesterMark
     @Transactional
     @Query(
             nativeQuery = true,
+            value = "CALL delete_mark_number_subgroup(:id_st, :id_group, :id_teacher, :number)"
+    )
+    void deleteMarksNumberSubGroupST(@Param("id_st") Long idSt,@Param("id_group") Long idGroup, @Param("id_teacher") Long idTeacher, @Param("number") Long number);
+
+    @Modifying
+    @Transactional
+    @Query(
+            nativeQuery = true,
             value = "CALL insert_marks_for_group(:id_group, :id_st, :number_marks, :id_lesson, :new_date_time)"
     )
     void addRegularMarksForGroup(@Param("id_group") Long idGroup, @Param("id_st") Long idSt, @Param("number_marks") Long numberMurks, @Param("id_lesson") Long idLesson, @Param("new_date_time") LocalDateTime new_date_time);
+
+    @Modifying
+    @Transactional
+    @Query(
+            nativeQuery = true,
+            value = "CALL insert_marks_for_subgroup(:id_st, :id_student, :number_marks, :lesson_id, :change_id)"
+    )
+    void insertMarksNumber(@Param("id_st") Long idSt,@Param("id_student") Long idStudent,@Param("number_marks") Long number, @Param("lesson_id") Long idLesson, @Param("change_id") Long idChange);
 }

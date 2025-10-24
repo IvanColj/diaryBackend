@@ -55,7 +55,6 @@ public class SimpleScheduleService implements ScheduleService {
             }
         }
         return scheduleDTOS;
-//        return scheduleRepository.findScheduleWeekGroup(id);
     }
 
     @Override
