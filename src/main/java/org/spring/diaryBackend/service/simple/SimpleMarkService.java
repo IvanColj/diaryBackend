@@ -78,6 +78,13 @@ public class SimpleMarkService implements MarkService {
     }
 
     @Override
+    public void updateCertification(SemesterMarkDTO semesterMarkDTO) {
+        SemesterMark semesterMark = markRepository.findByStudentAndSubject(semesterMarkDTO.getId().getIdStudent(), semesterMarkDTO.getId().getIdSt());
+        semesterMark.setCertification(semesterMarkDTO.getCertification());
+        markRepository.save(semesterMark);
+    }
+
+    @Override
     public void updateMarksNumber(UpdateMarkDTO updateMarkDTO) {
         SemesterMark semesterMarks = markRepository.findByStudentAndSubject(updateMarkDTO.getIdStudent(), updateMarkDTO.getIdSt());
         if (semesterMarks == null) {

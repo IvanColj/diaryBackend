@@ -14,4 +14,5 @@ import java.util.List;
 public class StudentMarksAllSubjectDTO {
     private STNameSubjectDTO stNameSubjectDTO;
     private List<MarksStudentDTO> marksBySt;
+    private Long certification;
 }

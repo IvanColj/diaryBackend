@@ -16,7 +16,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     )
     List<Student> findByIdGroup(@Param("id_group") Long idGroup);
 
-    @Query("SELECT m.id.idSt, m.regularMarks FROM SemesterMark m WHERE m.idStudent.id = :idStudent")
+    @Query("SELECT m.id.idSt, m.regularMarks, m.certification FROM SemesterMark m WHERE m.idStudent.id = :idStudent")
     List<Object[]> findMarksStudentBySubject(@Param("idStudent") Long idStudent);
 
     @Query(

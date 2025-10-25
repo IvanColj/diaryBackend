@@ -15,8 +15,9 @@ public class PathDTOMapper implements Function<Path, PathDTO> {
                 path.getId(),
                 path.getNameFile(),
                 path.getPathToFile(),
-                path.getAccessStudent(),
+                path.getIdStudent(),
                 path.getAccessTeacher(),
+                path.getType(),
                 path.getStaffs().stream().map(Staff::getId).toList()
         );
     }

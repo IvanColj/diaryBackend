@@ -28,9 +28,14 @@ public class PathController {
         return pathService.findAllPath();
     }
 
+    @GetMapping("type")
+    public List<PathDTO> findAllPath(@RequestParam("type") String type) {
+        return pathService.findType(type);
+    }
+
     @PutMapping("/upload")
-    public void uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-            pathService.uploadFile(file);
+    public void uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("student") Long student, @RequestParam("type") String type) throws IOException {
+            pathService.uploadFile(file, student, type);
     }
 
     @GetMapping("/id/{id}")

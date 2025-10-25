@@ -26,7 +26,7 @@ public class SemesterMark {
     private Student idStudent;
 
     @Column(name = "certification")
-    private Double certification;
+    private Long certification;
 
     @OneToMany(mappedBy = "semesterMark", fetch = FetchType.LAZY)
     private Set<RegularMark> regularMarks = new LinkedHashSet<>();

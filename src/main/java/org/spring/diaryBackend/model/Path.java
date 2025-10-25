@@ -20,14 +20,17 @@ public class Path {
     @Column(name = "path_to_file")
     private String pathToFile;
 
-    @Column(name = "access_student")
-    private Boolean accessStudent;
+    @Column(name = "id_student")
+    private Long idStudent;
 
     @Column(name = "access_teacher")
     private Boolean accessTeacher;
 
     @Column(name = "name_file")
     private String nameFile;
+
+    @Column(name = "type")
+    private String type;
 
     @ManyToMany(mappedBy = "paths")
     private Set<Supplement> supplements = new LinkedHashSet<>();

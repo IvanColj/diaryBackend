@@ -22,6 +22,8 @@ public interface MarkService {
 
     void updateMarksNumber(UpdateMarkDTO updateMarkDTO);
 
+    void updateCertification(SemesterMarkDTO semesterMarkDTO);
+
     void deleteMarksNumberGroupST(CRUDMarksDTO crudMarksDTO);
 
     void deleteMarksGroupSt(DelMarksGroup delMarksGroup);

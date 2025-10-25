@@ -2,8 +2,10 @@ package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.ScheduleDTO;
+import org.spring.diaryBackend.dto.other.ScheduleWeekGroupDTO;
 import org.spring.diaryBackend.mapper.entity.ScheduleDTOMapper;
 import org.spring.diaryBackend.model.Schedule;
+import org.spring.diaryBackend.model.Staff;
 import org.spring.diaryBackend.model.Student;
 import org.spring.diaryBackend.model.Subgroup;
 import org.spring.diaryBackend.repository.*;
@@ -11,6 +13,7 @@ import org.spring.diaryBackend.service.ScheduleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -35,12 +38,19 @@ public class SimpleScheduleService implements ScheduleService {
     }
 
     @Override
-    public List<ScheduleDTO> findScheduleWeekGroup(Long id) {
-        List<ScheduleDTO> scheduleDTOS = scheduleRepository.findScheduleWeekGroup(id);
+    public List<ScheduleWeekGroupDTO> findScheduleWeekGroup(Long id) {
+        List<ScheduleWeekGroupDTO> scheduleDTOS = scheduleRepository.findScheduleWeekGroup(id);
         Subgroup subgroup;
         Student student;
-        for (ScheduleDTO scheduleDTO : scheduleDTOS) {
+        Staff teacher;
+        Long idTeacher;
+        for (ScheduleWeekGroupDTO scheduleDTO : scheduleDTOS) {
             if (scheduleDTO.getSubgroup() != null) {
+                scheduleDTO.setIdTeacher(scheduleDTO.getSubgroup());
+                teacher = staffRepository.findById(scheduleDTO.getSubgroup()).orElse(null);
+                scheduleDTO.setLastnameTeacher(Objects.requireNonNull(teacher).getLastName());
+                scheduleDTO.setNameTeacher(Objects.requireNonNull(teacher).getName());
+                scheduleDTO.setPatronymicTeacher(Objects.requireNonNull(teacher).getPatronymic());
                 subgroup = subgroupRepository.findByIdStAndIdTeacher(scheduleDTO.getIdSt(), scheduleDTO.getSubgroup());
                 if (subgroup.getStudents() != null) {
                     student = studentRepository.findByIdGroup(scheduleDTO.getIdGroup()).get(0);
@@ -52,6 +62,15 @@ public class SimpleScheduleService implements ScheduleService {
                     }
                 }
 
+            }
+            else {
+                idTeacher = Objects.requireNonNull(sTRepository.findById(scheduleDTO.getIdSt()).orElse(null)).getTeachers().stream().toList().get(0).getId();
+                teacher = staffRepository.findById(idTeacher).orElse(null);
+                scheduleDTO.setIdTeacher(scheduleDTO.getSubgroup());
+                scheduleDTO.setIdTeacher(idTeacher);
+                scheduleDTO.setLastnameTeacher(Objects.requireNonNull(teacher).getLastName());
+                scheduleDTO.setNameTeacher(Objects.requireNonNull(teacher).getName());
+                scheduleDTO.setPatronymicTeacher(Objects.requireNonNull(teacher).getPatronymic());
             }
         }
         return scheduleDTOS;

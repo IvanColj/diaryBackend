@@ -9,9 +9,11 @@ import java.util.List;
 public interface PathService {
     List<PathDTO> findAllPath();
 
-    void uploadFile(MultipartFile file) throws IOException;
+    void uploadFile(MultipartFile file, Long student, String path) throws IOException;
 
     byte[] downloadFile(Long id);
 
     void deleteFile(Long id);
+
+    List<PathDTO> findType(String type);
 }

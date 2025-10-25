@@ -15,7 +15,8 @@ public class PathDTO {
     private Long id;
     private String nameFile;
     private String pathToFile;
-    private Boolean accessStudent;
+    private Long idStudent;
     private Boolean accessTeacher;
+    private String type;
     private List<Long> staffs;
 }

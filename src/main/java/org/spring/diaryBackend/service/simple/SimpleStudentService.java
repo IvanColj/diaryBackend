@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,6 +54,7 @@ public class SimpleStudentService implements StudentService {
         List<StudentMarksAllSubjectDTO> studentMarksAllSubjectDTOS = new ArrayList<>();
         stNameSubjectDTOS.forEach(stNameSubjectDTO -> studentMarksAllSubjectDTOS.add(new StudentMarksAllSubjectDTO(
                 stNameSubjectDTO,
+                null,
                 null
                 ))
         );
@@ -68,14 +70,24 @@ public class SimpleStudentService implements StudentService {
                         )
                 ));
 
+        Map<Long, Long> stCertification = rawMarks.stream()
+                .collect(HashMap::new,
+                        (map, row) -> map.putIfAbsent((Long) row[0], (Long) row[2]),
+                        HashMap::putAll);
+
 
         studentMarksAllSubjectDTOS.forEach(
                 studentMarksAllSubjectDTO -> {
                     studentMarksAllSubjectDTO.setMarksBySt(
                             stMarks.get(studentMarksAllSubjectDTO.getStNameSubjectDTO().getIdSt())
+
+                    );
+                    studentMarksAllSubjectDTO.setCertification(
+                            stCertification.get(studentMarksAllSubjectDTO.getStNameSubjectDTO().getIdSt())
                     );
                 }
         );
+
         return studentMarksAllSubjectDTOS;
     }
 

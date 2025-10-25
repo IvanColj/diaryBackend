@@ -53,6 +53,11 @@ public class MarkController {
         markService.updateMarksNumber(updateMarkDTO);
     }
 
+    @PatchMapping ("update/certification")
+    public void updateCertification(@RequestBody SemesterMarkDTO semesterMarkDTO) {
+        markService.updateCertification(semesterMarkDTO);
+    }
+
     @PostMapping("save/group")
     public void saveMarksGroup(@RequestBody CRUDMarksDTO crudMarksDTO) {
         markService.addMarksForGroup(crudMarksDTO);

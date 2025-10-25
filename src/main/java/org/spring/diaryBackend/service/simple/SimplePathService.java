@@ -43,6 +43,11 @@ public class SimplePathService implements PathService {
         return pathRepository.findAll().stream().map(pathDTOMapper).toList();
     }
 
+    @Override
+    public List<PathDTO> findType(String type) {
+        return pathRepository.findType(type).stream().map(pathDTOMapper).toList();
+    }
+
     @Value("${file.storage.upload-url}")
     private String uploadUrl;
 
@@ -57,7 +62,7 @@ public class SimplePathService implements PathService {
      */
     @Override
     @Transactional
-    public void uploadFile(MultipartFile file) throws IOException {
+    public void uploadFile(MultipartFile file, Long student, String type) throws IOException {
         String fileName = UUID.randomUUID().toString();
         String fileExtension = getFileExtension(file.getOriginalFilename());
         String fullFileName = fileName + fileExtension;
@@ -75,6 +80,8 @@ public class SimplePathService implements PathService {
 
         Path pathSave = new Path();
         pathSave.setPathToFile(fullFileName);
+        pathSave.setIdStudent(student);
+        pathSave.setType(type);
         pathSave.setNameFile(file.getOriginalFilename());
         pathRepository.save(pathSave);
     }

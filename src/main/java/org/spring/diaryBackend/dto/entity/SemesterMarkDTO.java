@@ -14,6 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class SemesterMarkDTO {
     private SemesterMarkId id;
-    private Double certification;
+    private Long certification;
     private List<RegularMarkDTO> regularMarks;
 }
