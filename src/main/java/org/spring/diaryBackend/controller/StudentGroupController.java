@@ -3,7 +3,6 @@ package org.spring.diaryBackend.controller;
 import lombok.RequiredArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
 import org.spring.diaryBackend.dto.entity.StudentGroupDTO;
-import org.spring.diaryBackend.dto.other.CRUDMarksDTO;
 import org.spring.diaryBackend.dto.other.GroupMarksDTO;
 import org.spring.diaryBackend.dto.other.STNameSubjectDTO;
 import org.spring.diaryBackend.service.StudentGroupService;
@@ -39,8 +38,12 @@ public class StudentGroupController {
     }
 
     @GetMapping("marks/group")
-    public List<GroupMarksDTO> findGroupMarks(@RequestBody CRUDMarksDTO crudMarksDTO) {
-        return studentGroupService.getGroupMarksBySubject(crudMarksDTO);
+    public List<GroupMarksDTO> findGroupMarks(
+            @RequestParam(value = "idGroup") Long idGroup,
+            @RequestParam(value = "idSt") Long idSt,
+            @RequestParam(value = "idTeacher", required = false) Long idTeacher) {
+
+        return studentGroupService.getGroupMarksBySubject(idGroup, idSt, idTeacher);
     }
 
     @GetMapping("subjects/group/{group}")

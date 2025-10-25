@@ -5,7 +5,6 @@ package org.spring.diaryBackend.service;
 
 import org.spring.diaryBackend.dto.entity.StudentDTO;
 import org.spring.diaryBackend.dto.entity.StudentGroupDTO;
-import org.spring.diaryBackend.dto.other.CRUDMarksDTO;
 import org.spring.diaryBackend.dto.other.GroupMarksDTO;
 import org.spring.diaryBackend.dto.other.STNameSubjectDTO;
 
@@ -15,7 +14,7 @@ import java.util.List;
 public interface StudentGroupService {
 
     List<StudentGroupDTO> findAll();
-    List<GroupMarksDTO> getGroupMarksBySubject(CRUDMarksDTO crudMarksDTO);
+    List<GroupMarksDTO> getGroupMarksBySubject(Long idGroup, Long idSt, Long idTeacher);
     List<STNameSubjectDTO> findBySubject(Long group);
     List<StudentDTO> fetchStudentsGroup(Long groupNumber) throws IOException;
 

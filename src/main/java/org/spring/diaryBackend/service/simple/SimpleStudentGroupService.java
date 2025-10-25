@@ -9,7 +9,6 @@ import org.jsoup.select.Elements;
 import org.spring.diaryBackend.dto.entity.RegularMarkDTO;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
 import org.spring.diaryBackend.dto.entity.StudentGroupDTO;
-import org.spring.diaryBackend.dto.other.CRUDMarksDTO;
 import org.spring.diaryBackend.dto.other.GroupMarksDTO;
 import org.spring.diaryBackend.dto.other.MarksStudentDTO;
 import org.spring.diaryBackend.dto.other.STNameSubjectDTO;
@@ -76,9 +75,9 @@ public class SimpleStudentGroupService implements StudentGroupService {
     }
 
     @Override
-    public List<GroupMarksDTO> getGroupMarksBySubject(CRUDMarksDTO crudMarksDTO) {
-        List<GroupMarksDTO> marksGroupBySubject = studentGroupRepository.findBaseInfo(crudMarksDTO.getIdGroup());
-        List<Object[]> rawMarks = studentGroupRepository.findAllMarksGroup(crudMarksDTO.getIdGroup(), crudMarksDTO.getIdSt());
+    public List<GroupMarksDTO> getGroupMarksBySubject(Long idGroup, Long idSt, Long idTeacher) {
+        List<GroupMarksDTO> marksGroupBySubject = studentGroupRepository.findBaseInfo(idGroup);
+        List<Object[]> rawMarks = studentGroupRepository.findAllMarksGroup(idGroup, idSt);
         Map<Long, List<RegularMarkDTO>> marksByStudentId = rawMarks.stream()
                 .collect(Collectors.groupingBy(
                         row -> (Long) row[0],
@@ -97,8 +96,8 @@ public class SimpleStudentGroupService implements StudentGroupService {
                     map(marksStudentDTOMapper).toList();
             groupMarksDTO.setMarks(marksStudentDTOS);
         }
-        if (crudMarksDTO.getIdTeacher() != null) {
-            List<Long> studentsId = subgroupRepository.findByIdStAndIdTeacher(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher()).getStudents().stream().map(Student::getId).toList();
+        if (idTeacher != null) {
+            List<Long> studentsId = subgroupRepository.findByIdStAndIdTeacher(idSt, idTeacher).getStudents().stream().map(Student::getId).toList();
             return marksGroupBySubject.stream()
                     .filter(groupMarksDTO -> studentsId.contains(groupMarksDTO.getIdStudent()))
                     .toList();
