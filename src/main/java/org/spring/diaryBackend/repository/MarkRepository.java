@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface MarkRepository extends JpaRepository<SemesterMark, SemesterMarkId> {
 
-    @Query("SELECT m FROM SemesterMark m JOIN m.regularMarks mm WHERE m.id.idStudent = :idStudent and m.id.idSt = :idSt")
+    @Query("SELECT m FROM SemesterMark m WHERE m.id.idStudent = :idStudent and m.id.idSt = :idSt")
     SemesterMark findByStudentAndSubject(@Param("idStudent") Long idStudent, @Param("idSt") Long idSt);
 
     @Query("SELECT m.regularMarks FROM SemesterMark m JOIN m.regularMarks mm WHERE m.id.idStudent = :idStudent and m.id.idSt = :idSt")
@@ -25,7 +25,7 @@ public interface MarkRepository extends JpaRepository<SemesterMark, SemesterMark
     @Query("""
             SELECT NEW org.spring.diaryBackend.dto.other.ColumnMarkDTO(
             l.date, rm.idTypeMark.name, s.id, s.comment, null
-            ) FROM RegularMark rm JOIN Lesson l ON rm.idLesson.id = l.id JOIN Supplement s ON l.idSupplement.id = s.id
+            ) FROM RegularMark rm LEFT JOIN Lesson l ON rm.idLesson.id = l.id LEFT JOIN Supplement s ON l.idSupplement.id = s.id
             WHERE rm.id.semesterMarkIdSt = :idSt AND rm.id.semesterMarkIdStudent = :idStudent AND rm.id.number = :number
 """)
     ColumnMarkDTO findColumnMarkInfo(@Param("idStudent") Long idStudent, @Param("idSt") Long idSt, @Param("number") Long number);

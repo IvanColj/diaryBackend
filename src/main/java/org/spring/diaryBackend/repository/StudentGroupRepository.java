@@ -20,10 +20,11 @@ public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long
     """
             SELECT m.id.idStudent, rm
             FROM SemesterMark m
-            JOIN m.regularMarks rm
+            LEFT JOIN m.regularMarks rm
+            LEFT JOIN rm.idTypeMark tm ON rm.idTypeMark.id = tm.id
             JOIN Student s ON m.id.idStudent = s.id
             WHERE m.id.idSt = :idSt
-            AND s.idGroup.id = :idGroup ORDER BY rm.id.number
+            AND s.idGroup.id = :idGroup ORDER BY rm.id.number, tm.weight
             """)
     List<Object[]> findAllMarksGroup(@Param("idGroup") Long idGroup,
                                      @Param("idSt") Long idSt);
