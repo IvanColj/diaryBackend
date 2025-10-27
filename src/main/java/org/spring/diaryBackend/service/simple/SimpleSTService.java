@@ -133,7 +133,7 @@ public class SimpleSTService implements STService {
 
     @Override
     public void deleteSTTeacher(Long idSt, Long idTeacher) {
-        stRepository.deleteSTGroup(idSt, idTeacher);
+        stRepository.deleteSTTeacher(idSt, idTeacher);
     }
 
     @Override

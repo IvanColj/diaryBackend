@@ -25,6 +25,11 @@ public class ScheduleController {
         return scheduleService.findScheduleWeekGroup(id);
     }
 
+    @GetMapping("teacher/{id}")
+    public List<ScheduleWeekGroupDTO> getSchedule(@PathVariable Long id) {
+        return scheduleService.findBySchedule(id);
+    }
+
     @PostMapping("save")
     public void save(@RequestBody ScheduleDTO scheduleDTO) {
         scheduleService.save(scheduleDTO);

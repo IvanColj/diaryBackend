@@ -20,4 +20,31 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
                        ) FROM Schedule s WHERE s.idGroup.id = :idGroup
             """)
     List<ScheduleWeekGroupDTO> findScheduleWeekGroup(@Param("idGroup") Long idGroup);
+
+    @Query(
+            nativeQuery = true,
+            value = "SELECT s.id, s.day_week, s.type_week, s.num_pair, " +
+                    "s.room, s.id_st, st.id_subject, s3.subject_name, " +
+                    "ts.id_teacher, s2.last_name, s2.name, s2.patronymic, " +
+                    "s.id_group, sg.number_group, s.subgroup, s.replacement " +
+                    "FROM schedule s JOIN subject_teacher st ON st.id = s.id_st " +
+                    "JOIN teachers_st ts ON st.id = ts.id_st " +
+                    "JOIN staff s2 ON s2.id = ts.id_teacher " +
+                    "JOIN subject s3 ON st.id_subject = s3.id " +
+                    "JOIN student_group sg ON s.id_group = sg.id " +
+                    "WHERE s.subgroup = :id_teacher AND ts.id_teacher = :id_teacher " +
+                    "UNION\n" +
+                    "SELECT s.id, s.day_week, s.type_week, s.num_pair, " +
+                    "s.room, s.id_st, st.id_subject, s3.subject_name, " +
+                    "ts.id_teacher, s2.last_name, s2.name, s2.patronymic, " +
+                    "s.id_group, sg.number_group, s.subgroup, s.replacement " +
+                    "FROM schedule s JOIN subject_teacher st ON st.id = s.id_st " +
+                    "JOIN teachers_st ts ON st.id = ts.id_st " +
+                    "JOIN staff s2 ON s2.id = ts.id_teacher " +
+                    "JOIN subject s3 ON st.id_subject = s3.id " +
+                    "JOIN student_group sg ON s.id_group = sg.id " +
+                    "WHERE st.id NOT IN " +
+                    "(SELECT sub.id_st from subgroup sub where sub.id_st = st.id) " +
+                    "and ts.id_teacher = :id_teacher")
+    List<Object[]> findBySchedule(@Param("id_teacher") Long idTeacher);
 }

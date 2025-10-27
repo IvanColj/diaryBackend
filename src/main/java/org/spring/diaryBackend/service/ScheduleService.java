@@ -10,5 +10,7 @@ public interface ScheduleService {
 
     List<ScheduleWeekGroupDTO> findScheduleWeekGroup(Long id);
 
+    List<ScheduleWeekGroupDTO> findBySchedule(Long idTeacher);
+
     void save(ScheduleDTO scheduleDTO);
 }
