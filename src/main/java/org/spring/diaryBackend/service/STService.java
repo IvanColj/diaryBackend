@@ -23,7 +23,11 @@ public interface STService {
 
     void addingSTGroup(Long idSt, Long idGroup);
 
+    void addingTeacher(Long idSt, Long idTeacher);
+
     void deleteSTGroup(Long idSt, Long idGroup);
+
+    void deleteSTTeacher(Long idSt, Long idTeacher);
 
     void deleteSubjectTeacher(Long idTeacher);
 }

@@ -51,6 +51,11 @@ public class STController {
         service.addingSTGroup(id, group);
     }
 
+    @PostMapping("add/id/{id}/teacher/{teacher}")
+    public void addTeacher(@PathVariable Long id, @PathVariable Long teacher) {
+        service.addingTeacher(id, teacher);
+    }
+
     @PatchMapping("update")
     public SubjectTeacherDTO updateSubjectTeacher(@RequestBody SubjectTeacherDTO subjectTeacher) {
         return service.updateSubjectTeacher(subjectTeacher);
@@ -64,5 +69,10 @@ public class STController {
     @DeleteMapping("delete/id/{id}/group/{group}")
     public void deleteGroup(@PathVariable Long id, @PathVariable Long group) {
         service.deleteSTGroup(id, group);
+    }
+
+    @DeleteMapping("delete/id/{id}/teacher/{teacher}")
+    public void deleteTeacher(@PathVariable Long id, @PathVariable Long teacher) {
+        service.deleteSTTeacher(id, teacher);
     }
 }

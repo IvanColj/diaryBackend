@@ -107,13 +107,33 @@ public class SimpleSTService implements STService {
     }
 
     @Override
-    public void addingSTGroup(Long id_st, Long group) {
-        stRepository.addingSTGroup(id_st, group);
+    public void addingSTGroup(Long id_st, Long id_group) {
+        stRepository.addingSTGroup(id_st, id_group);
+    }
+
+    @Override
+    public void addingTeacher(Long id_st, Long id_teacher) {
+        SubjectTeacher subjectTeacher = stRepository.findById(id_st).orElse(null);
+        if (subjectTeacher != null && subjectTeacher.getGroups() != null) {
+            subjectTeacher.getGroups().forEach(studentGroup ->
+                    stRepository.addingTwoGroupToSubgroup(
+                            id_st,
+                            studentGroup.getId(),
+                            subjectTeacher.getTeachers().stream().toList().get(0).getId(),
+                            id_teacher)
+            );
+        }
+        stRepository.addingTeacher(id_st, id_teacher);
     }
 
     @Override
     public void deleteSTGroup(Long idSt, Long idGroup) {
         stRepository.deleteSTGroup(idSt, idGroup);
+    }
+
+    @Override
+    public void deleteSTTeacher(Long idSt, Long idTeacher) {
+        stRepository.deleteSTGroup(idSt, idTeacher);
     }
 
     @Override

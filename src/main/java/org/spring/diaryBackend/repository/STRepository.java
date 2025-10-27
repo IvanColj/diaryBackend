@@ -54,6 +54,29 @@ public interface STRepository extends JpaRepository<SubjectTeacher, Long> {
     @Transactional
     @Query(
             nativeQuery = true,
+            value = "INSERT INTO teachers_st (id_st, id_teacher) VALUES (:id_st, :id_teacher)"
+    )
+    void addingTeacher(@Param("id_st") Long idSt, @Param("id_teacher") Long idTeacher);
+
+    @Modifying
+    @Transactional
+    @Query(
+            nativeQuery = true,
+            value = "CALL insert_new_teacher_in_subgroup(:id_st, :id_group, :id_teacher_old, :id_teacher_new)"
+    )
+    void addingTwoGroupToSubgroup(@Param("id_st") Long idSt, @Param("id_group") Long idGroup, @Param("id_teacher_old") Long idTeacherOld, @Param("id_teacher_new") Long idTeacherNew);
+
+    @Modifying
+    @Transactional
+    @Query(
+            nativeQuery = true,
             value = "DELETE FROM subject_teacher_groups WHERE id_st = :id_st AND id_group = :id_group")
     void deleteSTGroup(@Param("id_st") Long idSt, @Param("id_group") Long idGroup);
+
+    @Modifying
+    @Transactional
+    @Query(
+            nativeQuery = true,
+            value = "DELETE FROM teachers_st WHERE id_st = :id_st AND id_teacher = :id_teacher")
+    void deleteSTTeacher(@Param("id_st") Long idSt, @Param("id_teacher") Long idTeacher);
 }

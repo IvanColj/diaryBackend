@@ -21,7 +21,6 @@ public interface MarkRepository extends JpaRepository<SemesterMark, SemesterMark
     @Query("SELECT m.regularMarks FROM SemesterMark m JOIN m.regularMarks mm WHERE m.id.idStudent = :idStudent and m.id.idSt = :idSt")
     List<RegularMark> findByStudentSubject(@Param("idStudent") Long idStudent, @Param("idSt") Long idSt);
 
-    // TODO l.date, rm.idTypeMark.name
     @Query("""
             SELECT NEW org.spring.diaryBackend.dto.other.ColumnMarkDTO(
             l.date, rm.idTypeMark.name, s.id, s.comment, null
