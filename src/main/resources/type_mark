@@ -22,5 +22,3 @@ $$
         CALL new_type_mark_st(st_id);
     END
 $$;
-
-INSERT INTO staff_job_position (id_staff, id_staff_position) VALUES (1, 1);

@@ -136,6 +136,15 @@ public class SimpleStudentService implements StudentService {
         if (studentNew.getPatronymic() != null) {
             student.setPatronymic(studentNew.getPatronymic());
         }
+        if (studentNew.getLastNameGenitive() != null) {
+            student.setLastNameGenitive(studentNew.getLastNameGenitive());
+        }
+        if (studentNew.getNameGenitive() != null) {
+            student.setNameGenitive(studentNew.getNameGenitive());
+        }
+        if (studentNew.getPatronymicGenitive() != null) {
+            student.setPatronymicGenitive(studentNew.getPatronymicGenitive());
+        }
         if (studentNew.getIdGroup() != null) {
             student.setIdGroup(studentGroupRepository.findStudentGroupByIdGroup(studentNew.getIdGroup()));
         }

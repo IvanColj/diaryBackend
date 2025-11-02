@@ -16,6 +16,9 @@ public class StudentDTO {
     private String lastName;
     private String name;
     private String patronymic;
+    private String lastNameGenitive;
+    private String nameGenitive;
+    private String patronymicGenitive;
     private Long idGroup;
     private String login;
     private String password;

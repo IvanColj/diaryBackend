@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StaffDTO;
 import org.spring.diaryBackend.service.StaffService;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 public class saveStaff implements CommandLineRunner {
-    private final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
     private final StaffService staffService;
 
     @Override
@@ -86,6 +84,7 @@ public class saveStaff implements CommandLineRunner {
                         new StaffDTO(null, "Кузина", "Анна", "Сергеевна", "KuzinaAS", null, null, null),
                         new StaffDTO(null, "Кузнецова", "Татьяна", "Федоровна", "KuznecovaTF", null, null, null),
                         new StaffDTO(null, "Лебедева", "Галина", "Вячеславовна", "LebedevaGV", null, null, null),
+                        new StaffDTO(null, "Лазич", "Юлия", "Вячеславовна", "LazichYV", null, null, null),
                         new StaffDTO(null, "Ледащева", "Татьяна", "Алексеевна", "LadashevaTA", null, null, null),
                         new StaffDTO(null, "Лесков", "Роман", "Афанасьевич", "LeskovRA", null, null, null),
                         new StaffDTO(null, "Лукашик", "Екатерина", "Александровна", "LukashikEA", null, null, null),
@@ -122,7 +121,7 @@ public class saveStaff implements CommandLineRunner {
                         new StaffDTO(null, "Фролова", "Таисия", "Александровна", "FrolovaTA", null, null, null),
                         new StaffDTO(null, "Хаванов", "Александр", "Юрьевич", "HavanovAY", null, null, null),
                         new StaffDTO(null, "Химмельрайх", "Анна", "Викторовна", "HimmelrahAV", null, null, null),
-                        new StaffDTO(null, "Цымбалюк", "Лариса", "Николаевна", "CymbalyukLN", null, null, null),
+                        new StaffDTO(null, "Цымбалюк", "Лариса", "Николаевна", "TsymbalyukLN", null, null, null),
                         new StaffDTO(null, "Шаркова", "Мария", "Александровна", "SharkovaMA", null, null, null),
                         new StaffDTO(null, "Шатерникова", "Ольга", "Олеговна", "ShaternikovaOO", null, null, null),
                         new StaffDTO(null, "Ширина", "Тамара", "Сергеевна", "ShirinaTS", null, null, null),
@@ -135,10 +134,9 @@ public class saveStaff implements CommandLineRunner {
         for (StaffDTO staffDTO : staffDTOS) {
             String password = GenerateSecurePassword.generatePassword(10);
             passwords.add(password);
-            staffDTO.setPassword(encoder.encode(password));
+            staffDTO.setPassword(password);
             staffService.saveStaff(staffDTO);
         }
-
         for (String password : passwords) {
             System.out.println(password);
         }

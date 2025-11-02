@@ -46,7 +46,7 @@ public interface STRepository extends JpaRepository<SubjectTeacher, Long> {
     @Transactional
     @Query(
             nativeQuery = true,
-            value = "INSERT INTO subject_teacher_groups (id_st, id_group) VALUES (:id_st, :id_group)"
+            value = "INSERT INTO groups_st (id_st, id_group) VALUES (:id_st, :id_group)"
     )
     void addingSTGroup(@Param("id_st") Long idSt, @Param("id_group") Long idGroup);
 
@@ -70,7 +70,7 @@ public interface STRepository extends JpaRepository<SubjectTeacher, Long> {
     @Transactional
     @Query(
             nativeQuery = true,
-            value = "DELETE FROM subject_teacher_groups WHERE id_st = :id_st AND id_group = :id_group")
+            value = "DELETE FROM groups_st WHERE id_st = :id_st AND id_group = :id_group")
     void deleteSTGroup(@Param("id_st") Long idSt, @Param("id_group") Long idGroup);
 
     @Modifying

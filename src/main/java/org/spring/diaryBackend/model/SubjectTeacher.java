@@ -28,7 +28,7 @@ public class SubjectTeacher {
     private Set<Staff> teachers = new LinkedHashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "subject_teacher_groups",
+    @JoinTable(name = "groups_st",
             joinColumns = @JoinColumn(name = "id_st"),
             inverseJoinColumns = @JoinColumn(name = "id_group"))
     private Set<StudentGroup> groups = new LinkedHashSet<>();

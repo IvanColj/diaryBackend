@@ -31,6 +31,15 @@ public class Student {
     @Column(name = "patronymic")
     private String patronymic;
 
+    @Column(name = "last_name_genitive")
+    private String lastNameGenitive;
+
+    @Column(name = "name_genitive")
+    private String nameGenitive;
+
+    @Column(name = "patronymic_genitive")
+    private String patronymicGenitive;
+
     @Column(name = "login")
     private String login;
 
