@@ -54,10 +54,10 @@ public class SimpleSTService implements STService {
         Map<List<Object>, STGroupsDTO> map = new LinkedHashMap<>();
 
         for (STGroupDTO item : stGroup) {
-            List<Object> key = Arrays.asList(item.getIdTeacher(), item.getIdSubject(), item.getSubjectName());
+            List<Object> key = Arrays.asList(item.getIdSt(), item.getSubjectName());
             STGroupsDTO dto = map.get(key);
             if (dto == null) {
-                dto = new STGroupsDTO(item.getIdTeacher(), item.getIdSubject(), item.getSubjectName(), new ArrayList<>());
+                dto = new STGroupsDTO(item.getIdSt(), item.getSubjectName(), new ArrayList<>());
                 map.put(key, dto);
             }
             dto.getIdGroups().add(item.getGroup());

@@ -28,7 +28,7 @@ public class SimpleTypeMarkService implements TypeMarkService {
 
     @Override
     public List<TypeMarkDTO> findBySt(Long idSt) {
-        return typeMarkRepository.findBySt(idSt);
+        return typeMarkRepository.findBySt(idSt).stream().map(typeMarkDTOMapper).toList();
     }
 
     @Override
@@ -36,7 +36,7 @@ public class SimpleTypeMarkService implements TypeMarkService {
         TypeMark typeMark = new TypeMark();
         typeMark.setName(typeMarkDTO.getName());
         typeMark.setWeight(typeMarkDTO.getWeight());
-        typeMark.setIdSt(sTRepository.getReferenceById(typeMarkDTO.getId()));
+        typeMark.setIdSt(sTRepository.getReferenceById(typeMarkDTO.getIdSt()));
         typeMarkRepository.save(typeMark);
     }
 

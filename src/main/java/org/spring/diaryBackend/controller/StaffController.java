@@ -3,6 +3,8 @@ package org.spring.diaryBackend.controller;
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StaffDTO;
 import org.spring.diaryBackend.dto.entity.SubjectDTO;
+import org.spring.diaryBackend.dto.other.SubjectCourseDTO;
+import org.spring.diaryBackend.dto.other.SubjectGroupDTO;
 import org.spring.diaryBackend.service.StaffService;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +35,16 @@ public class StaffController {
     @GetMapping("subjects/{id}")
     public List<SubjectDTO> findByAllSubject(@PathVariable Long id) {
         return staffService.findByAllSubject(id);
+    }
+
+    @GetMapping("subjects/course/{id}")
+    public List<SubjectCourseDTO> findBySubjectCourse(@PathVariable Long id) {
+        return staffService.findBySubjectCourse(id);
+    }
+
+    @GetMapping("subjects/group/{id}")
+    public List<SubjectGroupDTO> findBySubjectGroup(@PathVariable Long id) {
+        return staffService.findByGroup(id);
     }
 
     @PostMapping("addJob/id/{idStaff}/job/{idJob}")

@@ -9,8 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class STGroupDTO {
-    private Long idSt;
+public class SubjectGroupDTO {
+    private Long numberGroup;
+    private String specialty;
     private String subjectName;
-    private Long group;
+    private Long countStudent;
 }

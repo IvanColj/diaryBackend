@@ -29,12 +29,12 @@ public class TypeMarkController {
         typeMarkService.save(typeMarkDTO);
     }
 
-    @PostMapping("update")
+    @PatchMapping("update")
     public void update(@RequestBody TypeMarkDTO typeMarkDTO) {
         typeMarkService.update(typeMarkDTO);
     }
 
-    @GetMapping("id/{id}")
+    @DeleteMapping("id/{id}")
     public void delete(@PathVariable("id") Long id) {
         typeMarkService.delete(id);
     }

@@ -12,8 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class STGroupsDTO {
-    private Long idTeacher;
-    private Long idSubject;
+    private Long idSt;
     private String subjectName;
     private List<Long> idGroups;
 }

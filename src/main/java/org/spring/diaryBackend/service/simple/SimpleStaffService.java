@@ -3,9 +3,12 @@ package org.spring.diaryBackend.service.simple;
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StaffDTO;
 import org.spring.diaryBackend.dto.entity.SubjectDTO;
+import org.spring.diaryBackend.dto.other.SubjectCourseDTO;
+import org.spring.diaryBackend.dto.other.SubjectGroupDTO;
 import org.spring.diaryBackend.mapper.entity.StaffDTOMapper;
 import org.spring.diaryBackend.mapper.entity.SubjectDTOMapper;
 import org.spring.diaryBackend.model.Staff;
+import org.spring.diaryBackend.repository.StaffPositionRepository;
 import org.spring.diaryBackend.repository.StaffRepository;
 import org.spring.diaryBackend.service.StaffService;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
@@ -23,6 +26,8 @@ public class SimpleStaffService implements StaffService {
 
     private final SubjectDTOMapper subjectDTOMapper;
 
+    private final StaffPositionRepository staffPositionRepository;
+
     @Override
     public List<StaffDTO> findAllStaff() {
         return staffRepository.findAll().stream().map(staffDTOMapper).toList();
@@ -31,6 +36,16 @@ public class SimpleStaffService implements StaffService {
     @Override
     public List<SubjectDTO> findByAllSubject(Long id) {
         return staffRepository.findByAllSubject(id).stream().map(subjectDTOMapper).toList();
+    }
+
+    @Override
+    public List<SubjectCourseDTO> findBySubjectCourse(Long idTeacher) {
+        return staffRepository.findBySubjectCourse(idTeacher);
+    }
+
+    @Override
+    public List<SubjectGroupDTO> findByGroup(Long idTeacher) {
+        return staffRepository.findByGroup(idTeacher);
     }
 
     @Override

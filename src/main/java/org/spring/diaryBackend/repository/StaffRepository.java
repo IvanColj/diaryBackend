@@ -1,5 +1,7 @@
 package org.spring.diaryBackend.repository;
 
+import org.spring.diaryBackend.dto.other.SubjectCourseDTO;
+import org.spring.diaryBackend.dto.other.SubjectGroupDTO;
 import org.spring.diaryBackend.model.Staff;
 import org.spring.diaryBackend.model.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -40,4 +42,47 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
     void deleteStaffJob(@Param("id_staff") Long idStaff, @Param("id_job") Long idJob);
 
     Staff findByLogin(String login);
+
+    @Query(
+            value = """
+                    SELECT DISTINCT NEW org.spring.diaryBackend.dto.other.SubjectCourseDTO(
+                    st.id,
+                    s.subjectName,
+                    g.course,
+                    COUNT(g.id)
+                    )
+                    FROM SubjectTeacher st
+                        JOIN st.teachers t
+                        JOIN st.idSubject s
+                        JOIN st.groups g
+                    WHERE t.id = :idTeacher
+                    GROUP BY
+                    st.id,
+                    s.subjectName,
+                    g.course
+                    """
+    )
+    List<SubjectCourseDTO> findBySubjectCourse(@Param("idTeacher") Long idTeacher);
+
+    @Query(
+            value = """
+                    SELECT DISTINCT NEW org.spring.diaryBackend.dto.other.SubjectGroupDTO(
+                    g.numberGroup,
+                    g.specialty,
+                    s.subjectName,
+                    COUNT(ss.id)
+                    )
+                    FROM SubjectTeacher st
+                        JOIN st.teachers t
+                        JOIN st.idSubject s
+                        JOIN st.groups g
+                        JOIN g.students ss
+                    WHERE t.id = :idTeacher
+                    GROUP BY
+                    g.numberGroup,
+                    g.specialty,
+                    s.subjectName
+                    """
+    )
+    List<SubjectGroupDTO> findByGroup(@Param("idTeacher") Long idTeacher);
 }

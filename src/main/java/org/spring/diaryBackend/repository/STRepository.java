@@ -20,8 +20,7 @@ public interface STRepository extends JpaRepository<SubjectTeacher, Long> {
 
     @Query("""
             SELECT DISTINCT NEW org.spring.diaryBackend.dto.other.STGroupDTO(
-                t.id,
-                s.id,
+                st.id,
                 s.subjectName,
                 g.id
             )
