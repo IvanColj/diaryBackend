@@ -65,13 +65,15 @@ public class SimpleScheduleService implements ScheduleService {
 
             }
             else {
-                idTeacher = Objects.requireNonNull(sTRepository.findById(scheduleDTO.getIdSt()).orElse(null)).getTeachers().stream().toList().get(0).getId();
-                teacher = staffRepository.findById(idTeacher).orElse(null);
-                scheduleDTO.setIdTeacher(scheduleDTO.getSubgroup());
-                scheduleDTO.setIdTeacher(idTeacher);
-                scheduleDTO.setLastnameTeacher(Objects.requireNonNull(teacher).getLastName());
-                scheduleDTO.setNameTeacher(Objects.requireNonNull(teacher).getName());
-                scheduleDTO.setPatronymicTeacher(Objects.requireNonNull(teacher).getPatronymic());
+                if (sTRepository.findById(scheduleDTO.getIdSt()).orElse(null).getTeachers().size() != 0) {
+                    idTeacher = sTRepository.findById(scheduleDTO.getIdSt()).orElse(null).getTeachers().stream().toList().get(0).getId();
+                    teacher = staffRepository.findById(idTeacher).orElse(null);
+                    scheduleDTO.setIdTeacher(scheduleDTO.getSubgroup());
+                    scheduleDTO.setIdTeacher(idTeacher);
+                    scheduleDTO.setLastnameTeacher(Objects.requireNonNull(teacher).getLastName());
+                    scheduleDTO.setNameTeacher(Objects.requireNonNull(teacher).getName());
+                    scheduleDTO.setPatronymicTeacher(Objects.requireNonNull(teacher).getPatronymic());
+                }
             }
         }
         return scheduleDTOS;

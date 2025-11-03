@@ -70,10 +70,14 @@ public class SimpleSTService implements STService {
     public SubjectTeacherDTO saveSubjectTeacher(SubjectTeacherDTO subjectTeacherDTO) {
         SubjectTeacher subjectTeacher = new SubjectTeacher();
         subjectTeacher.setIdSubject(subjectRepository.findById(subjectTeacherDTO.getIdSubject()).orElse(null));
-        subjectTeacher.setTeachers(subjectTeacherDTO.getTeachers().stream().map(
-                idTeacher -> staffRepository.findById(idTeacher).orElse(null)
-        ).collect(Collectors.toSet()));
-        if (subjectTeacher.getIdSubject() == null || subjectTeacher.getTeachers() == null) {
+        if (subjectTeacherDTO.getTeachers() != null) {
+            subjectTeacher.setTeachers(subjectTeacherDTO.getTeachers().stream().map(
+                    idTeacher -> staffRepository.findById(idTeacher).orElse(null)
+            ).collect(Collectors.toSet()));
+        }
+        if (subjectTeacher.getTeachers() == null) {
+            return  stdtoMapper.apply(stRepository.save(subjectTeacher));
+        } else if (subjectTeacher.getIdSubject() == null) {
             return new SubjectTeacherDTO();
         } else {
             return stdtoMapper.apply(stRepository.save(subjectTeacher));
