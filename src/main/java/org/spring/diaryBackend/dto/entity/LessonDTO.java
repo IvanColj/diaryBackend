@@ -5,13 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TypeMarkDTO {
+public class LessonDTO {
     private Long id;
-    private Long idSt;
-    private String name;
-    private Long weight;
+    private Long idSchedule;
+    private Long numberWeek;
+    private Long idSupplement;
+    private LocalDate date;
 }

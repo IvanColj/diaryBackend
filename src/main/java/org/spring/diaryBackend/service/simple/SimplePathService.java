@@ -57,12 +57,9 @@ public class SimplePathService implements PathService {
     @Value("${file.storage.delete-url}")
     private String deleteUrl;
 
-    /**
-     * Загружает файл на сервер через PUT запрос
-     */
     @Override
     @Transactional
-    public void uploadFile(MultipartFile file, Long student, String type) throws IOException {
+    public Path uploadFile(MultipartFile file, Long student, String type) throws IOException {
         String fileName = UUID.randomUUID().toString();
         String fileExtension = getFileExtension(file.getOriginalFilename());
         String fullFileName = fileName + fileExtension;
@@ -83,7 +80,7 @@ public class SimplePathService implements PathService {
         pathSave.setIdStudent(student);
         pathSave.setType(type);
         pathSave.setNameFile(file.getOriginalFilename());
-        pathRepository.save(pathSave);
+        return pathRepository.save(pathSave);
     }
 
     private String getFileExtension(String originalFileName) {
@@ -99,9 +96,6 @@ public class SimplePathService implements PathService {
         return headers;
     }
 
-    /**
-     * Скачивает файл с сервера
-     */
     @Override
     public byte[] downloadFile(Long id) {
         Path pathGet = pathRepository.findById(id).orElseThrow();
@@ -119,9 +113,6 @@ public class SimplePathService implements PathService {
         return response.getBody();
     }
 
-    /**
-     * Удаляет файл с сервера
-     */
     @Override
     @Transactional
     @Modifying

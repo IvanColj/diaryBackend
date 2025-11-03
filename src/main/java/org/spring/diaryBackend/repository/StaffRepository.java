@@ -38,4 +38,6 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
             value = "DELETE FROM staff_job_position WHERE id_staff = :id_staff AND id_staff_position = :id_job"
     )
     void deleteStaffJob(@Param("id_staff") Long idStaff, @Param("id_job") Long idJob);
+
+    Staff findByLogin(String login);
 }

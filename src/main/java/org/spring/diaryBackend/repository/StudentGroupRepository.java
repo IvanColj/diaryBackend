@@ -43,7 +43,7 @@ public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long
     @Modifying
     @Query(
             nativeQuery = true,
-            value = "DELETE FROM student_group WHERE id_group = :id_group"
+            value = "DELETE FROM student_group WHERE id = :id_group"
     )
     void deleteIdGroup(@Param("id_group") Long idGroup);
 

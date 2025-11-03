@@ -157,7 +157,7 @@ public class SimpleStudentGroupService implements StudentGroupService {
             }
         }
 
-        if (findStudentGroupByNumberGroupAndAdmissionYear(group.getNumberGroup(), group.getAdmissionYear()) == null) {
+        if (findStudentGroupByNumberGroupAndAdmissionYear(group.getNumberGroup(), group.getAdmissionYear()).getId() == null) {
             studentGroupRepository.save(group);
             group.setId(studentGroupRepository.findStudentGroupByNumberGroupAndAdmissionYear(
                     group.getNumberGroup(),

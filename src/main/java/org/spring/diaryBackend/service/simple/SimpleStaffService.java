@@ -76,7 +76,13 @@ public class SimpleStaffService implements StaffService {
             staffUpdate.setLastName(staffNew.getLastName());
         }
         if (staffNew.getLogin() != null) {
-            staffUpdate.setLogin(staffNew.getLogin());
+            Staff staffLogin = staffRepository.findByLogin(staffNew.getLogin());
+            if (staffLogin.getId() == null) {
+                staffUpdate.setLogin(staffNew.getLogin());
+            }
+            else {
+                return new StaffDTO(null, null, null, null, "Такой логин уже есть, придумайте другой", null, null, null);
+            }
         }
         if (staffNew.getPassword() != null) {
             staffUpdate.setPassword(encoder.encode(staffNew.getPassword()));

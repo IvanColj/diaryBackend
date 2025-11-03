@@ -11,6 +11,8 @@ public class TypeMarkDTOMapper implements Function<TypeMark, TypeMarkDTO> {
     @Override
     public TypeMarkDTO apply(TypeMark typeMark) {
         return new TypeMarkDTO(
+                typeMark.getId(),
+                typeMark.getIdSt() != null ? typeMark.getIdSt().getId() : null,
                 typeMark.getName(),
                 typeMark.getWeight()
         );
