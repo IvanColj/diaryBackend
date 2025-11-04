@@ -10,9 +10,14 @@ import java.util.function.Function;
 public class MarksStudentDTOMapper implements Function<RegularMarkDTO, MarksStudentDTO> {
     @Override
     public MarksStudentDTO apply(RegularMarkDTO regularMarkDTO) {
-        return new MarksStudentDTO(
-                regularMarkDTO.getId() != null ? regularMarkDTO.getId().getNumber() : null,
-                regularMarkDTO.getValue()
-        );
+        if (regularMarkDTO.getId() != null) {
+            return new MarksStudentDTO(
+                    regularMarkDTO.getId().getNumber(),
+                    regularMarkDTO.getValue()
+            );
+        }
+        else {
+            return null;
+        }
     }
 }
