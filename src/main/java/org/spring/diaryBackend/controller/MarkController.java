@@ -2,10 +2,7 @@ package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.SemesterMarkDTO;
-import org.spring.diaryBackend.dto.other.CRUDMarksDTO;
-import org.spring.diaryBackend.dto.other.ColumnMarkDTO;
-import org.spring.diaryBackend.dto.other.SubjectMarksDTO;
-import org.spring.diaryBackend.dto.other.UpdateMarkDTO;
+import org.spring.diaryBackend.dto.other.*;
 import org.spring.diaryBackend.service.MarkService;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,9 +25,14 @@ public class MarkController {
         return markService.findByStudentAndSubject(id_student, id_st);
     }
 
-    @GetMapping("info/student/{idStudent}/st/{idSt}/number/{number}")
+    @GetMapping("info/column/student/{idStudent}/st/{idSt}/number/{number}")
     public ColumnMarkDTO findColumnMarkInfo(@PathVariable Long idStudent, @PathVariable Long idSt, @PathVariable Long number) {
         return markService.findColumnMarkInfo(idStudent, idSt, number);
+    }
+
+    @GetMapping("info/mark/student/{idStudent}/st/{idSt}/number/{number}")
+    public MarkInfoDTO findMarkInfo(@PathVariable Long idStudent, @PathVariable Long idSt, @PathVariable Long number) {
+        return markService.findMarkInfo(idStudent, idSt, number);
     }
 
 //    @DeleteMapping("delete/group")

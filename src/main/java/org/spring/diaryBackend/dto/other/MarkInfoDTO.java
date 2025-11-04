@@ -12,15 +12,18 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ColumnMarkDTO {
+public class MarkInfoDTO {
+    private Double value;
     private LocalDate dateLesson;
     private String typeMark;
+    private String lastNameTeacher;
+    private String nameTeacher;
+    private String patronymicTeacher;
     private Long numberWeek;
     private String dayWeek;
     private String typeWeek;
     private Long numPair;
     private Boolean replacement;
-    private Long idSupplement;
-    private String comment;
-    private List<FilesDTO> files;
+    private List<ChangeInfoDTO> changes;
 }
+

@@ -9,10 +9,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CRUDMarksDTO {
-    private Long idGroup;
-    private Long idSt;
-    private Long idTeacher;
-    private Long idLesson;
-    private Long number;
+public class LessonInfoDTO {
+    private Long id;
+    private Long numberWeek;
+    private String dayWeek;
+    private String typeWeek;
+    private Long numPair;
+    private Boolean replacement;
 }

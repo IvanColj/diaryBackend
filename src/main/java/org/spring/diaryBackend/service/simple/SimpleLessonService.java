@@ -3,6 +3,7 @@ package org.spring.diaryBackend.service.simple;
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.LessonDTO;
 import org.spring.diaryBackend.dto.entity.SupplementDTO;
+import org.spring.diaryBackend.dto.other.LessonInfoDTO;
 import org.spring.diaryBackend.mapper.entity.LessonDTOMapper;
 import org.spring.diaryBackend.model.Lesson;
 import org.spring.diaryBackend.model.Supplement;
@@ -39,5 +40,10 @@ public class SimpleLessonService implements LessonService {
         Objects.requireNonNull(lesson).setIdSupplement(supplement);
         lessonRepository.save(lesson);
         return lessonDTOMapper.apply(lesson);
+    }
+
+    @Override
+    public List<LessonInfoDTO> findByLessonInfo(Long idSt, Long idGroup) {
+        return lessonRepository.findByLessonInfo(idSt, idGroup);
     }
 }

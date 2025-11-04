@@ -6,6 +6,7 @@ import org.spring.diaryBackend.dto.other.*;
 import org.spring.diaryBackend.logic.BeanUtils;
 import org.spring.diaryBackend.logic.DelMarksGroup;
 import org.spring.diaryBackend.mapper.entity.SemesterMarkDTOMapper;
+import org.spring.diaryBackend.mapper.other.ChangeInfoDTOMapper;
 import org.spring.diaryBackend.mapper.other.SubjectMarksDTOMapper;
 import org.spring.diaryBackend.model.*;
 import org.spring.diaryBackend.repository.*;
@@ -35,6 +36,8 @@ public class SimpleMarkService implements MarkService {
 
     private final ChangeRepository changeRepository;
 
+    private final ChangeInfoDTOMapper changeInfoDTOMapper;
+
     @Override
     public ColumnMarkDTO findColumnMarkInfo(Long idStudent, Long idSt, Long number) {
         ColumnMarkDTO columnMarkDTO = markRepository.findColumnMarkInfo(idStudent, idSt, number);
@@ -42,6 +45,17 @@ public class SimpleMarkService implements MarkService {
             List<FilesDTO> filesDTOS = supplementRepository.findAllFilesSupplement(columnMarkDTO.getIdSupplement());
             columnMarkDTO.setFiles(filesDTOS);
             return columnMarkDTO;
+        }
+        return null;
+    }
+
+    @Override
+    public MarkInfoDTO findMarkInfo(Long idStudent, Long idSt, Long number) {
+        MarkInfoDTO markInfoDTO = markRepository.findMarkInfo(idStudent, idSt, number);
+        if (markInfoDTO != null) {
+            List<ChangeInfoDTO> changeInfoDTOS = changeRepository.findByAllChangeMark(idSt, idStudent, number).stream().map(changeInfoDTOMapper).toList();
+            markInfoDTO.setChanges(changeInfoDTOS);
+            return markInfoDTO;
         }
         return null;
     }
@@ -138,12 +152,12 @@ public class SimpleMarkService implements MarkService {
             List<Student> students = studentRepository.findByIdGroup(crudMarksDTO.getIdGroup());
             for (Student student : students) {
                 if (subgroup.getStudents().contains(student)) {
-                    markRepository.insertMarksNumber(crudMarksDTO.getIdSt(), student.getId(), numberMark + 1, null, idChange);
+                    markRepository.insertMarksNumber(crudMarksDTO.getIdSt(), student.getId(), numberMark + 1, crudMarksDTO.getIdLesson(), idChange);
                 }
             }
         }
         else {
-            markRepository.addRegularMarksForGroup(crudMarksDTO.getIdGroup(), crudMarksDTO.getIdSt(), numberMark + 1, null, LocalDateTime.now());
+            markRepository.addRegularMarksForGroup(crudMarksDTO.getIdGroup(), crudMarksDTO.getIdSt(), numberMark + 1, crudMarksDTO.getIdLesson(), LocalDateTime.now());
         }
     }
 }

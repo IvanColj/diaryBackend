@@ -32,6 +32,13 @@ public class SupplementController {
         supplementService.addFileSupplement(id, file);
     }
 
+    @PatchMapping("update")
+    public void findUpdate(
+            @RequestParam(value = "id") Long id,
+            @RequestParam(value = "comment") String comment) {
+        supplementService.update(id, comment);
+    }
+
     @DeleteMapping("delete/files/{idFile}/id/{id}")
     public void deleteFiles(@PathVariable("idFile") Long idFile, @PathVariable("id") Long idSupplement) {
         supplementService.deleteFileSupplement(idSupplement, idFile);
