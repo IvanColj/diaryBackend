@@ -55,6 +55,8 @@ public class SimpleMarkService implements MarkService {
         if (markInfoDTO != null) {
             List<ChangeInfoDTO> changeInfoDTOS = changeRepository.findByAllChangeMark(idSt, idStudent, number).stream().map(changeInfoDTOMapper).toList();
             markInfoDTO.setChanges(changeInfoDTOS);
+            List<FilesDTO> filesDTOS = supplementRepository.findAllFilesSupplement(markInfoDTO.getIdSupplement());
+            markInfoDTO.setFiles(filesDTOS);
             return markInfoDTO;
         }
         return null;

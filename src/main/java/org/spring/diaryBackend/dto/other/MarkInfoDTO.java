@@ -19,6 +19,9 @@ public class MarkInfoDTO {
     private String lastNameTeacher;
     private String nameTeacher;
     private String patronymicTeacher;
+    private Long idSupplement;
+    private String comment;
+    private List<FilesDTO> files;
     private Long numberWeek;
     private String dayWeek;
     private String typeWeek;
