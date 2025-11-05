@@ -12,7 +12,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     @Query(
             value = """
                     SELECT new org.spring.diaryBackend.dto.other.LessonInfoDTO(
-                        l.id, l.numberWeek, s.dayWeek, s.typeWeek, s.numPair, s.replacement
+                        l.id, l.numberWeek, l.date, s.dayWeek, s.typeWeek, s.numPair, s.replacement
                     )
                     FROM Schedule s JOIN s.lessons l
                     WHERE s.idSt.id = :idSt AND s.idGroup.id = :idGroup
