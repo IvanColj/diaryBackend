@@ -11,7 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UpdateMarkDTO {
     private Long idStudent;
+    private Long idGroup;
     private Long idSt;
     private Double mark;
     private Long number;
+    private Long idTypeMark;
 }

@@ -62,6 +62,14 @@ public interface MarkRepository extends JpaRepository<SemesterMark, SemesterMark
     @Transactional
     @Query(
             nativeQuery = true,
+            value = "CALL update_marks_for_group(:id_group, :id_st, :number_marks, :new_date_time, :id_type_mark)"
+    )
+    void updateMarkGroup(@Param("id_group") Long idGroup, @Param("id_st") Long idSt, @Param("number_marks") Long numberMurks, @Param("new_date_time") LocalDateTime new_date_time, @Param("id_type_mark") Long idTypeMark);
+
+    @Modifying
+    @Transactional
+    @Query(
+            nativeQuery = true,
             value = "CALL delete_mark_number(:id_st, :id_group, :number)"
     )
     void deleteMarksNumberGroupST(@Param("id_st") Long idSt, @Param("id_group") Long idGroup, @Param("number") Long number);

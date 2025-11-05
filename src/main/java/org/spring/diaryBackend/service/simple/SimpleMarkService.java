@@ -38,6 +38,8 @@ public class SimpleMarkService implements MarkService {
 
     private final ChangeInfoDTOMapper changeInfoDTOMapper;
 
+    private final StudentGroupRepository studentGroupRepository;
+
     @Override
     public ColumnMarkDTO findColumnMarkInfo(Long idStudent, Long idSt, Long number) {
         ColumnMarkDTO columnMarkDTO = markRepository.findColumnMarkInfo(idStudent, idSt, number);
@@ -106,12 +108,17 @@ public class SimpleMarkService implements MarkService {
         if (semesterMarks == null) {
             return;
         }
-        semesterMarks.getRegularMarks().stream().toList().forEach(regularMarks ->
-        {
-            if (regularMarks.getId().getNumber() != null && regularMarks.getId().getNumber().equals(updateMarkDTO.getNumber())) {
-                regularMarks.setValue(updateMarkDTO.getMark());
-            }
-        });
+        if (updateMarkDTO.getIdTypeMark() != null) {
+            markRepository.updateMarkGroup(updateMarkDTO.getIdGroup(), updateMarkDTO.getIdSt(), updateMarkDTO.getNumber(), LocalDateTime.now(), updateMarkDTO.getIdTypeMark());
+        }
+        else {
+            semesterMarks.getRegularMarks().stream().toList().forEach(regularMarks ->
+            {
+                if (regularMarks.getId().getNumber() != null && regularMarks.getId().getNumber().equals(updateMarkDTO.getNumber())) {
+                    regularMarks.setValue(updateMarkDTO.getMark());
+                }
+            });
+        }
         markRepository.save(semesterMarks);
     }
 

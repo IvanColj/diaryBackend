@@ -65,6 +65,7 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
     @Query(
             value = """
                     SELECT DISTINCT NEW org.spring.diaryBackend.dto.other.SubjectGroupDTO(
+                    st.id,
                     g.numberGroup,
                     g.specialty,
                     s.subjectName,
@@ -79,7 +80,8 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
                     GROUP BY
                     g.numberGroup,
                     g.specialty,
-                    s.subjectName
+                    s.subjectName,
+                    st.id
                     """
     )
     List<SubjectGroupDTO> findByGroup(@Param("idTeacher") Long idTeacher);
