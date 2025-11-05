@@ -29,4 +29,9 @@ public class ChangeController {
     public ChangeDTO save(@PathVariable Long id) {
         return changeService.addSupplement(id);
     }
+
+    @PostMapping("add/st/{idSt}/student/{idStudent}/number/{number}")
+    public void saveStudent(@PathVariable Long idSt, @PathVariable Long idStudent, @PathVariable Long number) {
+        changeService.save(idSt, idStudent, number);
+    }
 }

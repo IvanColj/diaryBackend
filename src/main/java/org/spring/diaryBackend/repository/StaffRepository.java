@@ -46,7 +46,6 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
     @Query(
             value = """
                     SELECT DISTINCT NEW org.spring.diaryBackend.dto.other.SubjectCourseDTO(
-                    st.id,
                     s.subjectName,
                     g.course,
                     COUNT(g.id)
@@ -57,7 +56,6 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
                         JOIN st.groups g
                     WHERE t.id = :idTeacher
                     GROUP BY
-                    st.id,
                     s.subjectName,
                     g.course
                     """

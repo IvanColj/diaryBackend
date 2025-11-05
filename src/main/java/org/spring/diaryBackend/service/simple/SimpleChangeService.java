@@ -13,7 +13,9 @@ import org.spring.diaryBackend.repository.SupplementRepository;
 import org.spring.diaryBackend.service.ChangeService;
 import org.spring.diaryBackend.service.SupplementService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,5 +50,20 @@ public class SimpleChangeService implements ChangeService {
         Objects.requireNonNull(change).setIdSupplement(supplement);
         changeRepository.save(change);
         return changeDTOMapper.apply(change);
+    }
+
+    @Override
+    @Transactional
+    public Change save(Long idSt, Long idStudent, Long number) {
+        Change change = new Change();
+        change.setDateTime(LocalDateTime.now());
+        change.setAction("комментарий студента");
+        SupplementDTO supplementDTO = supplementService.save();
+        Supplement supplement = supplementRepository.findById(supplementDTO.getId()).orElse(null);
+        Objects.requireNonNull(change).setIdSupplement(supplement);
+        change.setTeacherOrStudent(false);
+        Change newChange = changeRepository.save(change);
+        changeRepository.insertChange(idSt, idStudent, number, newChange.getId());
+        return newChange;
     }
 }

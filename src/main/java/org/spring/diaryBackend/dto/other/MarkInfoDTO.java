@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class MarkInfoDTO {
     private Double value;
+    private Long number;
     private LocalDate dateLesson;
     private String typeMark;
     private String lastNameTeacher;

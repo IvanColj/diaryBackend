@@ -32,7 +32,7 @@ public interface MarkRepository extends JpaRepository<SemesterMark, SemesterMark
 
     @Query("""
             SELECT NEW org.spring.diaryBackend.dto.other.MarkInfoDTO(
-            rm.value, l.date, rm.idTypeMark.name, ff.lastName, ff.name, ff.patronymic, ss.id, ss.comment, null, l.numberWeek, s.dayWeek, s.typeWeek, s.numPair, s.replacement, null
+            rm.value, rm.id.number, l.date, rm.idTypeMark.name, ff.lastName, ff.name, ff.patronymic, ss.id, ss.comment, null, l.numberWeek, s.dayWeek, s.typeWeek, s.numPair, s.replacement, null
             ) FROM RegularMark rm JOIN Lesson l ON rm.idLesson.id = l.id JOIN Supplement ss ON l.idSupplement.id = ss.id JOIN Schedule s ON s.id = l.idSchedule.id
             JOIN s.idSt.teachers t JOIN Staff ff ON t.id = ff.id
             WHERE rm.id.semesterMarkIdSt = :idSt AND rm.id.semesterMarkIdStudent = :idStudent AND rm.id.number = :number

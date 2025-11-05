@@ -10,7 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubjectCourseDTO {
-    private Long idTeacher;
     private String subjectName;
     private Long course;
     private Long countGroup;
