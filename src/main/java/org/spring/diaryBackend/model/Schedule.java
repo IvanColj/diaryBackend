@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -43,6 +44,9 @@ public class Schedule {
 
     @JoinColumn(name = "replacement")
     private Boolean replacement;
+
+    @JoinColumn(name = "date_replacement")
+    private LocalDate dateReplacement;
 
     @OneToMany(mappedBy = "idSchedule")
     private Set<Lesson> lessons = new LinkedHashSet<>();
