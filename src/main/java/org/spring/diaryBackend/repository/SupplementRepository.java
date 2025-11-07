@@ -29,7 +29,7 @@ public interface SupplementRepository extends JpaRepository<Supplement, Long> {
     @Transactional
     @Query(
             nativeQuery = true,
-            value = "DELETE FROM WHERE id_supplement = :id_supplement AND id_path = :id_file)"
+            value = "DELETE FROM file_path WHERE id_supplement = :id_supplement AND id_path = :id_file"
     )
     void deleteFileSupplement(@Param("id_supplement") Long idSupplement, @Param("id_file") Long idFile);
 }
