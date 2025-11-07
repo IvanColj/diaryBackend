@@ -92,7 +92,7 @@ public class SimpleStaffService implements StaffService {
         }
         if (staffNew.getLogin() != null) {
             Staff staffLogin = staffRepository.findByLogin(staffNew.getLogin());
-            if (staffLogin.getId() == null) {
+            if (staffLogin == null) {
                 staffUpdate.setLogin(staffNew.getLogin());
             }
             else {
