@@ -3,6 +3,7 @@ package org.spring.diaryBackend.repository;
 import org.spring.diaryBackend.dto.other.LessonInfoDTO;
 import org.spring.diaryBackend.model.Lesson;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -33,4 +34,14 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
                     
                     """)
     List<LocalDate> findByLessonSubject(@Param("idSt") Long idSt, @Param("idGroup") Long idGroup);
+
+    @Modifying
+    @Query(
+            nativeQuery = true,
+            value =
+                    """
+                    UPDATE lesson SET id_supplement = NULL WHERE id_supplement = :id_supplement;
+                    """
+    )
+    void updateLesson(@Param("id_supplement") Long idSupplement);
 }

@@ -30,4 +30,14 @@ public interface ChangeRepository extends JpaRepository<Change, Long> {
             """
     )
     void insertChange(@Param("id_st") Long idSt, @Param("id_student") Long idStudent, @Param("number_mark") Long numberMark, @Param("id_change") Long idChange);
+
+    @Modifying
+    @Query(
+            nativeQuery = true,
+            value =
+                    """
+                    UPDATE change SET id_supplement = NULL WHERE id_supplement = :id_supplement;
+                    """
+    )
+    void updateChange(@Param("id_supplement") Long idSupplement);
 }

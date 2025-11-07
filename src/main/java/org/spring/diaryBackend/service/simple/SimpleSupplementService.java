@@ -6,10 +6,13 @@ import org.spring.diaryBackend.dto.other.FilesDTO;
 import org.spring.diaryBackend.mapper.entity.SupplementDTOMapper;
 import org.spring.diaryBackend.model.Path;
 import org.spring.diaryBackend.model.Supplement;
+import org.spring.diaryBackend.repository.ChangeRepository;
+import org.spring.diaryBackend.repository.LessonRepository;
 import org.spring.diaryBackend.repository.SupplementRepository;
 import org.spring.diaryBackend.service.PathService;
 import org.spring.diaryBackend.service.SupplementService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,6 +27,10 @@ public class SimpleSupplementService implements SupplementService {
     private final PathService pathService;
 
     private final SupplementDTOMapper supplementDTOMapper;
+
+    private final LessonRepository lessonRepository;
+
+    private final ChangeRepository changeRepository;
 
     @Override
     public List<SupplementDTO> findAllSupplement() {
@@ -60,7 +67,15 @@ public class SimpleSupplementService implements SupplementService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
+        changeRepository.updateChange(id);
+        lessonRepository.updateLesson(id);
+        List<FilesDTO> filesDTOS = supplementRepository.findAllFilesSupplement(id);
+        filesDTOS.forEach(filesDTO -> {
+            supplementRepository.deleteFileSupplement(id, filesDTO.getId());
+            pathService.deleteFile(filesDTO.getId());
+        });
         supplementRepository.deleteById(id);
     }
 }
