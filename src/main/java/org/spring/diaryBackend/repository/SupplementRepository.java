@@ -33,3 +33,4 @@ public interface SupplementRepository extends JpaRepository<Supplement, Long> {
     )
     void deleteFileSupplement(@Param("id_supplement") Long idSupplement, @Param("id_file") Long idFile);
 }
+
