@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
@@ -19,4 +20,17 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
                     
                     """)
     List<LessonInfoDTO> findByLessonInfo(@Param("idSt") Long idSt, @Param("idGroup") Long idGroup);
+
+    @Query(
+            value = """
+                    SELECT DISTINCT l.date
+                    FROM Schedule s
+                    JOIN s.lessons l
+                    JOIN l.regularMarks rm
+                    WHERE s.idSt.id = :idSt AND s.idGroup.id = :idGroup
+                    ORDER BY l.date
+                    
+                    
+                    """)
+    List<LocalDate> findByLessonSubject(@Param("idSt") Long idSt, @Param("idGroup") Long idGroup);
 }

@@ -41,7 +41,7 @@ public class StudentGroupController {
     public List<GroupMarksDTO> findGroupMarks(
             @RequestParam(value = "idGroup") Long idGroup,
             @RequestParam(value = "idSt") Long idSt,
-            @RequestParam(value = "idTeacher", required = false) Long idTeacher) {
+            @RequestParam(value = "idTeacher") Long idTeacher) {
 
         return studentGroupService.getGroupMarksBySubject(idGroup, idSt, idTeacher);
     }

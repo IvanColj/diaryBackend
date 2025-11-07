@@ -6,6 +6,7 @@ import org.spring.diaryBackend.dto.other.LessonInfoDTO;
 import org.spring.diaryBackend.service.LessonService;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -20,9 +21,14 @@ public class LessonController {
         return lessonService.findAllLesson();
     }
 
-    @GetMapping("st/{st}/group/{group}")
+    @GetMapping("info/st/{st}/group/{group}")
     public List<LessonInfoDTO> findAllLessonInfo(@PathVariable("st") Long idSt, @PathVariable("group") Long idGroup) {
         return lessonService.findByLessonInfo(idSt, idGroup);
+    }
+
+    @GetMapping("date/st/{st}/group/{group}")
+    public List<LocalDate> findAllDate(@PathVariable("st") Long idSt, @PathVariable("group") Long idGroup) {
+        return lessonService.findByLessonSubject(idSt, idGroup);
     }
 
     @PostMapping("add/supplement/id/{id}")

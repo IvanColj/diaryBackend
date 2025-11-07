@@ -96,7 +96,7 @@ public class SimpleStudentGroupService implements StudentGroupService {
                     map(marksStudentDTOMapper).toList();
             groupMarksDTO.setMarks(marksStudentDTOS);
         }
-        if (idTeacher != null) {
+        if (subgroupRepository.findByIdStAndIdTeacher(idSt, idTeacher) != null) {
             List<Long> studentsId = subgroupRepository.findByIdStAndIdTeacher(idSt, idTeacher).getStudents().stream().map(Student::getId).toList();
             return marksGroupBySubject.stream()
                     .filter(groupMarksDTO -> studentsId.contains(groupMarksDTO.getIdStudent()))

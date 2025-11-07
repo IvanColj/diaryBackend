@@ -13,6 +13,7 @@ import org.spring.diaryBackend.service.LessonService;
 import org.spring.diaryBackend.service.SupplementService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,5 +46,10 @@ public class SimpleLessonService implements LessonService {
     @Override
     public List<LessonInfoDTO> findByLessonInfo(Long idSt, Long idGroup) {
         return lessonRepository.findByLessonInfo(idSt, idGroup);
+    }
+
+    @Override
+    public List<LocalDate> findByLessonSubject(Long idSt, Long idGroup) {
+        return lessonRepository.findByLessonSubject(idSt, idGroup);
     }
 }
