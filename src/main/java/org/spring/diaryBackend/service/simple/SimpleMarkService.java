@@ -107,7 +107,7 @@ public class SimpleMarkService implements MarkService {
             return;
         }
         if (updateMarkDTO.getIdTypeMark() != null) {
-            markRepository.updateMarkGroup(updateMarkDTO.getIdGroup(), updateMarkDTO.getIdSt(), updateMarkDTO.getNumber(), LocalDateTime.now(), updateMarkDTO.getIdTypeMark());
+            markRepository.updateMarkGroup(updateMarkDTO.getIdTeacher(), updateMarkDTO.getIdSt(), updateMarkDTO.getIdGroup(), updateMarkDTO.getNumber(), LocalDateTime.now(), updateMarkDTO.getIdTypeMark());
         }
         else {
             semesterMarks.getRegularMarks().stream().toList().forEach(regularMarks ->
