@@ -38,8 +38,6 @@ public class SimpleMarkService implements MarkService {
 
     private final ChangeInfoDTOMapper changeInfoDTOMapper;
 
-    private final StudentGroupRepository studentGroupRepository;
-
     @Override
     public ColumnMarkDTO findColumnMarkInfo(Long idStudent, Long idSt, Long number) {
         ColumnMarkDTO columnMarkDTO = markRepository.findColumnMarkInfo(idStudent, idSt, number);
@@ -137,7 +135,7 @@ public class SimpleMarkService implements MarkService {
     @Override
     @Transactional
     public void deleteMarksNumberGroupST(CRUDMarksDTO crudMarksDTO) {
-        if (crudMarksDTO.getIdTeacher() != null) {
+        if (subgroupRepository.findByIdStAndIdTeacher(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher()) != null) {
             markRepository.deleteMarksNumberSubGroupST(crudMarksDTO.getIdSt(), crudMarksDTO.getIdGroup(), crudMarksDTO.getIdTeacher(), crudMarksDTO.getNumber());
         }
         else {
@@ -151,7 +149,7 @@ public class SimpleMarkService implements MarkService {
         if (numberMark == null) {
             numberMark = 0L;
         }
-        if (crudMarksDTO.getIdTeacher() != null) {
+        if (subgroupRepository.findByIdStAndIdTeacher(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher()) != null) {
             Change change = new Change();
             change.setDateTime(LocalDateTime.now());
             change.setAction("добавление оценки");

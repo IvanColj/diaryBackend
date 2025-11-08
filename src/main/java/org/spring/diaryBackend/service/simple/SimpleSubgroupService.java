@@ -51,7 +51,7 @@ public class SimpleSubgroupService implements SubgroupService {
 
     @Override
     public void addStudents(SubgroupStudentsDTO subgroupStudentsDTO) {
-        Subgroup subgroup = subgroupRepository.findById(subgroupStudentsDTO.getId()).orElse(null);
+        Subgroup subgroup = subgroupRepository.findByIdStAndIdTeacher(subgroupStudentsDTO.getIdSt(), subgroupStudentsDTO.getIdTeacher());
         List<Long> students = new java.util.ArrayList<>(Objects.requireNonNull(subgroup).getStudents().stream().map(Student::getId).toList());
         students.addAll(subgroupStudentsDTO.getStudents());
         subgroup.setStudents(students.stream().map(student -> studentRepository.findById(student).orElse(null)).collect(Collectors.toSet()));
@@ -60,7 +60,7 @@ public class SimpleSubgroupService implements SubgroupService {
 
     @Override
     public void updateStudents(SubgroupStudentsDTO subgroupStudentsDTO, Long idSt, Long idTeacher) {
-        Subgroup subgroupOne = subgroupRepository.findById(subgroupStudentsDTO.getId()).orElse(null);
+        Subgroup subgroupOne = subgroupRepository.findByIdStAndIdTeacher(subgroupStudentsDTO.getIdSt(), subgroupStudentsDTO.getIdTeacher());
         Subgroup subgroupTwo = subgroupRepository.findByIdStAndIdTeacher(idSt, idTeacher);
         List<Long> studentsSubgroupTwo = new java.util.ArrayList<>(Objects.requireNonNull(subgroupTwo).getStudents().stream().map(Student::getId).toList());
         studentsSubgroupTwo.addAll(subgroupStudentsDTO.getStudents());
@@ -76,7 +76,7 @@ public class SimpleSubgroupService implements SubgroupService {
 
     @Override
     public void deleteStudents(SubgroupStudentsDTO subgroupStudentsDTO) {
-        Subgroup subgroup = subgroupRepository.findById(subgroupStudentsDTO.getId()).orElse(null);
+        Subgroup subgroup = subgroupRepository.findByIdStAndIdTeacher(subgroupStudentsDTO.getIdSt(), subgroupStudentsDTO.getIdTeacher());
         List<Long> students = new java.util.ArrayList<>(Objects.requireNonNull(subgroup).getStudents().stream().map(Student::getId).toList());
         students.removeAll(subgroupStudentsDTO.getStudents());
         subgroup.setStudents(students.stream().map(student -> studentRepository.findById(student).orElse(null)).collect(Collectors.toSet()));

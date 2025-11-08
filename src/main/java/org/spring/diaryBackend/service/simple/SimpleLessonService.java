@@ -3,6 +3,7 @@ package org.spring.diaryBackend.service.simple;
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.LessonDTO;
 import org.spring.diaryBackend.dto.entity.SupplementDTO;
+import org.spring.diaryBackend.dto.other.LessonDateDTO;
 import org.spring.diaryBackend.dto.other.LessonInfoDTO;
 import org.spring.diaryBackend.mapper.entity.LessonDTOMapper;
 import org.spring.diaryBackend.model.Lesson;
@@ -13,7 +14,6 @@ import org.spring.diaryBackend.service.LessonService;
 import org.spring.diaryBackend.service.SupplementService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,12 +44,12 @@ public class SimpleLessonService implements LessonService {
     }
 
     @Override
-    public List<LessonInfoDTO> findByLessonInfo(Long idSt, Long idGroup) {
-        return lessonRepository.findByLessonInfo(idSt, idGroup);
+    public List<LessonInfoDTO> findByLessonInfo(Long idSt, Long idGroup, Long idTeacher) {
+        return lessonRepository.findByLessonInfo(idSt, idGroup, idTeacher);
     }
 
     @Override
-    public List<LocalDate> findByLessonSubject(Long idSt, Long idGroup) {
-        return lessonRepository.findByLessonSubject(idSt, idGroup);
+    public List<LessonDateDTO> findByLessonSubject(Long idSt, Long idGroup, Long idTeacher) {
+        return lessonRepository.findByLessonDate(idSt, idGroup, idTeacher);
     }
 }

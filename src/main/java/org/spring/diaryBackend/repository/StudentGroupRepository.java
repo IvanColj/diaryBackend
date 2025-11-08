@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long> {
 
-    @Query("SELECT NEW org.spring.diaryBackend.dto.other.GroupMarksDTO(s.id, s.lastName, s.name, s.patronymic, null) FROM Student s WHERE s.idGroup.id = :idGroup")
+    @Query("SELECT NEW org.spring.diaryBackend.dto.other.GroupMarksDTO(s.id, s.lastName, s.name, s.patronymic, null) FROM Student s WHERE s.idGroup.id = :idGroup ORDER BY s.lastName, s.name, s.patronymic")
     List<GroupMarksDTO> findBaseInfo(@Param("idGroup") Long idGroup);
 
     @Query(
@@ -23,7 +23,7 @@ public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long
             LEFT JOIN rm.idTypeMark tm ON rm.idTypeMark.id = tm.id
             JOIN Student s ON m.id.idStudent = s.id
             WHERE m.id.idSt = :idSt
-            AND s.idGroup.id = :idGroup ORDER BY rm.id.number, tm.weight
+            AND s.idGroup.id = :idGroup ORDER BY rm.id.number
             """)
     List<Object[]> findAllMarksGroup(@Param("idGroup") Long idGroup,
                                      @Param("idSt") Long idSt);

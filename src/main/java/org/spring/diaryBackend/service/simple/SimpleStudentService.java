@@ -65,7 +65,7 @@ public class SimpleStudentService implements StudentService {
                 .collect(Collectors.groupingBy(
                         row -> (Long) row[0],
                         Collectors.mapping(
-                                row -> marksStudentDTOMapper.apply(regularMarkDTOMapper.apply((RegularMark) row[1])),
+                                row -> marksStudentDTOMapper.apply((RegularMark) row[1]),
                                 Collectors.toList()
                         )
                 ));

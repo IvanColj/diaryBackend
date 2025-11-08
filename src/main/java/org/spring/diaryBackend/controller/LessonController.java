@@ -2,11 +2,11 @@ package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.LessonDTO;
+import org.spring.diaryBackend.dto.other.LessonDateDTO;
 import org.spring.diaryBackend.dto.other.LessonInfoDTO;
 import org.spring.diaryBackend.service.LessonService;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -21,14 +21,14 @@ public class LessonController {
         return lessonService.findAllLesson();
     }
 
-    @GetMapping("info/st/{st}/group/{group}")
-    public List<LessonInfoDTO> findAllLessonInfo(@PathVariable("st") Long idSt, @PathVariable("group") Long idGroup) {
-        return lessonService.findByLessonInfo(idSt, idGroup);
+    @GetMapping("info/st/{st}/group/{group}/teacher/{id}")
+    public List<LessonInfoDTO> findAllLessonInfo(@PathVariable("st") Long idSt, @PathVariable("group") Long idGroup, @PathVariable("id") Long idTeacher) {
+        return lessonService.findByLessonInfo(idSt, idGroup, idTeacher);
     }
 
-    @GetMapping("date/st/{st}/group/{group}")
-    public List<LocalDate> findAllDate(@PathVariable("st") Long idSt, @PathVariable("group") Long idGroup) {
-        return lessonService.findByLessonSubject(idSt, idGroup);
+    @GetMapping("date/st/{st}/group/{group}/teacher/{id}")
+    public List<LessonDateDTO> findAllDate(@PathVariable("st") Long idSt, @PathVariable("group") Long idGroup, @PathVariable("id") Long idTeacher) {
+        return lessonService.findByLessonSubject(idSt, idGroup, idTeacher);
     }
 
     @PostMapping("add/supplement/id/{id}")

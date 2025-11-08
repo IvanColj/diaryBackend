@@ -8,7 +8,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface TypeMarkRepository extends JpaRepository<TypeMark, Long> {
-
-    @Query(value = "SELECT tm FROM TypeMark tm WHERE tm.idSt.id = :idSt")
+    @Query(
+            """
+            SELECT tm FROM TypeMark tm WHERE tm.idSt.id = :idSt
+            """
+    )
     List<TypeMark> findBySt(@Param("idSt") Long idSt);
 }

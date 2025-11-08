@@ -6,19 +6,17 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.spring.diaryBackend.dto.entity.RegularMarkDTO;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
 import org.spring.diaryBackend.dto.entity.StudentGroupDTO;
 import org.spring.diaryBackend.dto.other.GroupMarksDTO;
-import org.spring.diaryBackend.dto.other.MarksStudentDTO;
 import org.spring.diaryBackend.dto.other.STNameSubjectDTO;
 import org.spring.diaryBackend.logic.GenerateSecurePassword;
 import org.spring.diaryBackend.mapper.entity.RegularMarkDTOMapper;
 import org.spring.diaryBackend.mapper.entity.StudentGroupDTOMapper;
 import org.spring.diaryBackend.mapper.other.MarksStudentDTOMapper;
-import org.spring.diaryBackend.model.RegularMark;
 import org.spring.diaryBackend.model.Student;
 import org.spring.diaryBackend.model.StudentGroup;
+import org.spring.diaryBackend.repository.MarkRepository;
 import org.spring.diaryBackend.repository.StaffRepository;
 import org.spring.diaryBackend.repository.StudentGroupRepository;
 import org.spring.diaryBackend.repository.SubgroupRepository;
@@ -30,8 +28,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -48,6 +47,8 @@ public class SimpleStudentGroupService implements StudentGroupService {
     private final MarksStudentDTOMapper marksStudentDTOMapper;
 
     private final SubgroupRepository subgroupRepository;
+
+    private final MarkRepository markRepository;
 
     @Override
     public List<StudentGroupDTO> findAll() {
@@ -77,32 +78,15 @@ public class SimpleStudentGroupService implements StudentGroupService {
     @Override
     public List<GroupMarksDTO> getGroupMarksBySubject(Long idGroup, Long idSt, Long idTeacher) {
         List<GroupMarksDTO> marksGroupBySubject = studentGroupRepository.findBaseInfo(idGroup);
-        List<Object[]> rawMarks = studentGroupRepository.findAllMarksGroup(idGroup, idSt);
-        Map<Long, List<RegularMarkDTO>> marksByStudentId = rawMarks.stream()
-                .collect(Collectors.groupingBy(
-                        row -> (Long) row[0],
-                        Collectors.mapping(
-                                row -> regularMarkDTOMapper.apply((RegularMark) row[1]),
-                                Collectors.toList()
-                        )
-                ));
-
-        for (GroupMarksDTO groupMarksDTO : marksGroupBySubject) {
-            Map<Long, List<RegularMarkDTO>> studentMarksMap = new HashMap<>();
-            studentMarksMap.put(groupMarksDTO.getIdStudent(), marksByStudentId.getOrDefault(groupMarksDTO.getIdStudent(), new ArrayList<>()));
-
-            List<MarksStudentDTO> marksStudentDTOS = studentMarksMap.
-                    get(groupMarksDTO.getIdStudent()).stream().
-                    map(marksStudentDTOMapper).toList();
-            groupMarksDTO.setMarks(marksStudentDTOS);
-        }
         if (subgroupRepository.findByIdStAndIdTeacher(idSt, idTeacher) != null) {
             List<Long> studentsId = subgroupRepository.findByIdStAndIdTeacher(idSt, idTeacher).getStudents().stream().map(Student::getId).toList();
-            return marksGroupBySubject.stream()
+            marksGroupBySubject = marksGroupBySubject.stream()
                     .filter(groupMarksDTO -> studentsId.contains(groupMarksDTO.getIdStudent()))
                     .toList();
         }
-
+        for (GroupMarksDTO groupMarksDTO : marksGroupBySubject) {
+            groupMarksDTO.setMarks(markRepository.findByStudentSubject(groupMarksDTO.getIdStudent(), idSt).stream().map(marksStudentDTOMapper).toList());
+        }
         return marksGroupBySubject;
     }
 
