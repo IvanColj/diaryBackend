@@ -3,11 +3,12 @@ package org.spring.diaryBackend.service.simple;
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
 import org.spring.diaryBackend.dto.other.MarksStudentDTO;
-import org.spring.diaryBackend.dto.other.STNameSubjectDTO;
+import org.spring.diaryBackend.dto.other.NameSubjectTeachersDTO;
 import org.spring.diaryBackend.dto.other.StudentMarksAllSubjectDTO;
 import org.spring.diaryBackend.mapper.entity.RegularMarkDTOMapper;
 import org.spring.diaryBackend.mapper.entity.StudentDTOMapper;
 import org.spring.diaryBackend.mapper.other.MarksStudentDTOMapper;
+import org.spring.diaryBackend.mapper.other.NameSubjectTeachersDTOMapper;
 import org.spring.diaryBackend.model.RegularMark;
 import org.spring.diaryBackend.model.Student;
 import org.spring.diaryBackend.model.StudentGroup;
@@ -38,6 +39,8 @@ public class SimpleStudentService implements StudentService {
 
     private final MarksStudentDTOMapper marksStudentDTOMapper;
 
+    private final NameSubjectTeachersDTOMapper nameSubjectTeachersDTOMapper;
+
     @Override
     public List<StudentDTO> findAllStudent() {
         return studentRepository.findAll().stream().map(studentDTOMapper).toList();
@@ -50,10 +53,26 @@ public class SimpleStudentService implements StudentService {
 
     @Override
     public List<StudentMarksAllSubjectDTO> getStudentMarks(Long id) {
-        List<STNameSubjectDTO> stNameSubjectDTOS = studentRepository.findBySubject(id);
+        List<NameSubjectTeachersDTO> nameSubjectTeachersDTOS = studentRepository.findSubjectsByStudent(id).stream().map(nameSubjectTeachersDTOMapper).toList();
+        List<NameSubjectTeachersDTO> groupedNameSubjectTeachersDTOS = nameSubjectTeachersDTOS.stream()
+                .collect(Collectors.toMap(
+                        NameSubjectTeachersDTO::getIdSt,
+                        dto -> new NameSubjectTeachersDTO(
+                                dto.getIdSt(),
+                                dto.getIdSubject(),
+                                dto.getNameSubject(),
+                                new ArrayList<>(dto.getTeachers())
+                        ),
+                        (existing, replacement) -> {
+                            existing.getTeachers().addAll(replacement.getTeachers());
+                            return existing;
+                        }
+                ))
+                .values().stream()
+                .toList();
         List<StudentMarksAllSubjectDTO> studentMarksAllSubjectDTOS = new ArrayList<>();
-        stNameSubjectDTOS.forEach(stNameSubjectDTO -> studentMarksAllSubjectDTOS.add(new StudentMarksAllSubjectDTO(
-                stNameSubjectDTO,
+        groupedNameSubjectTeachersDTOS.forEach(nameSubjectTeachersDTO -> studentMarksAllSubjectDTOS.add(new StudentMarksAllSubjectDTO(
+                nameSubjectTeachersDTO,
                 null,
                 null
                 ))
@@ -79,11 +98,10 @@ public class SimpleStudentService implements StudentService {
         studentMarksAllSubjectDTOS.forEach(
                 studentMarksAllSubjectDTO -> {
                     studentMarksAllSubjectDTO.setMarksBySt(
-                            stMarks.get(studentMarksAllSubjectDTO.getStNameSubjectDTO().getIdSt())
-
+                            stMarks.get(studentMarksAllSubjectDTO.getNameSubjectTeachersDTO().getIdSt())
                     );
                     studentMarksAllSubjectDTO.setCertification(
-                            stCertification.get(studentMarksAllSubjectDTO.getStNameSubjectDTO().getIdSt())
+                            stCertification.get(studentMarksAllSubjectDTO.getNameSubjectTeachersDTO().getIdSt())
                     );
                 }
         );

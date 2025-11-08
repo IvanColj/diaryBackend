@@ -22,23 +22,36 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             "WHERE sm.id.idStudent = :idStudent")
     List<Object[]> findMarksStudentBySubject(@Param("idStudent") Long idStudent);
 
-    @Query(
-            value = """
-                     select DISTINCT new org.spring.diaryBackend.dto.other.STNameSubjectDTO(
-                         st.id,
-                         st.idSubject.id,
-                         s.subjectName,
-                         t.id,
-                         f.lastName,
-                         f.name,
-                         f.patronymic)
-                    FROM SubjectTeacher st
-                         JOIN SemesterMark sm ON st.id = sm.idSt.id
-                         JOIN st.teachers t
-                         JOIN st.idSubject s
-                         JOIN Staff f ON t.id = f.id
-                         WHERE s.id = st.idSubject.id AND sm.idStudent.id = :idStudent""")
-    List<STNameSubjectDTO> findBySubject(@Param("idStudent") Long idStudent);
+    @Query("""
+                SELECT DISTINCT new org.spring.diaryBackend.dto.other.STNameSubjectDTO(
+                    st.id,
+                    st.idSubject.id,
+                    s.subjectName,
+                    t.id,
+                    f.lastName,
+                    f.name,
+                    f.patronymic)
+                FROM SubjectTeacher st
+                JOIN st.teachers t
+                JOIN st.idSubject s
+                JOIN Staff f ON t.id = f.id
+                JOIN SemesterMark sm ON st.id = sm.idSt.id
+                WHERE sm.idStudent.id = :idStudent
+                AND (EXISTS (
+                    SELECT ss.id
+                    FROM Subgroup sub
+                    JOIN sub.students ss
+                    WHERE sub.idSt.id = st.id
+                    AND sub.idTeacher.id = t.id
+                    AND ss.id = :idStudent
+                ) OR NOT EXISTS (
+                    SELECT sub2
+                    FROM Subgroup sub2
+                    WHERE sub2.idSt.id = st.id
+                    AND sub2.idTeacher.id = t.id
+                ))
+            """)
+    List<STNameSubjectDTO> findSubjectsByStudent(@Param("idStudent") Long idStudent);
 
     Student findByLoginOrPassword(String login, String password);
 }
