@@ -9,11 +9,11 @@ import org.jsoup.select.Elements;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
 import org.spring.diaryBackend.dto.entity.StudentGroupDTO;
 import org.spring.diaryBackend.dto.other.GroupMarksDTO;
-import org.spring.diaryBackend.dto.other.STNameSubjectDTO;
+import org.spring.diaryBackend.dto.other.NameSubjectTeachersDTO;
 import org.spring.diaryBackend.logic.GenerateSecurePassword;
-import org.spring.diaryBackend.mapper.entity.RegularMarkDTOMapper;
 import org.spring.diaryBackend.mapper.entity.StudentGroupDTOMapper;
 import org.spring.diaryBackend.mapper.other.MarksStudentDTOMapper;
+import org.spring.diaryBackend.mapper.other.NameSubjectTeachersDTOMapper;
 import org.spring.diaryBackend.model.Student;
 import org.spring.diaryBackend.model.StudentGroup;
 import org.spring.diaryBackend.repository.MarkRepository;
@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -42,7 +43,7 @@ public class SimpleStudentGroupService implements StudentGroupService {
     private final StaffRepository staffRepository;
     private final StudentGroupDTOMapper studentGroupDTOMapper;
 
-    private final RegularMarkDTOMapper regularMarkDTOMapper;
+    private final NameSubjectTeachersDTOMapper nameSubjectTeachersDTOMapper;
 
     private final MarksStudentDTOMapper marksStudentDTOMapper;
 
@@ -71,8 +72,24 @@ public class SimpleStudentGroupService implements StudentGroupService {
     }
 
     @Override
-    public List<STNameSubjectDTO> findBySubject(Long group) {
-        return studentGroupRepository.findBySubject(group);
+    public List<NameSubjectTeachersDTO> findBySubject(Long group) {
+        List<NameSubjectTeachersDTO> nameSubjectTeachersDTOS = studentGroupRepository.findBySubject(group).stream().map(nameSubjectTeachersDTOMapper).toList();
+        return nameSubjectTeachersDTOS.stream()
+                .collect(Collectors.toMap(
+                        NameSubjectTeachersDTO::getIdSt,
+                        dto -> new NameSubjectTeachersDTO(
+                                dto.getIdSt(),
+                                dto.getIdSubject(),
+                                dto.getNameSubject(),
+                                new ArrayList<>(dto.getTeachers())
+                        ),
+                        (existing, replacement) -> {
+                            existing.getTeachers().addAll(replacement.getTeachers());
+                            return existing;
+                        }
+                ))
+                .values().stream()
+                .toList();
     }
 
     @Override

@@ -5,7 +5,6 @@ import org.spring.diaryBackend.dto.entity.StudentDTO;
 import org.spring.diaryBackend.dto.other.MarksStudentDTO;
 import org.spring.diaryBackend.dto.other.NameSubjectTeachersDTO;
 import org.spring.diaryBackend.dto.other.StudentMarksAllSubjectDTO;
-import org.spring.diaryBackend.mapper.entity.RegularMarkDTOMapper;
 import org.spring.diaryBackend.mapper.entity.StudentDTOMapper;
 import org.spring.diaryBackend.mapper.other.MarksStudentDTOMapper;
 import org.spring.diaryBackend.mapper.other.NameSubjectTeachersDTOMapper;
@@ -34,8 +33,6 @@ public class SimpleStudentService implements StudentService {
     private final StudentGroupRepository studentGroupRepository;
     private final StudentDTOMapper studentDTOMapper;
     private final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
-
-    private final RegularMarkDTOMapper regularMarkDTOMapper;
 
     private final MarksStudentDTOMapper marksStudentDTOMapper;
 
