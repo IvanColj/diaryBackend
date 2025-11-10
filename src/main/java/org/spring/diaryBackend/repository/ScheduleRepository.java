@@ -16,7 +16,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
                        s.numPair, s.room, s.idSt.id,
                        s.idSt.idSubject.id, s.idSt.idSubject.subjectName,
                        null, null, null, null,
-                       s.idGroup.id, s.idGroup.numberGroup, s.subgroup.id, s.replacement
+                       s.idGroup.id, s.idGroup.numberGroup, s.subgroup.id, s.replacement, s.dateReplacement
                        ) FROM Schedule s WHERE s.idGroup.id = :idGroup
             """)
     List<ScheduleWeekGroupDTO> findScheduleWeekGroup(@Param("idGroup") Long idGroup);
@@ -26,7 +26,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
             value = "SELECT s.id, s.day_week, s.type_week, s.num_pair, " +
                     "s.room, s.id_st, st.id_subject, s3.subject_name, " +
                     "ts.id_teacher, s2.last_name, s2.name, s2.patronymic, " +
-                    "s.id_group, sg.number_group, s.subgroup, s.replacement " +
+                    "s.id_group, sg.number_group, s.subgroup, s.replacement, s.date_replacement " +
                     "FROM schedule s JOIN subject_teacher st ON st.id = s.id_st " +
                     "JOIN teachers_st ts ON st.id = ts.id_st " +
                     "JOIN staff s2 ON s2.id = ts.id_teacher " +
@@ -37,7 +37,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
                     "SELECT s.id, s.day_week, s.type_week, s.num_pair, " +
                     "s.room, s.id_st, st.id_subject, s3.subject_name, " +
                     "ts.id_teacher, s2.last_name, s2.name, s2.patronymic, " +
-                    "s.id_group, sg.number_group, s.subgroup, s.replacement " +
+                    "s.id_group, sg.number_group, s.subgroup, s.replacement, s.date_replacement " +
                     "FROM schedule s JOIN subject_teacher st ON st.id = s.id_st " +
                     "JOIN teachers_st ts ON st.id = ts.id_st " +
                     "JOIN staff s2 ON s2.id = ts.id_teacher " +

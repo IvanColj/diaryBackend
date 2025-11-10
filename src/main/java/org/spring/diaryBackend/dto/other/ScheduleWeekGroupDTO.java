@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -26,4 +28,5 @@ public class ScheduleWeekGroupDTO {
     private Long numberGroup;
     private Long subgroup;
     private Boolean replacement;
+    private LocalDate dateReplacement;
 }

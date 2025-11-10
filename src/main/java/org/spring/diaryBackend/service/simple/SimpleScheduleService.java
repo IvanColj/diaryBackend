@@ -12,6 +12,7 @@ import org.spring.diaryBackend.repository.*;
 import org.spring.diaryBackend.service.ScheduleService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -101,7 +102,8 @@ public class SimpleScheduleService implements ScheduleService {
                         (Long) ((Object[]) schedule)[12],
                         (Long) ((Object[]) schedule)[13],
                         (Long) ((Object[]) schedule)[14],
-                        (Boolean) ((Object[]) schedule)[15]
+                        (Boolean) ((Object[]) schedule)[15],
+                        (LocalDate) ((Object[]) schedule)[16]
                 );
                 scheduleWeekGroupDTOs.add(dto);
             }
@@ -161,6 +163,7 @@ public class SimpleScheduleService implements ScheduleService {
             schedule.setSubgroup(staffRepository.findById(scheduleDTO.getSubgroup()).orElse(null));
         }
         schedule.setReplacement(scheduleDTO.getReplacement());
+        schedule.setDateReplacement(scheduleDTO.getDateReplacement());
 
         scheduleRepository.save(schedule);
     }
