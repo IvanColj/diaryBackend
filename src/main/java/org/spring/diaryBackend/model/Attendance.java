@@ -3,6 +3,7 @@ package org.spring.diaryBackend.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.spring.diaryBackend.converter.AttendanceStatusConverter;
 import org.spring.diaryBackend.dbEnum.AttendanceStatus;
 
 @Getter
@@ -26,6 +27,7 @@ public class Attendance {
     @Column(name = "comment", length = Integer.MAX_VALUE)
     private String comment;
 
+    @Convert(converter = AttendanceStatusConverter.class)
     @Column(name = "status", nullable = false)
     private AttendanceStatus status;
 

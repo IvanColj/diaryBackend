@@ -9,4 +9,6 @@ public interface AttendanceService {
     AttendanceDTO findByStAndStudent(Long idLesson, Long idStudent);
 
     List<GroupAttendanceDTO> findByGroupAttendance(Long idGroup, Long idSt, Long idTeacher);
+
+    void update(Long idStudent, AttendanceDTO attendanceDTO);
 }

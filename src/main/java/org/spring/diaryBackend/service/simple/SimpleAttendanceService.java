@@ -1,6 +1,7 @@
 package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
+import org.spring.diaryBackend.dbEnum.AttendanceStatus;
 import org.spring.diaryBackend.dto.entity.AttendanceDTO;
 import org.spring.diaryBackend.dto.other.GroupAttendanceDTO;
 import org.spring.diaryBackend.mapper.entity.AttendanceDTOMapper;
@@ -9,6 +10,7 @@ import org.spring.diaryBackend.repository.AttendanceRepository;
 import org.spring.diaryBackend.repository.SubgroupRepository;
 import org.spring.diaryBackend.service.AttendanceService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -40,5 +42,37 @@ public class SimpleAttendanceService implements AttendanceService {
         }
 
         return attendances;
+    }
+
+    @Override
+    @Transactional
+    public void update(Long idStudent, AttendanceDTO attendanceDTO) {
+        if (attendanceDTO.getStatus() != null || attendanceDTO.getComment() != null) {
+            String statusCode = AttendanceStatus.toCode(attendanceDTO.getStatus());
+
+            if (attendanceDTO.getStatus() != null && statusCode == null) {
+                throw new IllegalArgumentException("Неизвестный статус: " + attendanceDTO.getStatus());
+            }
+
+            attendanceRepository.updateAttendanceNative(
+                    attendanceDTO.getIdLesson(),
+                    idStudent,
+                    attendanceDTO.getComment(),
+                    statusCode
+            );
+        }
+    }
+
+    private String convertStatusToCode(String status) {
+        if (status == null) {
+            return null;
+        }
+
+        try {
+            AttendanceStatus enumStatus = AttendanceStatus.valueOf(status);
+            return enumStatus.getCode();
+        } catch (IllegalArgumentException e) {
+            return status;
+        }
     }
 }

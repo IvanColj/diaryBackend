@@ -13,7 +13,7 @@ public class AttendanceDTOMapper implements Function<Attendance, AttendanceDTO> 
         return new AttendanceDTO(
                 attendance.getIdLesson().getId(),
                 attendance.getIdStudent().getId(),
-                attendance.getStatus().toString(),
+                attendance.getStatus() != null ? attendance.getStatus().toString() : null,
                 attendance.getComment()
         );
     }

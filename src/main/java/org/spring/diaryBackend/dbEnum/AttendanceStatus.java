@@ -15,4 +15,22 @@ public enum AttendanceStatus {
         this.code = code;
     }
 
+    @Override
+    public String toString() {
+        return code;
+    }
+
+    public static String toCode(String statusNameOrCode) {
+        if (statusNameOrCode == null) return null;
+
+        if (statusNameOrCode.length() == 1 && "упнб".contains(statusNameOrCode)) {
+            return statusNameOrCode;
+        }
+
+        try {
+            return valueOf(statusNameOrCode).getCode();
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
 }

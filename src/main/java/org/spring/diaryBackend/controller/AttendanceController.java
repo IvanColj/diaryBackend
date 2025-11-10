@@ -24,4 +24,9 @@ public class AttendanceController {
     public List<GroupAttendanceDTO> findByGroupAttendance(@PathVariable("idGroup") Long idGroup,@PathVariable("idSt") Long idSt, @PathVariable("idTeacher")  Long idTeacher) {
         return attendanceService.findByGroupAttendance(idGroup, idSt, idTeacher);
     }
+
+    @PatchMapping("student/{idStudent}")
+    public void update(@PathVariable("idStudent") Long idStudent , @RequestBody AttendanceDTO attendanceDTO) {
+        attendanceService.update(idStudent, attendanceDTO);
+    }
 }

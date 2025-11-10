@@ -4,6 +4,7 @@ import org.spring.diaryBackend.dto.other.AttendanceStudentDTO;
 import org.spring.diaryBackend.dto.other.GroupAttendanceDTO;
 import org.spring.diaryBackend.model.Attendance;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -16,11 +17,19 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     List<GroupAttendanceDTO> findBaseInfo(@Param("idGroup") Long idGroup);
 
     @Query("SELECT NEW org.spring.diaryBackend.dto.other.AttendanceStudentDTO(" +
-            "l.id, l.date, CAST(a.status AS string), a.comment" +
+            "l.id, l.date, a.status, a.comment" +
             ") " +
             "FROM Schedule s " +
             "JOIN Lesson l ON s.id = l.idSchedule.id " +
             "JOIN Attendance a ON l.id = a.idLesson.id " +
             "WHERE a.idStudent.id = :idStudent AND s.idSt.id = :idSt ")
     List<AttendanceStudentDTO> findAttendanceStudent(@Param("idStudent") Long idStudent, @Param("idSt") Long idSt);
+
+    @Modifying
+    @Query(value = "UPDATE attendance SET comment = :comment, status = CAST(:status AS attendance_status) WHERE id_lesson = :idLesson AND id_student = :idStudent",
+            nativeQuery = true)
+    void updateAttendanceNative(@Param("idLesson") Long idLesson,
+                                @Param("idStudent") Long idStudent,
+                                @Param("comment") String comment,
+                                @Param("status") String status);
 }
