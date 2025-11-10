@@ -16,7 +16,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     @Query("SELECT NEW org.spring.diaryBackend.dto.other.GroupAttendanceDTO(s.id, s.lastName, s.name, s.patronymic, null) FROM Student s WHERE s.idGroup.id = :idGroup ORDER BY s.lastName, s.name, s.patronymic")
     List<GroupAttendanceDTO> findBaseInfo(@Param("idGroup") Long idGroup);
 
-    @Query("SELECT NEW org.spring.diaryBackend.dto.other.AttendanceStudentDTO(" +
+    @Query("SELECT DISTINCT NEW org.spring.diaryBackend.dto.other.AttendanceStudentDTO(" +
             "l.id, l.date, a.status, a.comment" +
             ") " +
             "FROM Schedule s " +
