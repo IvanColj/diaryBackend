@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
-import org.spring.diaryBackend.dbEnum.AttendanceStatus;
 
 import java.io.Serializable;
 
@@ -17,7 +16,4 @@ public class AttendanceId implements Serializable {
 
     @Column(name = "id_lesson", nullable = false)
     private Long idLesson;
-
-    @Column(name = "status", nullable = false)
-    private AttendanceStatus status;
 }

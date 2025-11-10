@@ -3,6 +3,7 @@ package org.spring.diaryBackend.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.spring.diaryBackend.dbEnum.AttendanceStatus;
 
 @Getter
 @Setter
@@ -25,8 +26,7 @@ public class Attendance {
     @Column(name = "comment", length = Integer.MAX_VALUE)
     private String comment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_subgroup")
-    private Subgroup idSubgroup;
+    @Column(name = "status", nullable = false)
+    private AttendanceStatus status;
 
 }

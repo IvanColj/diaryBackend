@@ -30,7 +30,4 @@ public class Subgroup {
             joinColumns = @JoinColumn(name = "id_subgroup"),
             inverseJoinColumns = @JoinColumn(name = "id_student"))
     private Set<Student> students = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "idSubgroup")
-    private Set<Attendance> attendances = new LinkedHashSet<>();
 }
