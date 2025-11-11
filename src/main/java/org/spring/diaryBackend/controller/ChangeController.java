@@ -30,8 +30,13 @@ public class ChangeController {
         return changeService.addSupplement(id);
     }
 
-    @PostMapping("add/st/{idSt}/student/{idStudent}/number/{number}")
+    @PostMapping("add/student/st/{idSt}/student/{idStudent}/number/{number}")
     public void saveStudent(@PathVariable Long idSt, @PathVariable Long idStudent, @PathVariable Long number) {
-        changeService.save(idSt, idStudent, number);
+        changeService.saveStudent(idSt, idStudent, number);
+    }
+
+    @PostMapping("add/teacher/st/{idSt}/student/{idStudent}/number/{number}")
+    public void saveTeacher(@PathVariable Long idSt, @PathVariable Long idStudent, @PathVariable Long number) {
+        changeService.saveTeacher(idSt, idStudent, number);
     }
 }

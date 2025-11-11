@@ -54,7 +54,7 @@ public class SimpleChangeService implements ChangeService {
 
     @Override
     @Transactional
-    public Change save(Long idSt, Long idStudent, Long number) {
+    public Change saveStudent(Long idSt, Long idStudent, Long number) {
         Change change = new Change();
         change.setDateTime(LocalDateTime.now());
         change.setAction("комментарий студента");
@@ -62,6 +62,21 @@ public class SimpleChangeService implements ChangeService {
         Supplement supplement = supplementRepository.findById(supplementDTO.getId()).orElse(null);
         Objects.requireNonNull(change).setIdSupplement(supplement);
         change.setTeacherOrStudent(false);
+        Change newChange = changeRepository.save(change);
+        changeRepository.insertChange(idSt, idStudent, number, newChange.getId());
+        return newChange;
+    }
+
+    @Override
+    @Transactional
+    public Change saveTeacher(Long idSt, Long idStudent, Long number) {
+        Change change = new Change();
+        change.setDateTime(LocalDateTime.now());
+        change.setAction("комментарий преподавателя");
+        SupplementDTO supplementDTO = supplementService.save();
+        Supplement supplement = supplementRepository.findById(supplementDTO.getId()).orElse(null);
+        Objects.requireNonNull(change).setIdSupplement(supplement);
+        change.setTeacherOrStudent(true);
         Change newChange = changeRepository.save(change);
         changeRepository.insertChange(idSt, idStudent, number, newChange.getId());
         return newChange;

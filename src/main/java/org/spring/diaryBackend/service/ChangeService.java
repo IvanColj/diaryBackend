@@ -13,5 +13,7 @@ public interface ChangeService {
 
     ChangeDTO addSupplement(Long id);
 
-    Change save(Long idSt, Long idStudent, Long number);
+    Change saveStudent(Long idSt, Long idStudent, Long number);
+
+    Change saveTeacher(Long idSt, Long idStudent, Long number);
 }
