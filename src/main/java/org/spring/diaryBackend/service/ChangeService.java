@@ -2,7 +2,6 @@ package org.spring.diaryBackend.service;
 
 import org.spring.diaryBackend.dto.entity.ChangeDTO;
 import org.spring.diaryBackend.dto.other.ChangeInfoDTO;
-import org.spring.diaryBackend.model.Change;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ public interface ChangeService {
 
     ChangeDTO addSupplement(Long id);
 
-    Change saveStudent(Long idSt, Long idStudent, Long number);
+    ChangeDTO saveStudent(Long idSt, Long idStudent, Long number);
 
-    Change saveTeacher(Long idSt, Long idStudent, Long number);
+    ChangeDTO saveTeacher(Long idSt, Long idStudent, Long number);
 }

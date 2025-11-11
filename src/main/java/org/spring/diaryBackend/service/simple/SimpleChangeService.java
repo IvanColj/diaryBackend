@@ -54,7 +54,7 @@ public class SimpleChangeService implements ChangeService {
 
     @Override
     @Transactional
-    public Change saveStudent(Long idSt, Long idStudent, Long number) {
+    public ChangeDTO saveStudent(Long idSt, Long idStudent, Long number) {
         Change change = new Change();
         change.setDateTime(LocalDateTime.now());
         change.setAction("комментарий студента");
@@ -64,12 +64,12 @@ public class SimpleChangeService implements ChangeService {
         change.setTeacherOrStudent(false);
         Change newChange = changeRepository.save(change);
         changeRepository.insertChange(idSt, idStudent, number, newChange.getId());
-        return newChange;
+        return changeDTOMapper.apply(newChange);
     }
 
     @Override
     @Transactional
-    public Change saveTeacher(Long idSt, Long idStudent, Long number) {
+    public ChangeDTO saveTeacher(Long idSt, Long idStudent, Long number) {
         Change change = new Change();
         change.setDateTime(LocalDateTime.now());
         change.setAction("комментарий преподавателя");
@@ -79,6 +79,6 @@ public class SimpleChangeService implements ChangeService {
         change.setTeacherOrStudent(true);
         Change newChange = changeRepository.save(change);
         changeRepository.insertChange(idSt, idStudent, number, newChange.getId());
-        return newChange;
+        return changeDTOMapper.apply(newChange);
     }
 }

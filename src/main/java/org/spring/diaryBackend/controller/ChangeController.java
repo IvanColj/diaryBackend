@@ -31,12 +31,12 @@ public class ChangeController {
     }
 
     @PostMapping("add/student/st/{idSt}/student/{idStudent}/number/{number}")
-    public void saveStudent(@PathVariable Long idSt, @PathVariable Long idStudent, @PathVariable Long number) {
-        changeService.saveStudent(idSt, idStudent, number);
+    public ChangeDTO saveStudent(@PathVariable Long idSt, @PathVariable Long idStudent, @PathVariable Long number) {
+        return changeService.saveStudent(idSt, idStudent, number);
     }
 
     @PostMapping("add/teacher/st/{idSt}/student/{idStudent}/number/{number}")
-    public void saveTeacher(@PathVariable Long idSt, @PathVariable Long idStudent, @PathVariable Long number) {
-        changeService.saveTeacher(idSt, idStudent, number);
+    public ChangeDTO saveTeacher(@PathVariable Long idSt, @PathVariable Long idStudent, @PathVariable Long number) {
+        return changeService.saveTeacher(idSt, idStudent, number);
     }
 }
