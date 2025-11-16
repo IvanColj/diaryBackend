@@ -1,7 +1,7 @@
 FROM amazoncorretto:17-alpine AS builder
 WORKDIR /application
 COPY . .
-RUN --mount=type=cache,target=/root/.m2 chmod +x mvnw && ./mvnw clean install -Dmaven.test.skip
+RUN chmod +x mvnw && ./mvnw clean install -Dmaven.test.skip
 
 FROM amazoncorretto:17-alpine AS layers
 WORKDIR /application
