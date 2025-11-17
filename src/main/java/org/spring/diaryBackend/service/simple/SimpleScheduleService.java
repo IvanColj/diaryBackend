@@ -103,11 +103,14 @@ public class SimpleScheduleService implements ScheduleService {
                         (Long) ((Object[]) schedule)[13],
                         (Long) ((Object[]) schedule)[14],
                         (Boolean) ((Object[]) schedule)[15],
-                        (LocalDate) ((Object[]) schedule)[16]
+                        schedule[16] instanceof java.sql.Date ?
+                                ((java.sql.Date) schedule[16]).toLocalDate() :
+                                (LocalDate) schedule[16]
                 );
                 scheduleWeekGroupDTOs.add(dto);
             }
         });
+
 
         Subgroup subgroup;
         Student student;

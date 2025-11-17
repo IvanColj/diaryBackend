@@ -42,7 +42,7 @@ public class Schedule {
     @JoinColumn(name = "subgroup")
     private Staff subgroup;
 
-    @JoinColumn(name = "replacement")
+    @Column(name = "replacement")
     private Boolean replacement;
 
     @JoinColumn(name = "date_replacement")
