@@ -13,5 +13,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class LessonDateDTO {
     private Long number;
+    private Long idLesson;
     private LocalDate date;
 }

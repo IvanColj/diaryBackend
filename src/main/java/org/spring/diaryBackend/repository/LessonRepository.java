@@ -23,7 +23,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
     @Query(
             value = """
-                    SELECT DISTINCT new org.spring.diaryBackend.dto.other.LessonDateDTO(rm.id.number, l.date)
+                    SELECT DISTINCT new org.spring.diaryBackend.dto.other.LessonDateDTO(rm.id.number, l.id, l.date)
                     FROM Schedule s
                     JOIN s.lessons l
                     JOIN l.regularMarks rm

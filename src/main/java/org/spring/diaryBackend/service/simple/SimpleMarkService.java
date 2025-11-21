@@ -102,17 +102,24 @@ public class SimpleMarkService implements MarkService {
 
     @Override
     public void updateMarksNumber(UpdateMarkDTO updateMarkDTO) {
-        SemesterMark semesterMarks = markRepository.findByStudentAndSubject(updateMarkDTO.getIdStudent(), updateMarkDTO.getIdSt());
+        SemesterMark semesterMarks = markRepository.findByStudentAndSubject(
+                updateMarkDTO.getIdStudent(), updateMarkDTO.getIdSt());
         if (semesterMarks == null) {
             return;
         }
         if (updateMarkDTO.getIdTypeMark() != null) {
-            markRepository.updateMarkGroup(updateMarkDTO.getIdTeacher(), updateMarkDTO.getIdGroup(), updateMarkDTO.getIdSt(), updateMarkDTO.getNumber(), LocalDateTime.now(), updateMarkDTO.getIdTypeMark());
+            markRepository.updateMarkGroup(updateMarkDTO.getIdTeacher(),
+                    updateMarkDTO.getIdGroup(), updateMarkDTO.getIdSt(),
+                    updateMarkDTO.getNumber(), LocalDateTime.now(),
+                    updateMarkDTO.getIdTypeMark());
         }
         else {
-            semesterMarks.getRegularMarks().stream().toList().forEach(regularMarks ->
+            semesterMarks.getRegularMarks().stream().toList()
+                    .forEach(regularMarks ->
             {
-                if (regularMarks.getId().getNumber() != null && regularMarks.getId().getNumber().equals(updateMarkDTO.getNumber())) {
+                if (regularMarks.getId().getNumber() != null &&
+                        regularMarks.getId().getNumber().equals
+                                (updateMarkDTO.getNumber())) {
                     regularMarks.setValue(updateMarkDTO.getMark());
                 }
             });
