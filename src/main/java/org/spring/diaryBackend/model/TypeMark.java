@@ -1,24 +1,33 @@
 package org.spring.diaryBackend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Getter
+@Setter
+@Entity
+@Table(name = "type_mark")
 public class TypeMark {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_st")
+    private SubjectTeacher idSt;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "weight")
     private Long weight;
-    private Long idSt;
+
+    @OneToMany(mappedBy = "idTypeMark")
+    private Set<RegularMark> regularMarks = new LinkedHashSet<>();
+
 }

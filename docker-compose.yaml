@@ -1,0 +1,7 @@
+services:
+  diary-backend:
+    image: diary-backend:latest
+    build: .
+    restart: "no"
+    ports:
+      - "8080:8080"

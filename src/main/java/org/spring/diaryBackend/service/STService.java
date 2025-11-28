@@ -1,21 +1,33 @@
 package org.spring.diaryBackend.service;
 
-import org.spring.diaryBackend.dto.STGroupsDTO;
-import org.spring.diaryBackend.model.SubjectTeacher;
+import org.spring.diaryBackend.dto.entity.SubjectTeacherDTO;
+import org.spring.diaryBackend.dto.other.STGroupsDTO;
+import org.spring.diaryBackend.dto.other.STNumberMarkTypeMarkDTO;
 
 import java.util.List;
 
 public interface STService {
-    List<SubjectTeacher> findByAllSubjectTeacher(int offset, int limit);
-    List<SubjectTeacher> findAllSubjectTeacher();
-    List<SubjectTeacher> findByTeacher(Long teacherId);
-    List<STGroupsDTO> findBySTGroups(Long teacherId);
+    List<SubjectTeacherDTO> findAllSubjectTeacher();
 
-    SubjectTeacher findById(Long id);
-    SubjectTeacher saveSubjectTeacher(SubjectTeacher subjectTeacher);
-    SubjectTeacher updateSubjectTeacher(SubjectTeacher subjectTeacher);
-    void addingSTGroup(Long id_st, Long group);
-    void updateSTGroup(Long id_st, Long group, Long newGroup);
-    void deleteSTGroup(Long id_st, Long group);
-    void deleteSubjectTeacher(Long teacherId);
+    List<SubjectTeacherDTO> findByTeacher(Long idTeacher);
+
+    List<STGroupsDTO> findBySTGroups(Long idTeacher);
+
+    SubjectTeacherDTO findById(Long id);
+
+    List<STNumberMarkTypeMarkDTO> findByStNumberMarkType(Long idSt);
+
+    SubjectTeacherDTO saveSubjectTeacher(SubjectTeacherDTO subjectTeacher);
+
+    SubjectTeacherDTO updateSubjectTeacher(SubjectTeacherDTO subjectTeacher);
+
+    void addingSTGroup(Long idSt, Long idGroup);
+
+    void addingTeacher(Long idSt, Long idTeacher);
+
+    void deleteSTGroup(Long idSt, Long idGroup);
+
+    void deleteSTTeacher(Long idSt, Long idTeacher);
+
+    void deleteSubjectTeacher(Long idTeacher);
 }

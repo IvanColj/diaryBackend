@@ -1,91 +1,147 @@
 package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
-import org.spring.diaryBackend.dto.STGroupDTO;
-import org.spring.diaryBackend.dto.STGroupsDTO;
+import org.spring.diaryBackend.dto.entity.SubjectTeacherDTO;
+import org.spring.diaryBackend.dto.other.STGroupDTO;
+import org.spring.diaryBackend.dto.other.STGroupsDTO;
+import org.spring.diaryBackend.dto.other.STNumberMarkTypeMarkDTO;
+import org.spring.diaryBackend.mapper.entity.STDTOMapper;
 import org.spring.diaryBackend.model.SubjectTeacher;
-import org.spring.diaryBackend.repository.MarksRepository;
 import org.spring.diaryBackend.repository.STRepository;
+import org.spring.diaryBackend.repository.StaffRepository;
+import org.spring.diaryBackend.repository.StudentGroupRepository;
+import org.spring.diaryBackend.repository.SubjectRepository;
 import org.spring.diaryBackend.service.STService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class SimpleSTService implements STService {
     private final STRepository stRepository;
-    private final MarksRepository marksRepository;
+    private final StaffRepository staffRepository;
+    private final SubjectRepository subjectRepository;
+    private final StudentGroupRepository studentGroupRepository;
+
+    private final STDTOMapper stdtoMapper;
 
     @Override
-    public List<SubjectTeacher> findByAllSubjectTeacher(int offset, int limit) {
-        return stRepository.findByAllSubjectTeacher(offset, limit);
+    public List<SubjectTeacherDTO> findAllSubjectTeacher() {
+        return stRepository.findAll().stream().map(stdtoMapper).toList();
     }
 
     @Override
-    public List<SubjectTeacher> findAllSubjectTeacher() {
-        return stRepository.findAll();
+    public List<SubjectTeacherDTO> findByTeacher(Long teacherId) {
+        return stRepository.findByTeacher(teacherId).stream().map(stdtoMapper).toList();
     }
 
     @Override
-    public List<SubjectTeacher> findByTeacher(Long teacherId) {
-        return stRepository.findByTeacher(teacherId);
+    public SubjectTeacherDTO findById(Long id) {
+        return stRepository.findById(id).map(stdtoMapper).orElse(null);
     }
 
     @Override
-    public SubjectTeacher findById(Long id) {
-        return stRepository.findById(id).orElse(null);
+    public List<STNumberMarkTypeMarkDTO> findByStNumberMarkType(Long idSt) {
+        return stRepository.findByStNumberMarkTypeMark(idSt);
     }
 
     @Override
-    public List<STGroupsDTO> findBySTGroups(Long teacherId) {
-        List<STGroupDTO> stGroup = stRepository.findBySTGroup(teacherId);
+    public List<STGroupsDTO> findBySTGroups(Long idTeacher) {
+        List<STGroupDTO> stGroup = stRepository.findBySTGroup(idTeacher);
 
         Map<List<Object>, STGroupsDTO> map = new LinkedHashMap<>();
 
         for (STGroupDTO item : stGroup) {
-            List<Object> key = Arrays.asList(item.getIdTeacher(), item.getIdSubject(), item.getSubjectName());
+            List<Object> key = Arrays.asList(item.getIdSt(), item.getSubjectName());
             STGroupsDTO dto = map.get(key);
             if (dto == null) {
-                dto = new STGroupsDTO(item.getIdTeacher(), item.getIdSubject(), item.getSubjectName(), new ArrayList<>());
+                dto = new STGroupsDTO(item.getIdSt(), item.getSubjectName(), new ArrayList<>());
                 map.put(key, dto);
             }
-            dto.getGroups().add(item.getGroup());
+            dto.getIdGroups().add(item.getGroup());
         }
 
         return new ArrayList<>(map.values());
     }
 
     @Override
-    public SubjectTeacher saveSubjectTeacher(SubjectTeacher subjectTeacher) {
-        return stRepository.save(subjectTeacher);
+    public SubjectTeacherDTO saveSubjectTeacher(SubjectTeacherDTO subjectTeacherDTO) {
+        SubjectTeacher subjectTeacher = new SubjectTeacher();
+        subjectTeacher.setIdSubject(subjectRepository.findById(subjectTeacherDTO.getIdSubject()).orElse(null));
+        if (subjectTeacherDTO.getTeachers() != null) {
+            subjectTeacher.setTeachers(subjectTeacherDTO.getTeachers().stream().map(
+                    idTeacher -> staffRepository.findById(idTeacher).orElse(null)
+            ).collect(Collectors.toSet()));
+        }
+        if (subjectTeacher.getTeachers() == null) {
+            return  stdtoMapper.apply(stRepository.save(subjectTeacher));
+        } else if (subjectTeacher.getIdSubject() == null) {
+            return new SubjectTeacherDTO();
+        } else {
+            return stdtoMapper.apply(stRepository.save(subjectTeacher));
+        }
     }
 
     @Override
-    public SubjectTeacher updateSubjectTeacher(SubjectTeacher subjectTeacher) {
-        return stRepository.save(subjectTeacher);
+    public SubjectTeacherDTO updateSubjectTeacher(SubjectTeacherDTO subjectTeacherNew) {
+        SubjectTeacher subjectTeacherUpdate = stRepository.findById(subjectTeacherNew.getId()).orElse(null);
+        if (subjectTeacherUpdate == null) {
+            return new SubjectTeacherDTO();
+        }
+        if (subjectTeacherNew.getIdSubject() != null) {
+            subjectTeacherUpdate.setIdSubject(subjectRepository.findById(subjectTeacherNew.getIdSubject()).orElse(null));
+        }
+        if (subjectTeacherNew.getTeachers() != null) {
+            subjectTeacherUpdate.setTeachers(subjectTeacherNew.getTeachers().stream().map(
+                    idTeacher -> staffRepository.findById(idTeacher).orElse(null)
+            ).collect(Collectors.toSet()));
+        }
+        if (subjectTeacherNew.getGroups() != null) {
+            subjectTeacherUpdate.setGroups(
+                    subjectTeacherNew.getGroups()
+                            .stream()
+                            .map(studentGroupRepository::findStudentGroupByIdGroup).collect(Collectors.toSet()));
+        }
+        if (subjectTeacherUpdate.getIdSubject() == null || subjectTeacherUpdate.getTeachers() == null) {
+            return new SubjectTeacherDTO();
+        }
+        return stdtoMapper.apply(stRepository.save(subjectTeacherUpdate));
     }
 
     @Override
-    public void addingSTGroup(Long id_st, Long group) {
-        stRepository.addingSTGroup(id_st, group);
-        marksRepository.addSemesterMarksForGroup(group, id_st);
-        marksRepository.addFirstRegularMarksForGroup(group, id_st, LocalDate.now());
+    public void addingSTGroup(Long id_st, Long id_group) {
+        stRepository.addingSTGroup(id_st, id_group);
     }
 
     @Override
-    public void updateSTGroup(Long id_st, Long group, Long newGroup) {
-        stRepository.updateSTGroup(id_st, group, newGroup);
+    public void addingTeacher(Long id_st, Long id_teacher) {
+        SubjectTeacher subjectTeacher = stRepository.findById(id_st).orElse(null);
+        if (subjectTeacher != null && subjectTeacher.getGroups() != null) {
+            subjectTeacher.getGroups().forEach(studentGroup ->
+                    stRepository.addingTwoGroupToSubgroup(
+                            id_st,
+                            studentGroup.getId(),
+                            subjectTeacher.getTeachers().stream().toList().get(0).getId(),
+                            id_teacher)
+            );
+        }
+        stRepository.addingTeacher(id_st, id_teacher);
     }
 
     @Override
-    public void deleteSTGroup(Long id_st, Long group) {
-        stRepository.deleteSTGroup(id_st, group);
+    public void deleteSTGroup(Long idSt, Long idGroup) {
+        stRepository.deleteSTGroup(idSt, idGroup);
     }
 
     @Override
-    public void deleteSubjectTeacher(Long teacherId) {
-        stRepository.deleteById(teacherId);
+    public void deleteSTTeacher(Long idSt, Long idTeacher) {
+        stRepository.deleteSTTeacher(idSt, idTeacher);
+    }
+
+    @Override
+    public void deleteSubjectTeacher(Long idTeacher) {
+        stRepository.deleteById(idTeacher);
     }
 }
