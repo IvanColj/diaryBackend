@@ -3,9 +3,9 @@ package org.spring.diaryBackend.service.simple;
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dbEnum.AttendanceStatus;
 import org.spring.diaryBackend.dto.entity.AttendanceDTO;
+import org.spring.diaryBackend.dto.other.AllSubjectsAttendanceDTO;
 import org.spring.diaryBackend.dto.other.GroupAttendanceDTO;
-import org.spring.diaryBackend.dto.other.NameSubjectTeachersDTO;
-import org.spring.diaryBackend.dto.other.StudentAttendanceDTO;
+import org.spring.diaryBackend.dto.other.STTeachersDTO;
 import org.spring.diaryBackend.mapper.entity.AttendanceDTOMapper;
 import org.spring.diaryBackend.mapper.other.NameSubjectTeachersDTOMapper;
 import org.spring.diaryBackend.model.Student;
@@ -24,31 +24,39 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SimpleAttendanceService implements AttendanceService {
     private final AttendanceRepository attendanceRepository;
-
     private final SubgroupRepository subgroupRepository;
-
-    private final AttendanceDTOMapper attendanceDTOMapper;
-
     private final StudentRepository studentRepository;
-
     private final NameSubjectTeachersDTOMapper nameSubjectTeachersDTOMapper;
+    private final AttendanceDTOMapper attendanceDTOMapper;
 
     @Override
     public AttendanceDTO findByStAndStudent(Long idLesson, Long idStudent) {
-        return attendanceDTOMapper.apply(attendanceRepository.findById_IdStudentAndId_IdLesson(idStudent, idLesson));
+        return attendanceDTOMapper.apply(
+                attendanceRepository.findById_IdStudentAndId_IdLesson(idStudent, idLesson)
+        );
     }
 
     @Override
     public List<GroupAttendanceDTO> findByGroupAttendance(Long idGroup, Long idSt, Long idTeacher) {
-        List<GroupAttendanceDTO> attendances = attendanceRepository.findBaseInfo(idGroup);
-        if (subgroupRepository.findByIdStAndIdTeacher(idSt, idTeacher) != null) {
-            List<Long> studentsId = subgroupRepository.findByIdStAndIdTeacher(idSt, idTeacher).getStudents().stream().map(Student::getId).toList();
+        List<GroupAttendanceDTO> attendances = attendanceRepository.findStudentsFIOByGroup(idGroup);
+
+        if (subgroupRepository.findTeacherSubgroupBySubject(idSt, idTeacher) != null) {
+            List<Long> studentsId = subgroupRepository
+                    .findTeacherSubgroupBySubject(idSt, idTeacher)
+                    .getStudents()
+                    .stream()
+                    .map(Student::getId)
+                    .toList();
+
             attendances = attendances.stream()
                     .filter(attendance -> studentsId.contains(attendance.getIdStudent()))
                     .toList();
         }
+
         for (GroupAttendanceDTO attendance : attendances) {
-            attendance.setAttendances(attendanceRepository.findAttendanceStudent(attendance.getIdStudent(), idSt));
+            attendance.setAttendances(
+                    attendanceRepository.findAttendanceForStudent(attendance.getIdStudent(), idSt)
+            );
         }
 
         return attendances;
@@ -64,7 +72,7 @@ public class SimpleAttendanceService implements AttendanceService {
                 throw new IllegalArgumentException("Неизвестный статус: " + attendanceDTO.getStatus());
             }
 
-            attendanceRepository.updateAttendanceNative(
+            attendanceRepository.updateAttendanceStatus(
                     attendanceDTO.getIdLesson(),
                     idStudent,
                     attendanceDTO.getComment(),
@@ -74,13 +82,19 @@ public class SimpleAttendanceService implements AttendanceService {
     }
 
     @Override
-    public List<StudentAttendanceDTO> studentAttendance(Long idStudent) {
-        List<NameSubjectTeachersDTO> nameSubjectTeachersDTOS = studentRepository.findSubjectsByStudent(idStudent).stream().map(nameSubjectTeachersDTOMapper).toList();
-        List<StudentAttendanceDTO> studentAttendances = new ArrayList<>();
-        List<NameSubjectTeachersDTO> groupedNameSubjectTeachersDTOS = nameSubjectTeachersDTOS.stream()
+    public List<AllSubjectsAttendanceDTO> studentAttendance(Long idStudent) {
+        List<STTeachersDTO> STTeachersDTOS = studentRepository
+                .findStudentMarksInSubgroup(idStudent)
+                .stream()
+                .map(nameSubjectTeachersDTOMapper)
+                .toList();
+
+        List<AllSubjectsAttendanceDTO> studentAttendances = new ArrayList<>();
+
+        List<STTeachersDTO> groupedSTTeachersDTOS = STTeachersDTOS.stream()
                 .collect(Collectors.toMap(
-                        NameSubjectTeachersDTO::getIdSt,
-                        dto -> new NameSubjectTeachersDTO(
+                        STTeachersDTO::getIdSt,
+                        dto -> new STTeachersDTO(
                                 dto.getIdSt(),
                                 dto.getIdSubject(),
                                 dto.getNameSubject(),
@@ -93,11 +107,14 @@ public class SimpleAttendanceService implements AttendanceService {
                 ))
                 .values().stream()
                 .toList();
-        groupedNameSubjectTeachersDTOS.forEach(nameSubjectTeachersDTO -> studentAttendances.add(new StudentAttendanceDTO(
+
+        groupedSTTeachersDTOS.forEach(nameSubjectTeachersDTO ->
+                studentAttendances.add(new AllSubjectsAttendanceDTO(
                         nameSubjectTeachersDTO,
-                        attendanceRepository.findAttendanceStudent(idStudent, nameSubjectTeachersDTO.getIdSt())
+                        attendanceRepository.findAttendanceForStudent(idStudent, nameSubjectTeachersDTO.getIdSt())
                 ))
         );
+
         return studentAttendances;
     }
 }

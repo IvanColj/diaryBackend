@@ -3,7 +3,7 @@ package org.spring.diaryBackend.service.simple;
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.ChangeDTO;
 import org.spring.diaryBackend.dto.entity.SupplementDTO;
-import org.spring.diaryBackend.dto.other.ChangeInfoDTO;
+import org.spring.diaryBackend.dto.other.MarkChangeDTO;
 import org.spring.diaryBackend.mapper.entity.ChangeDTOMapper;
 import org.spring.diaryBackend.mapper.other.ChangeInfoDTOMapper;
 import org.spring.diaryBackend.model.Change;
@@ -23,23 +23,25 @@ import java.util.Objects;
 @AllArgsConstructor
 public class SimpleChangeService implements ChangeService {
     private final ChangeRepository changeRepository;
-
-    private final SupplementService supplementService;
-
     private final SupplementRepository supplementRepository;
-
+    private final SupplementService supplementService;
     private final ChangeInfoDTOMapper changeInfoDTOMapper;
-
     private final ChangeDTOMapper changeDTOMapper;
 
     @Override
     public List<ChangeDTO> findAllChange() {
-        return changeRepository.findAll().stream().map(changeDTOMapper).toList();
+        return changeRepository.findAll()
+                .stream()
+                .map(changeDTOMapper)
+                .toList();
     }
 
     @Override
-    public List<ChangeInfoDTO> findByAllChangeMark(Long idSt, Long idStudent, Long numberMark) {
-        return changeRepository.findByAllChangeMark(idSt, idStudent, numberMark).stream().map(changeInfoDTOMapper).toList();
+    public List<MarkChangeDTO> findByAllChangeMark(Long idSt, Long idStudent, Long numberMark) {
+        return changeRepository.findMarkChanges(idSt, idStudent, numberMark)
+                .stream()
+                .map(changeInfoDTOMapper)
+                .toList();
     }
 
     @Override
@@ -63,7 +65,7 @@ public class SimpleChangeService implements ChangeService {
         Objects.requireNonNull(change).setIdSupplement(supplement);
         change.setTeacherOrStudent(false);
         Change newChange = changeRepository.save(change);
-        changeRepository.insertChange(idSt, idStudent, number, newChange.getId());
+        changeRepository.addMarkChange(idSt, idStudent, number, newChange.getId());
         return changeDTOMapper.apply(newChange);
     }
 
@@ -78,7 +80,7 @@ public class SimpleChangeService implements ChangeService {
         Objects.requireNonNull(change).setIdSupplement(supplement);
         change.setTeacherOrStudent(true);
         Change newChange = changeRepository.save(change);
-        changeRepository.insertChange(idSt, idStudent, number, newChange.getId());
+        changeRepository.addMarkChange(idSt, idStudent, number, newChange.getId());
         return changeDTOMapper.apply(newChange);
     }
 }

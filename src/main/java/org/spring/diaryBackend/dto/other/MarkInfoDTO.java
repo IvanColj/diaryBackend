@@ -8,6 +8,8 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.List;
 
+// TODO убрать измения оставить их в отдельном запросе
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,6 +30,6 @@ public class MarkInfoDTO {
     private String typeWeek;
     private Long numPair;
     private Boolean replacement;
-    private List<ChangeInfoDTO> changes;
+    private List<MarkChangeDTO> changes;
 }
 

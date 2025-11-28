@@ -2,14 +2,14 @@ package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
-import org.spring.diaryBackend.dto.other.StudentMarksAllSubjectDTO;
+import org.spring.diaryBackend.dto.other.StudentAllMarksDTO;
 import org.spring.diaryBackend.service.StudentService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-    @RequestMapping("/api/v1/students")
+@RequestMapping("/api/v1/students")
 @AllArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class StudentController {
@@ -26,7 +26,8 @@ public class StudentController {
     }
 
     @GetMapping("login/{login}/password/{password}")
-    public StudentDTO getByLogin(@PathVariable String login, @PathVariable String password) {
+    public StudentDTO getByLogin(@PathVariable String login,
+                                 @PathVariable String password) {
         return studentService.findByLoginOrPassword(login, password);
     }
 
@@ -36,7 +37,7 @@ public class StudentController {
     }
 
     @GetMapping("marks/id/{id}")
-    public List<StudentMarksAllSubjectDTO> getGroupMarks(@PathVariable Long id) {
+    public List<StudentAllMarksDTO> getGroupMarks(@PathVariable Long id) {
         return studentService.getStudentMarks(id);
     }
 

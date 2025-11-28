@@ -11,11 +11,11 @@ public interface MarkService {
 
     void addMarksForGroup(CRUDMarksDTO crudMarksDTO);
 
-    ColumnMarkDTO findColumnMarkInfo(Long idStudent, Long idSt, Long number);
+    MarksColumnDataDTO findColumnMarkInfo(Long idStudent, Long idSt, Long number);
 
     MarkInfoDTO findMarkInfo(Long idStudent, Long idSt, Long number);
 
-    List<SubjectMarksDTO> findByStudentAndSubject(Long idStudent, Long idSt);
+    List<SubjectMarksInfoDTO> findByStudentAndSubject(Long idStudent, Long idSt);
 
     SemesterMarkDTO updateMarks(SemesterMarkDTO semesterMarkDTO);
 

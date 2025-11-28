@@ -11,8 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class STGroupsDTO {
-    private Long idSt;
-    private String subjectName;
-    private List<Long> idGroups;
+public class AllSubjectsAttendanceDTO {
+    private STTeachersDTO STTeachersDTO;
+    private List<SingleSubjectAttendanceDTO> attendances;
 }

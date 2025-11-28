@@ -7,10 +7,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface SubgroupRepository extends JpaRepository<Subgroup, Long> {
 
-    @Query(
-            """
-            SELECT s FROM Subgroup s WHERE s.idSt.id = :idSt AND s.idTeacher.id = :idTeacher
-            """
-    )
-    Subgroup findByIdStAndIdTeacher(@Param("idSt") Long idSt, @Param("idTeacher") Long idTeacher);
+    @Query("""
+        SELECT s FROM Subgroup s
+        WHERE s.idSt.id = :idSt
+            AND s.idTeacher.id = :idTeacher
+    """)
+    Subgroup findTeacherSubgroupBySubject(@Param("idSt") Long idSt,
+                                          @Param("idTeacher") Long idTeacher);
 }

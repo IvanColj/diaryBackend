@@ -22,9 +22,7 @@ import java.util.UUID;
 @Service
 public class SimplePathService implements PathService {
     private final PathRepository pathRepository;
-
     private final PathDTOMapper pathDTOMapper;
-
     private final RestTemplate restTemplate;
 
     public SimplePathService(RestTemplateBuilder restTemplateBuilder,
@@ -40,12 +38,18 @@ public class SimplePathService implements PathService {
 
     @Override
     public List<PathDTO> findAllPath() {
-        return pathRepository.findAll().stream().map(pathDTOMapper).toList();
+        return pathRepository.findAll()
+                .stream()
+                .map(pathDTOMapper)
+                .toList();
     }
 
     @Override
     public List<PathDTO> findType(String type) {
-        return pathRepository.findType(type).stream().map(pathDTOMapper).toList();
+        return pathRepository.findPathsByType(type)
+                .stream()
+                .map(pathDTOMapper)
+                .toList();
     }
 
     @Value("${file.storage.upload-url}")

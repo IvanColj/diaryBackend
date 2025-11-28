@@ -5,16 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class STNameSubjectDTO {
+public class STTeachersDTO {
     private Long idSt;
     private Long idSubject;
     private String nameSubject;
-    private Long idTeacher;
-    private String lastnameTeacher;
-    private String nameTeacher;
-    private String patronymicTeacher;
+    private List<TeacherFIODTO> teachers;
 }

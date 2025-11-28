@@ -15,8 +15,7 @@ public class MarksStudentDTOMapper implements Function<RegularMark, MarksStudent
                     regularMark.getId() != null ? regularMark.getId().getNumber() : null,
                     regularMark.getValue()
             );
-        }
-        else {
+        } else {
             return null;
         }
     }

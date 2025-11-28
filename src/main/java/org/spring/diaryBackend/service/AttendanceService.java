@@ -1,8 +1,8 @@
 package org.spring.diaryBackend.service;
 
 import org.spring.diaryBackend.dto.entity.AttendanceDTO;
+import org.spring.diaryBackend.dto.other.AllSubjectsAttendanceDTO;
 import org.spring.diaryBackend.dto.other.GroupAttendanceDTO;
-import org.spring.diaryBackend.dto.other.StudentAttendanceDTO;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ public interface AttendanceService {
 
     void update(Long idStudent, AttendanceDTO attendanceDTO);
 
-    List<StudentAttendanceDTO> studentAttendance(Long idStudent);
+    List<AllSubjectsAttendanceDTO> studentAttendance(Long idStudent);
 }

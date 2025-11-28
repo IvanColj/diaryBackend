@@ -21,24 +21,24 @@ public class MarkController {
     }
 
     @GetMapping("student/{id_student}/subject/{id_st}")
-    public List<SubjectMarksDTO> getMarksStudentsSubject(@PathVariable Long id_student, @PathVariable Long id_st) {
+    public List<SubjectMarksInfoDTO> getMarksStudentsSubject(@PathVariable Long id_student,
+                                                             @PathVariable Long id_st) {
         return markService.findByStudentAndSubject(id_student, id_st);
     }
 
     @GetMapping("info/column/student/{idStudent}/st/{idSt}/number/{number}")
-    public ColumnMarkDTO findColumnMarkInfo(@PathVariable Long idStudent, @PathVariable Long idSt, @PathVariable Long number) {
+    public MarksColumnDataDTO findColumnMarkInfo(@PathVariable Long idStudent,
+                                                 @PathVariable Long idSt,
+                                                 @PathVariable Long number) {
         return markService.findColumnMarkInfo(idStudent, idSt, number);
     }
 
     @GetMapping("info/mark/student/{idStudent}/st/{idSt}/number/{number}")
-    public MarkInfoDTO findMarkInfo(@PathVariable Long idStudent, @PathVariable Long idSt, @PathVariable Long number) {
+    public MarkInfoDTO findMarkInfo(@PathVariable Long idStudent,
+                                    @PathVariable Long idSt,
+                                    @PathVariable Long number) {
         return markService.findMarkInfo(idStudent, idSt, number);
     }
-
-//    @DeleteMapping("delete/group")
-//    public void deleteMarksNumber(@RequestBody DelMarksGroup delMarksGroup) {
-//        markService.deleteMarksGroupSt(delMarksGroup);
-//    }
 
     @DeleteMapping("delete/group")
     public void deleteMarksNumberGroupST(@RequestBody CRUDMarksDTO crudMarksDTO) {
@@ -50,12 +50,12 @@ public class MarkController {
         return markService.updateMarks(semesterMarks);
     }
 
-    @PatchMapping ("updateOneMark")
+    @PatchMapping("updateOneMark")
     public void updateMarksNumber(@RequestBody UpdateMarkDTO updateMarkDTO) {
         markService.updateMarksNumber(updateMarkDTO);
     }
 
-    @PatchMapping ("update/certification")
+    @PatchMapping("update/certification")
     public void updateCertification(@RequestBody SemesterMarkDTO semesterMarkDTO) {
         markService.updateCertification(semesterMarkDTO);
     }

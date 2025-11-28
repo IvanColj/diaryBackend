@@ -16,19 +16,23 @@ import java.util.List;
 @AllArgsConstructor
 public class SimpleTypeMarkService implements TypeMarkService {
     private final TypeMarkRepository typeMarkRepository;
-
-    private final TypeMarkDTOMapper typeMarkDTOMapper;
-
     private final STRepository sTRepository;
+    private final TypeMarkDTOMapper typeMarkDTOMapper;
 
     @Override
     public List<TypeMarkDTO> findAll() {
-        return typeMarkRepository.findAll().stream().map(typeMarkDTOMapper).toList();
+        return typeMarkRepository.findAll()
+                .stream()
+                .map(typeMarkDTOMapper)
+                .toList();
     }
 
     @Override
     public List<TypeMarkDTO> findBySt(Long idSt) {
-        return typeMarkRepository.findBySt(idSt).stream().map(typeMarkDTOMapper).toList();
+        return typeMarkRepository.findSubjectMarkTypes(idSt)
+                .stream()
+                .map(typeMarkDTOMapper)
+                .toList();
     }
 
     @Override

@@ -16,8 +16,7 @@ public class ChangeDTOMapper implements Function<Change, ChangeDTO> {
                 change.getId(),
                 change.getDateTime(),
                 change.getAction(),
-                change.getIdSupplement() != null ?
-                        change.getIdSupplement().getId() : null,
+                change.getIdSupplement() != null ? change.getIdSupplement().getId() : null,
                 change.getTeacherOrStudent(),
                 change.getNewValue()
         );

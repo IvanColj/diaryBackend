@@ -13,11 +13,13 @@ import java.util.List;
 @AllArgsConstructor
 public class SimpleStaffPositionService implements StaffPositionService {
     private final StaffPositionRepository staffPositionRepository;
-
     private final StaffPositionDTOMapper staffPositionDTOMapper;
 
     @Override
     public List<StaffPositionDTO> findAllStaffPosition() {
-        return staffPositionRepository.findAll().stream().map(staffPositionDTOMapper).toList();
+        return staffPositionRepository.findAll()
+                .stream()
+                .map(staffPositionDTOMapper)
+                .toList();
     }
 }

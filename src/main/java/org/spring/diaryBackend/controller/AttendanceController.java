@@ -2,8 +2,8 @@ package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.AttendanceDTO;
+import org.spring.diaryBackend.dto.other.AllSubjectsAttendanceDTO;
 import org.spring.diaryBackend.dto.other.GroupAttendanceDTO;
-import org.spring.diaryBackend.dto.other.StudentAttendanceDTO;
 import org.spring.diaryBackend.service.AttendanceService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,22 +17,26 @@ public class AttendanceController {
     private final AttendanceService attendanceService;
 
     @GetMapping("lesson/{idLesson}/student/{idStudent}")
-    public AttendanceDTO findByLessonStudent(@PathVariable("idLesson") Long idLesson, @PathVariable("idStudent") Long idStudent) {
+    public AttendanceDTO findByLessonStudent(@PathVariable("idLesson") Long idLesson,
+                                             @PathVariable("idStudent") Long idStudent) {
         return attendanceService.findByStAndStudent(idLesson, idStudent);
     }
 
     @GetMapping("group/{idGroup}/st/{idSt}/teacher/{idTeacher}")
-    public List<GroupAttendanceDTO> findByGroupAttendance(@PathVariable("idGroup") Long idGroup,@PathVariable("idSt") Long idSt, @PathVariable("idTeacher")  Long idTeacher) {
+    public List<GroupAttendanceDTO> findByGroupAttendance(@PathVariable("idGroup") Long idGroup,
+                                                          @PathVariable("idSt") Long idSt,
+                                                          @PathVariable("idTeacher") Long idTeacher) {
         return attendanceService.findByGroupAttendance(idGroup, idSt, idTeacher);
     }
 
     @GetMapping("student/{id}")
-    public List<StudentAttendanceDTO> findByStudentAttendance(@PathVariable("id") Long id) {
+    public List<AllSubjectsAttendanceDTO> findByStudentAttendance(@PathVariable("id") Long id) {
         return attendanceService.studentAttendance(id);
     }
 
     @PatchMapping("student/{idStudent}")
-    public void update(@PathVariable("idStudent") Long idStudent , @RequestBody AttendanceDTO attendanceDTO) {
+    public void update(@PathVariable("idStudent") Long idStudent,
+                       @RequestBody AttendanceDTO attendanceDTO) {
         attendanceService.update(idStudent, attendanceDTO);
     }
 }

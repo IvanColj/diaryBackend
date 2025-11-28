@@ -31,7 +31,9 @@ public class SubgroupController {
     }
 
     @PostMapping("update/students/st/{idSt}/teacher/{idTeacher}")
-    public void updateStudents(@RequestBody SubgroupStudentsDTO subgroupStudentsDTO, @PathVariable Long idSt, @PathVariable Long idTeacher) {
+    public void updateStudents(@RequestBody SubgroupStudentsDTO subgroupStudentsDTO,
+                               @PathVariable Long idSt,
+                               @PathVariable Long idTeacher) {
         subgroupServices.updateStudents(subgroupStudentsDTO, idSt, idTeacher);
     }
 

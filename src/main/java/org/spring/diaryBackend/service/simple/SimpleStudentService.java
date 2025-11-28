@@ -3,8 +3,8 @@ package org.spring.diaryBackend.service.simple;
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
 import org.spring.diaryBackend.dto.other.MarksStudentDTO;
-import org.spring.diaryBackend.dto.other.NameSubjectTeachersDTO;
-import org.spring.diaryBackend.dto.other.StudentMarksAllSubjectDTO;
+import org.spring.diaryBackend.dto.other.STTeachersDTO;
+import org.spring.diaryBackend.dto.other.StudentAllMarksDTO;
 import org.spring.diaryBackend.mapper.entity.StudentDTOMapper;
 import org.spring.diaryBackend.mapper.other.MarksStudentDTOMapper;
 import org.spring.diaryBackend.mapper.other.NameSubjectTeachersDTOMapper;
@@ -29,32 +29,40 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Primary
 public class SimpleStudentService implements StudentService {
+    private final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
     private final StudentRepository studentRepository;
     private final StudentGroupRepository studentGroupRepository;
     private final StudentDTOMapper studentDTOMapper;
-    private final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
-
     private final MarksStudentDTOMapper marksStudentDTOMapper;
-
     private final NameSubjectTeachersDTOMapper nameSubjectTeachersDTOMapper;
 
     @Override
     public List<StudentDTO> findAllStudent() {
-        return studentRepository.findAll().stream().map(studentDTOMapper).toList();
+        return studentRepository.findAll()
+                .stream()
+                .map(studentDTOMapper)
+                .toList();
     }
 
     @Override
     public List<StudentDTO> findByIdGroup(Long idGroup) {
-        return studentRepository.findByIdGroup(idGroup).stream().map(studentDTOMapper).toList();
+        return studentRepository.findStudentsByGroup(idGroup)
+                .stream()
+                .map(studentDTOMapper)
+                .toList();
     }
 
     @Override
-    public List<StudentMarksAllSubjectDTO> getStudentMarks(Long id) {
-        List<NameSubjectTeachersDTO> nameSubjectTeachersDTOS = studentRepository.findSubjectsByStudent(id).stream().map(nameSubjectTeachersDTOMapper).toList();
-        List<NameSubjectTeachersDTO> groupedNameSubjectTeachersDTOS = nameSubjectTeachersDTOS.stream()
+    public List<StudentAllMarksDTO> getStudentMarks(Long id) {
+        List<STTeachersDTO> STTeachersDTOS = studentRepository.findStudentMarksInSubgroup(id)
+                .stream()
+                .map(nameSubjectTeachersDTOMapper)
+                .toList();
+
+        List<STTeachersDTO> groupedSTTeachersDTOS = STTeachersDTOS.stream()
                 .collect(Collectors.toMap(
-                        NameSubjectTeachersDTO::getIdSt,
-                        dto -> new NameSubjectTeachersDTO(
+                        STTeachersDTO::getIdSt,
+                        dto -> new STTeachersDTO(
                                 dto.getIdSt(),
                                 dto.getIdSubject(),
                                 dto.getNameSubject(),
@@ -67,15 +75,17 @@ public class SimpleStudentService implements StudentService {
                 ))
                 .values().stream()
                 .toList();
-        List<StudentMarksAllSubjectDTO> studentMarksAllSubjectDTOS = new ArrayList<>();
-        groupedNameSubjectTeachersDTOS.forEach(nameSubjectTeachersDTO -> studentMarksAllSubjectDTOS.add(new StudentMarksAllSubjectDTO(
-                nameSubjectTeachersDTO,
-                null,
-                null
+
+        List<StudentAllMarksDTO> studentAllMarksDTOS = new ArrayList<>();
+        groupedSTTeachersDTOS.forEach(nameSubjectTeachersDTO ->
+                studentAllMarksDTOS.add(new StudentAllMarksDTO(
+                        nameSubjectTeachersDTO,
+                        null,
+                        null
                 ))
         );
 
-        List<Object[]> rawMarks = studentRepository.findMarksStudentBySubject(id);
+        List<Object[]> rawMarks = studentRepository.findStudentMarksInGroup(id);
 
         Map<Long, List<MarksStudentDTO>> stMarks = rawMarks.stream()
                 .collect(Collectors.groupingBy(
@@ -89,21 +99,21 @@ public class SimpleStudentService implements StudentService {
         Map<Long, Long> stCertification = rawMarks.stream()
                 .collect(HashMap::new,
                         (map, row) -> map.putIfAbsent((Long) row[0], (Long) row[2]),
-                        HashMap::putAll);
+                        HashMap::putAll
+                );
 
-
-        studentMarksAllSubjectDTOS.forEach(
-                studentMarksAllSubjectDTO -> {
-                    studentMarksAllSubjectDTO.setMarksBySt(
-                            stMarks.get(studentMarksAllSubjectDTO.getNameSubjectTeachersDTO().getIdSt())
+        studentAllMarksDTOS.forEach(
+                studentAllMarksDTO -> {
+                    studentAllMarksDTO.setMarksBySt(
+                            stMarks.get(studentAllMarksDTO.getSTTeachersDTO().getIdSt())
                     );
-                    studentMarksAllSubjectDTO.setCertification(
-                            stCertification.get(studentMarksAllSubjectDTO.getNameSubjectTeachersDTO().getIdSt())
+                    studentAllMarksDTO.setCertification(
+                            stCertification.get(studentAllMarksDTO.getSTTeachersDTO().getIdSt())
                     );
                 }
         );
 
-        return studentMarksAllSubjectDTOS;
+        return studentAllMarksDTOS;
     }
 
     @Override
@@ -127,7 +137,7 @@ public class SimpleStudentService implements StudentService {
         student.setEmail(studentDTO.getEmail());
 
         if (studentDTO.getIdGroup() != null) {
-            StudentGroup group = studentGroupRepository.findStudentGroupByIdGroup(studentDTO.getIdGroup());
+            StudentGroup group = studentGroupRepository.findGroupById(studentDTO.getIdGroup());
             student.setIdGroup(group);
         } else {
             student.setIdGroup(null);
@@ -142,6 +152,7 @@ public class SimpleStudentService implements StudentService {
         if (student == null) {
             return new StudentDTO();
         }
+
         if (studentNew.getLastName() != null) {
             student.setLastName(studentNew.getLastName());
         }
@@ -161,7 +172,9 @@ public class SimpleStudentService implements StudentService {
             student.setPatronymicGenitive(studentNew.getPatronymicGenitive());
         }
         if (studentNew.getIdGroup() != null) {
-            student.setIdGroup(studentGroupRepository.findStudentGroupByIdGroup(studentNew.getIdGroup()));
+            student.setIdGroup(
+                    studentGroupRepository.findGroupById(studentNew.getIdGroup())
+            );
         }
         if (studentNew.getLogin() != null) {
             student.setLogin(studentNew.getLogin());
@@ -186,7 +199,9 @@ public class SimpleStudentService implements StudentService {
 
     @Override
     public StudentDTO findById(Long id) {
-        return studentRepository.findById(id).map(studentDTOMapper).orElse(null);
+        return studentRepository.findById(id)
+                .map(studentDTOMapper)
+                .orElse(null);
     }
 
     @Override
@@ -194,8 +209,7 @@ public class SimpleStudentService implements StudentService {
         Student student = studentRepository.findByLoginOrPassword(login, password);
         if (student != null && encoder.matches(password, student.getPassword())) {
             return studentDTOMapper.apply(student);
-        }
-        else {
+        } else {
             return new StudentDTO();
         }
     }

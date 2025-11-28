@@ -13,24 +13,31 @@ import java.util.List;
 public interface SupplementRepository extends JpaRepository<Supplement, Long> {
 
     @Query("""
-        SELECT NEW org.spring.diaryBackend.dto.other.FilesDTO(p.id, p.nameFile) FROM Supplement s JOIN s.paths p WHERE s.id = :id
-""")
-    List<FilesDTO> findAllFilesSupplement(@Param("id") Long id);
+        SELECT NEW org.spring.diaryBackend.dto.other.FilesDTO(p.id, p.nameFile)
+        FROM Supplement s
+        JOIN s.paths p
+        WHERE s.id = :id
+    """)
+    List<FilesDTO> findAllSupplementFiles(@Param("id") Long id);
 
     @Modifying
     @Transactional
-    @Query(
-            nativeQuery = true,
-            value = "INSERT INTO file_path (id_supplement, id_path) VALUES (:id_supplement, :id_file)"
-    )
-    void addingFileSupplement(@Param("id_supplement") Long idSupplement, @Param("id_file") Long idFile);
+    @Query(nativeQuery = true,
+            value = """
+            INSERT INTO file_path (id_supplement, id_path)
+            VALUES (:id_supplement, :id_file)
+           """)
+    void addSupplementFile(@Param("id_supplement") Long idSupplement,
+                           @Param("id_file") Long idFile);
 
     @Modifying
     @Transactional
-    @Query(
-            nativeQuery = true,
-            value = "DELETE FROM file_path WHERE id_supplement = :id_supplement AND id_path = :id_file"
-    )
-    void deleteFileSupplement(@Param("id_supplement") Long idSupplement, @Param("id_file") Long idFile);
+    @Query(nativeQuery = true,
+            value = """
+            DELETE FROM file_path
+            WHERE id_supplement = :id_supplement
+                AND id_path = :id_file
+           """)
+    void deleteSupplementFile(@Param("id_supplement") Long idSupplement,
+                              @Param("id_file") Long idFile);
 }
-

@@ -11,8 +11,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentMarksAllSubjectDTO {
-    private NameSubjectTeachersDTO nameSubjectTeachersDTO;
+public class StudentAllMarksDTO {
+    private STTeachersDTO STTeachersDTO;
     private List<MarksStudentDTO> marksBySt;
     private Long certification;
 }

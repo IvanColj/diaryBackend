@@ -1,4 +1,5 @@
 package org.spring.diaryBackend.config;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,12 +18,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http.cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
             CorsConfiguration corsConfiguration = new CorsConfiguration();
             corsConfiguration.setAllowCredentials(true);
             corsConfiguration.setAllowedOrigins(List.of(
-                    "http://localhost:5173","http://localhost:3000", "http://localhost:8081"
+                    "http://localhost:5173",
+                    "http://localhost:3000",
+                    "http://localhost:8081",
+                    "http://80.93.62.33:3000"
             ));
             corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
             corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
@@ -30,7 +33,9 @@ public class SecurityConfig {
             return corsConfiguration;
         }));
 
-        http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+
         return http.build();
     }
 }

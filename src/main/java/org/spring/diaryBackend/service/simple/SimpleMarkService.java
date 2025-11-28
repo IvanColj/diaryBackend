@@ -23,28 +23,21 @@ import java.util.Objects;
 @AllArgsConstructor
 public class SimpleMarkService implements MarkService {
     private final MarkRepository markRepository;
-
-    private final SemesterMarkDTOMapper semesterMarkDTOMapper;
-
-    private final SubjectMarksDTOMapper subjectMarksDTOMapper;
-
     private final SupplementRepository supplementRepository;
-
     private final SubgroupRepository subgroupRepository;
-
     private final StudentRepository studentRepository;
-
     private final ChangeRepository changeRepository;
-
+    private final SemesterMarkDTOMapper semesterMarkDTOMapper;
+    private final SubjectMarksDTOMapper subjectMarksDTOMapper;
     private final ChangeInfoDTOMapper changeInfoDTOMapper;
 
     @Override
-    public ColumnMarkDTO findColumnMarkInfo(Long idStudent, Long idSt, Long number) {
-        ColumnMarkDTO columnMarkDTO = markRepository.findColumnMarkInfo(idStudent, idSt, number);
-        if (columnMarkDTO != null) {
-            List<FilesDTO> filesDTOS = supplementRepository.findAllFilesSupplement(columnMarkDTO.getIdSupplement());
-            columnMarkDTO.setFiles(filesDTOS);
-            return columnMarkDTO;
+    public MarksColumnDataDTO findColumnMarkInfo(Long idStudent, Long idSt, Long number) {
+        MarksColumnDataDTO marksColumnDataDTO = markRepository.findMarksColumnInfo(idStudent, idSt, number);
+        if (marksColumnDataDTO != null) {
+            List<FilesDTO> filesDTOS = supplementRepository.findAllSupplementFiles(marksColumnDataDTO.getIdSupplement());
+            marksColumnDataDTO.setFiles(filesDTOS);
+            return marksColumnDataDTO;
         }
         return null;
     }
@@ -53,9 +46,13 @@ public class SimpleMarkService implements MarkService {
     public MarkInfoDTO findMarkInfo(Long idStudent, Long idSt, Long number) {
         MarkInfoDTO markInfoDTO = markRepository.findMarkInfo(idStudent, idSt, number);
         if (markInfoDTO != null) {
-            List<ChangeInfoDTO> changeInfoDTOS = changeRepository.findByAllChangeMark(idSt, idStudent, number).stream().map(changeInfoDTOMapper).toList();
-            markInfoDTO.setChanges(changeInfoDTOS);
-            List<FilesDTO> filesDTOS = supplementRepository.findAllFilesSupplement(markInfoDTO.getIdSupplement());
+            List<MarkChangeDTO> markChangeDTOS = changeRepository
+                    .findMarkChanges(idSt, idStudent, number)
+                    .stream()
+                    .map(changeInfoDTOMapper)
+                    .toList();
+            markInfoDTO.setChanges(markChangeDTOS);
+            List<FilesDTO> filesDTOS = supplementRepository.findAllSupplementFiles(markInfoDTO.getIdSupplement());
             markInfoDTO.setFiles(filesDTOS);
             return markInfoDTO;
         }
@@ -64,26 +61,37 @@ public class SimpleMarkService implements MarkService {
 
     @Override
     public List<SemesterMarkDTO> findAllMarks() {
-        return markRepository.findAll().stream().map(semesterMarkDTOMapper).toList();
+        return markRepository.findAll()
+                .stream()
+                .map(semesterMarkDTOMapper)
+                .toList();
     }
 
     @Override
-    public List<SubjectMarksDTO> findByStudentAndSubject(Long id_student, Long id_st) {
-        return markRepository.findByStudentSubject(id_student, id_st).stream().map(subjectMarksDTOMapper).toList();
+    public List<SubjectMarksInfoDTO> findByStudentAndSubject(Long id_student, Long id_st) {
+        return markRepository.findStudentRegularsMarkBySubject(id_student, id_st)
+                .stream()
+                .map(subjectMarksDTOMapper)
+                .toList();
     }
 
     @Override
     public SemesterMarkDTO updateMarks(SemesterMarkDTO updateSemesterMarks) {
-        SemesterMark semesterMark = markRepository.findByStudentAndSubject(updateSemesterMarks.getId().getIdStudent(), updateSemesterMarks.getId().getIdSt());
+        SemesterMark semesterMark = markRepository.findStudentSemesterMarkBySubject(
+                updateSemesterMarks.getId().getIdStudent(),
+                updateSemesterMarks.getId().getIdSt()
+        );
 
         List<RegularMark> regularMarkList = semesterMark.getRegularMarks().stream().toList();
         int numberMark = Math.toIntExact(updateSemesterMarks.getRegularMarks().get(0).getId().getNumber());
 
         for (RegularMark regularMarks : regularMarkList) {
-            if (regularMarks.getId().getNumber() != null && regularMarks.getId().getNumber() == numberMark) {
+            if (regularMarks.getId().getNumber() != null &&
+                    regularMarks.getId().getNumber() == numberMark) {
                 BeanUtils.copyNonNullProperties(updateSemesterMarks.getRegularMarks().get(0), regularMarks);
             }
         }
+
         if (!Objects.equals(updateSemesterMarks.getCertification(), semesterMark.getCertification())) {
             semesterMark.setCertification(updateSemesterMarks.getCertification());
         }
@@ -95,41 +103,50 @@ public class SimpleMarkService implements MarkService {
 
     @Override
     public void updateCertification(SemesterMarkDTO semesterMarkDTO) {
-        SemesterMark semesterMark = markRepository.findByStudentAndSubject(semesterMarkDTO.getId().getIdStudent(), semesterMarkDTO.getId().getIdSt());
+        SemesterMark semesterMark = markRepository.findStudentSemesterMarkBySubject(
+                semesterMarkDTO.getId().getIdStudent(),
+                semesterMarkDTO.getId().getIdSt()
+        );
         semesterMark.setCertification(semesterMarkDTO.getCertification());
         markRepository.save(semesterMark);
     }
 
     @Override
     public void updateMarksNumber(UpdateMarkDTO updateMarkDTO) {
-        SemesterMark semesterMarks = markRepository.findByStudentAndSubject(
-                updateMarkDTO.getIdStudent(), updateMarkDTO.getIdSt());
+        SemesterMark semesterMarks = markRepository.findStudentSemesterMarkBySubject(
+                updateMarkDTO.getIdStudent(),
+                updateMarkDTO.getIdSt()
+        );
         if (semesterMarks == null) {
             return;
         }
+
         if (updateMarkDTO.getIdTypeMark() != null) {
-            markRepository.updateMarkGroup(updateMarkDTO.getIdTeacher(),
-                    updateMarkDTO.getIdGroup(), updateMarkDTO.getIdSt(),
-                    updateMarkDTO.getNumber(), LocalDateTime.now(),
-                    updateMarkDTO.getIdTypeMark());
-        }
-        else {
+            markRepository.updateMarksColumn(
+                    updateMarkDTO.getIdTeacher(),
+                    updateMarkDTO.getIdGroup(),
+                    updateMarkDTO.getIdSt(),
+                    updateMarkDTO.getNumber(),
+                    LocalDateTime.now(),
+                    updateMarkDTO.getIdTypeMark()
+            );
+        } else {
             semesterMarks.getRegularMarks().stream().toList()
-                    .forEach(regularMarks ->
-            {
-                if (regularMarks.getId().getNumber() != null &&
-                        regularMarks.getId().getNumber().equals
-                                (updateMarkDTO.getNumber())) {
-                    regularMarks.setValue(updateMarkDTO.getMark());
-                }
-            });
+                    .forEach(regularMarks -> {
+                        if (regularMarks.getId().getNumber() != null &&
+                                regularMarks.getId().getNumber().equals(updateMarkDTO.getNumber())) {
+                            regularMarks.setValue(updateMarkDTO.getMark());
+                        }
+                    });
         }
         markRepository.save(semesterMarks);
     }
 
     @Override
     public void deleteMarksGroupSt(DelMarksGroup delMarksGroup) {
-        delMarksGroup.getStudents().forEach(student -> markRepository.deleteMarksNumber(student, delMarksGroup.getIdSt(), delMarksGroup.getNumber()));
+        delMarksGroup.getStudents().forEach(student ->
+                markRepository.deleteMarksByNumber(student, delMarksGroup.getIdSt(), delMarksGroup.getNumber())
+        );
     }
 
     public void deleteMarks(Long idStudent, Long idSt) {
@@ -142,36 +159,58 @@ public class SimpleMarkService implements MarkService {
     @Override
     @Transactional
     public void deleteMarksNumberGroupST(CRUDMarksDTO crudMarksDTO) {
-        if (subgroupRepository.findByIdStAndIdTeacher(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher()) != null) {
-            markRepository.deleteMarksNumberSubGroupST(crudMarksDTO.getIdSt(), crudMarksDTO.getIdGroup(), crudMarksDTO.getIdTeacher(), crudMarksDTO.getNumber());
-        }
-        else {
-            markRepository.deleteMarksNumberGroupST(crudMarksDTO.getIdSt(), crudMarksDTO.getIdGroup(), crudMarksDTO.getNumber());
+        if (subgroupRepository.findTeacherSubgroupBySubject(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher()) != null) {
+            markRepository.deleteMarksColumnFromSubgroup(
+                    crudMarksDTO.getIdSt(),
+                    crudMarksDTO.getIdGroup(),
+                    crudMarksDTO.getIdTeacher(),
+                    crudMarksDTO.getNumber()
+            );
+        } else {
+            markRepository.deleteMarksColumnFromGroup(
+                    crudMarksDTO.getIdSt(),
+                    crudMarksDTO.getIdGroup(),
+                    crudMarksDTO.getNumber()
+            );
         }
     }
 
     @Override
     public void addMarksForGroup(CRUDMarksDTO crudMarksDTO) {
-        Long numberMark = markRepository.findLargestNumberRegularMarks(crudMarksDTO.getIdGroup(), crudMarksDTO.getIdSt());
+        Long numberMark = markRepository.findLargestMarkNumberBySubject(crudMarksDTO.getIdGroup(), crudMarksDTO.getIdSt());
         if (numberMark == null) {
             numberMark = 0L;
         }
-        if (subgroupRepository.findByIdStAndIdTeacher(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher()) != null) {
+
+        if (subgroupRepository.findTeacherSubgroupBySubject(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher()) != null) {
             Change change = new Change();
             change.setDateTime(LocalDateTime.now());
             change.setAction("добавление оценки");
             change.setTeacherOrStudent(true);
             Long idChange = changeRepository.save(change).getId();
-            Subgroup subgroup = subgroupRepository.findByIdStAndIdTeacher(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher());
-            List<Student> students = studentRepository.findByIdGroup(crudMarksDTO.getIdGroup());
+
+            Subgroup subgroup = subgroupRepository.findTeacherSubgroupBySubject(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher());
+            List<Student> students = studentRepository.findStudentsByGroup(crudMarksDTO.getIdGroup());
+
             for (Student student : students) {
                 if (subgroup.getStudents().contains(student)) {
-                    markRepository.insertMarksNumber(crudMarksDTO.getIdSt(), student.getId(), numberMark + 1, crudMarksDTO.getIdLesson(), idChange);
+                    markRepository.addMarksColumnToSubgroup(
+                            crudMarksDTO.getIdSt(),
+                            student.getId(),
+                            numberMark + 1,
+                            crudMarksDTO.getIdLesson(),
+                            idChange
+                    );
                 }
             }
-        }
-        else {
-            markRepository.addRegularMarksForGroup(crudMarksDTO.getIdGroup(), crudMarksDTO.getIdSt(), numberMark + 1, crudMarksDTO.getIdLesson(), LocalDateTime.now());
+        } else {
+            markRepository.addMarksColumnToGroup(
+                    crudMarksDTO.getIdGroup(),
+                    crudMarksDTO.getIdSt(),
+                    numberMark + 1,
+                    crudMarksDTO.getIdLesson(),
+                    LocalDateTime.now()
+            );
         }
     }
 }

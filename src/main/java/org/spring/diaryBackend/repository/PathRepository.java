@@ -8,8 +8,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface PathRepository extends JpaRepository<Path, Long> {
+
     @Query("""
-            SELECT p FROM Path p WHERE p.type = :type
-           """)
-    List<Path> findType(@Param("type") String type);
+        SELECT p FROM Path p
+        WHERE p.type = :type
+    """)
+    List<Path> findPathsByType(@Param("type") String type);
 }

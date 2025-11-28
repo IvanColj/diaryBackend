@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TeachersDTO {
+public class TeacherFIODTO {
     private Long idTeacher;
     private String lastnameTeacher;
     private String nameTeacher;
