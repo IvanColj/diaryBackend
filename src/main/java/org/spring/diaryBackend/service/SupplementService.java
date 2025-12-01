@@ -9,16 +9,11 @@ import java.util.List;
 
 public interface SupplementService {
     List<SupplementDTO> findAllSupplement();
-
     List<FilesDTO> findAllFilesSupplement(Long id);
 
     void addFileSupplement(Long id, MultipartFile file) throws IOException;
-
-    void deleteFileSupplement(Long idSupplement, Long idFile);
-
     SupplementDTO save();
-
     void update(Long id, String comment);
-
+    void deleteFileSupplement(Long idSupplement, Long idFile);
     void delete(Long id);
 }

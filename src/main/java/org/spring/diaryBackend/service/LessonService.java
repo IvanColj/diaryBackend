@@ -8,10 +8,8 @@ import java.util.List;
 
 public interface LessonService {
     List<LessonDTO> findAllLesson();
+    List<LessonInfoDTO> findByLessonInfo(Long idSt, Long idGroup, Long idTeacher);
+    List<LessonDateDTO> findByLessonSubject(Long idSt, Long idGroup, Long idTeacher);
 
     LessonDTO addSupplement(Long id);
-
-    List<LessonInfoDTO> findByLessonInfo(Long idSt, Long idGroup, Long idTeacher);
-
-    List<LessonDateDTO> findByLessonSubject(Long idSt, Long idGroup, Long idTeacher);
 }

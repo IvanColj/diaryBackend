@@ -8,10 +8,8 @@ import java.util.List;
 
 public interface AttendanceService {
     AttendanceDTO findByStAndStudent(Long idLesson, Long idStudent);
-
     List<GroupAttendanceDTO> findByGroupAttendance(Long idGroup, Long idSt, Long idTeacher);
+    List<AllSubjectsAttendanceDTO> studentAttendance(Long idStudent);
 
     void update(Long idStudent, AttendanceDTO attendanceDTO);
-
-    List<AllSubjectsAttendanceDTO> studentAttendance(Long idStudent);
 }

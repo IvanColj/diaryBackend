@@ -63,25 +63,6 @@ public class SimpleAttendanceService implements AttendanceService {
     }
 
     @Override
-    @Transactional
-    public void update(Long idStudent, AttendanceDTO attendanceDTO) {
-        if (attendanceDTO.getStatus() != null || attendanceDTO.getComment() != null) {
-            String statusCode = AttendanceStatus.toCode(attendanceDTO.getStatus());
-
-            if (attendanceDTO.getStatus() != null && statusCode == null) {
-                throw new IllegalArgumentException("Неизвестный статус: " + attendanceDTO.getStatus());
-            }
-
-            attendanceRepository.updateAttendanceStatus(
-                    attendanceDTO.getIdLesson(),
-                    idStudent,
-                    attendanceDTO.getComment(),
-                    statusCode
-            );
-        }
-    }
-
-    @Override
     public List<AllSubjectsAttendanceDTO> studentAttendance(Long idStudent) {
         List<STTeachersDTO> STTeachersDTOS = studentRepository
                 .findStudentMarksInSubgroup(idStudent)
@@ -116,5 +97,24 @@ public class SimpleAttendanceService implements AttendanceService {
         );
 
         return studentAttendances;
+    }
+
+    @Override
+    @Transactional
+    public void update(Long idStudent, AttendanceDTO attendanceDTO) {
+        if (attendanceDTO.getStatus() != null || attendanceDTO.getComment() != null) {
+            String statusCode = AttendanceStatus.toCode(attendanceDTO.getStatus());
+
+            if (attendanceDTO.getStatus() != null && statusCode == null) {
+                throw new IllegalArgumentException("Неизвестный статус: " + attendanceDTO.getStatus());
+            }
+
+            attendanceRepository.updateAttendanceStatus(
+                    attendanceDTO.getIdLesson(),
+                    idStudent,
+                    attendanceDTO.getComment(),
+                    statusCode
+            );
+        }
     }
 }

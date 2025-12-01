@@ -7,6 +7,7 @@ import java.util.List;
 public interface SubjectService {
     List<SubjectDTO> findAllSubject();
     SubjectDTO findById(Long id);
+
     SubjectDTO saveSubject(SubjectDTO subject);
     SubjectDTO updateSubject(SubjectDTO subject);
     void deleteSubject(Long id);

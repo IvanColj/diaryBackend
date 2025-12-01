@@ -9,10 +9,7 @@ public interface SubgroupService {
     List<SubgroupDTO> findAllSubgroup();
 
     void save(SubgroupDTO subgroupDTO);
-
     void addStudents(SubgroupStudentsDTO subgroupStudentsDTO);
-
     void updateStudents(SubgroupStudentsDTO subgroupStudentsDTO, Long idSt, Long idTeacher);
-
     void deleteStudents(SubgroupStudentsDTO subgroupStudentsDTO);
 }

@@ -89,19 +89,6 @@ public interface MarkRepository extends JpaRepository<SemesterMark, SemesterMark
     @Transactional
     @Query(nativeQuery = true,
             value = """
-            DELETE FROM regular_marks
-            WHERE semester_mark_id_st = :id_st
-                AND semester_mark_id_student = :id_student
-                AND number = :number
-           """)
-    void deleteMarksByNumber(@Param("id_student") Long idStudent,
-                             @Param("id_st") Long idSt,
-                             @Param("number") Long number);
-
-    @Modifying
-    @Transactional
-    @Query(nativeQuery = true,
-            value = """
             CALL update_marks_for_group(
                 :id_teacher, :id_group, :id_st, :number_marks,
                 :new_date_time, :id_type_mark
@@ -113,29 +100,6 @@ public interface MarkRepository extends JpaRepository<SemesterMark, SemesterMark
                            @Param("number_marks") Long numberMurks,
                            @Param("new_date_time") LocalDateTime new_date_time,
                            @Param("id_type_mark") Long idTypeMark);
-
-    @Modifying
-    @Transactional
-    @Query(nativeQuery = true,
-            value = """
-            CALL delete_mark_number(:id_st, :id_group, :number)
-           """)
-    void deleteMarksColumnFromGroup(@Param("id_st") Long idSt,
-                                    @Param("id_group") Long idGroup,
-                                    @Param("number") Long number);
-
-    @Modifying
-    @Transactional
-    @Query(nativeQuery = true,
-            value = """
-            CALL delete_mark_number_subgroup(
-                :id_st, :id_group, :id_teacher, :number
-            )
-           """)
-    void deleteMarksColumnFromSubgroup(@Param("id_st") Long idSt,
-                                       @Param("id_group") Long idGroup,
-                                       @Param("id_teacher") Long idTeacher,
-                                       @Param("number") Long number);
 
     @Modifying
     @Transactional
@@ -164,4 +128,41 @@ public interface MarkRepository extends JpaRepository<SemesterMark, SemesterMark
                                   @Param("number_marks") Long number,
                                   @Param("lesson_id") Long idLesson,
                                   @Param("change_id") Long idChange);
+
+    @Modifying
+    @Transactional
+    @Query(nativeQuery = true,
+            value = """
+            CALL delete_mark_number(:id_st, :id_group, :number)
+           """)
+    void deleteMarksColumnFromGroup(@Param("id_st") Long idSt,
+                                    @Param("id_group") Long idGroup,
+                                    @Param("number") Long number);
+
+    @Modifying
+    @Transactional
+    @Query(nativeQuery = true,
+            value = """
+            CALL delete_mark_number_subgroup(
+                :id_st, :id_group, :id_teacher, :number
+            )
+           """)
+    void deleteMarksColumnFromSubgroup(@Param("id_st") Long idSt,
+                                       @Param("id_group") Long idGroup,
+                                       @Param("id_teacher") Long idTeacher,
+                                       @Param("number") Long number);
+
+
+    @Modifying
+    @Transactional
+    @Query(nativeQuery = true,
+            value = """
+            DELETE FROM regular_marks
+            WHERE semester_mark_id_st = :id_st
+                AND semester_mark_id_student = :id_student
+                AND number = :number
+           """)
+    void deleteMarksByNumber(@Param("id_student") Long idStudent,
+                             @Param("id_st") Long idSt,
+                             @Param("number") Long number);
 }

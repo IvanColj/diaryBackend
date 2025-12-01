@@ -25,27 +25,6 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
     """)
     List<Subject> findTeacherSubjects(@Param("id") Long id);
 
-    @Modifying
-    @Transactional
-    @Query(nativeQuery = true,
-            value = """
-            INSERT INTO staff_job_position (id_staff, id_staff_position)
-            VALUES (:id_staff, :id_job)
-           """)
-    void addStaffJob(@Param("id_staff") Long idStaff,
-                     @Param("id_job") Long idJob);
-
-    @Modifying
-    @Transactional
-    @Query(nativeQuery = true,
-            value = """
-            DELETE FROM staff_job_position
-            WHERE id_staff = :id_staff
-                AND id_staff_position = :id_job
-           """)
-    void deleteStaffJob(@Param("id_staff") Long idStaff,
-                        @Param("id_job") Long idJob);
-
     Staff findByLogin(String login);
 
     @Query("""
@@ -80,4 +59,25 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
         GROUP BY g.numberGroup, g.specialty, s.subjectName, st.id
     """)
     List<GroupSubjectsDTO> findGroupsAndSubjects(@Param("idTeacher") Long idTeacher);
+
+    @Modifying
+    @Transactional
+    @Query(nativeQuery = true,
+            value = """
+            INSERT INTO staff_job_position (id_staff, id_staff_position)
+            VALUES (:id_staff, :id_job)
+           """)
+    void addStaffJob(@Param("id_staff") Long idStaff,
+                     @Param("id_job") Long idJob);
+
+    @Modifying
+    @Transactional
+    @Query(nativeQuery = true,
+            value = """
+            DELETE FROM staff_job_position
+            WHERE id_staff = :id_staff
+                AND id_staff_position = :id_job
+           """)
+    void deleteStaffJob(@Param("id_staff") Long idStaff,
+                        @Param("id_job") Long idJob);
 }

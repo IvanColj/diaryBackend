@@ -48,12 +48,6 @@ public class SimpleSupplementService implements SupplementService {
     }
 
     @Override
-    public void deleteFileSupplement(Long idSupplement, Long idFile) {
-        supplementRepository.deleteSupplementFile(idSupplement, idFile);
-        pathService.deleteFile(idFile);
-    }
-
-    @Override
     public void update(Long id, String comment) {
         Supplement supplement = supplementRepository.findById(id).orElse(null);
         Objects.requireNonNull(supplement).setComment(comment);
@@ -64,6 +58,13 @@ public class SimpleSupplementService implements SupplementService {
     public SupplementDTO save() {
         return supplementDTOMapper.apply(supplementRepository.save(new Supplement()));
     }
+
+    @Override
+    public void deleteFileSupplement(Long idSupplement, Long idFile) {
+        supplementRepository.deleteSupplementFile(idSupplement, idFile);
+        pathService.deleteFile(idFile);
+    }
+
 
     @Override
     @Transactional

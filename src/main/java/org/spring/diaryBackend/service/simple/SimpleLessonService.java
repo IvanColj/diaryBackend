@@ -34,16 +34,6 @@ public class SimpleLessonService implements LessonService {
     }
 
     @Override
-    public LessonDTO addSupplement(Long id) {
-        Lesson lesson = lessonRepository.findById(id).orElse(null);
-        SupplementDTO supplementDTO = supplementService.save();
-        Supplement supplement = supplementRepository.findById(supplementDTO.getId()).orElse(null);
-        Objects.requireNonNull(lesson).setIdSupplement(supplement);
-        lessonRepository.save(lesson);
-        return lessonDTOMapper.apply(lesson);
-    }
-
-    @Override
     public List<LessonInfoDTO> findByLessonInfo(Long idSt, Long idGroup, Long idTeacher) {
         return lessonRepository.findLessonInfo(idSt, idGroup, idTeacher);
     }
@@ -51,5 +41,15 @@ public class SimpleLessonService implements LessonService {
     @Override
     public List<LessonDateDTO> findByLessonSubject(Long idSt, Long idGroup, Long idTeacher) {
         return lessonRepository.findLessonDates(idSt, idGroup, idTeacher);
+    }
+
+    @Override
+    public LessonDTO addSupplement(Long id) {
+        Lesson lesson = lessonRepository.findById(id).orElse(null);
+        SupplementDTO supplementDTO = supplementService.save();
+        Supplement supplement = supplementRepository.findById(supplementDTO.getId()).orElse(null);
+        Objects.requireNonNull(lesson).setIdSupplement(supplement);
+        lessonRepository.save(lesson);
+        return lessonDTOMapper.apply(lesson);
     }
 }
