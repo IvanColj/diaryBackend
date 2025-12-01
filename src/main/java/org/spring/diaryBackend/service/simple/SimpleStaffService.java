@@ -58,6 +58,16 @@ public class SimpleStaffService implements StaffService {
     }
 
     @Override
+    public StaffDTO findByLoginOrPassword(String login, String password) {
+        Staff staff = staffRepository.findByLoginOrPassword(login, password);
+        if (staff != null && encoder.matches(password, staff.getPassword())) {
+            return staffDTOMapper.apply(staff);
+        } else {
+            return new StaffDTO();
+        }
+    }
+
+    @Override
     public StaffDTO saveStaff(StaffDTO staffDTO) {
         Staff staff = new Staff();
         staff.setLastName(staffDTO.getLastName());
@@ -72,11 +82,6 @@ public class SimpleStaffService implements StaffService {
     @Override
     public void addStaffJob(Long idStaff, Long idJob) {
         staffRepository.addStaffJob(idStaff, idJob);
-    }
-
-    @Override
-    public void deleteStaffJob(Long idStaff, Long idJob) {
-        staffRepository.deleteStaffJob(idStaff, idJob);
     }
 
     @Override
@@ -114,13 +119,8 @@ public class SimpleStaffService implements StaffService {
     }
 
     @Override
-    public StaffDTO findByLoginOrPassword(String login, String password) {
-        Staff staff = staffRepository.findByLoginOrPassword(login, password);
-        if (staff != null && encoder.matches(password, staff.getPassword())) {
-            return staffDTOMapper.apply(staff);
-        } else {
-            return new StaffDTO();
-        }
+    public void deleteStaffJob(Long idStaff, Long idJob) {
+        staffRepository.deleteStaffJob(idStaff, idJob);
     }
 
     @Override

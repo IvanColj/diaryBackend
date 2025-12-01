@@ -37,6 +37,24 @@ public class SimpleStudentService implements StudentService {
     private final NameSubjectTeachersDTOMapper nameSubjectTeachersDTOMapper;
 
     @Override
+    public StudentDTO findByLoginOrPassword(String login, String password) {
+        Student student = studentRepository.findByLoginOrPassword(login, password);
+        if (student != null && encoder.matches(password, student.getPassword())) {
+            return studentDTOMapper.apply(student);
+        } else {
+            return new StudentDTO();
+        }
+    }
+
+
+    @Override
+    public StudentDTO findById(Long id) {
+        return studentRepository.findById(id)
+                .map(studentDTOMapper)
+                .orElse(null);
+    }
+
+    @Override
     public List<StudentDTO> findAllStudent() {
         return studentRepository.findAll()
                 .stream()
@@ -195,23 +213,6 @@ public class SimpleStudentService implements StudentService {
             student.setEmail(studentNew.getEmail());
         }
         return studentDTOMapper.apply(studentRepository.save(student));
-    }
-
-    @Override
-    public StudentDTO findById(Long id) {
-        return studentRepository.findById(id)
-                .map(studentDTOMapper)
-                .orElse(null);
-    }
-
-    @Override
-    public StudentDTO findByLoginOrPassword(String login, String password) {
-        Student student = studentRepository.findByLoginOrPassword(login, password);
-        if (student != null && encoder.matches(password, student.getPassword())) {
-            return studentDTOMapper.apply(student);
-        } else {
-            return new StudentDTO();
-        }
     }
 
     @Override

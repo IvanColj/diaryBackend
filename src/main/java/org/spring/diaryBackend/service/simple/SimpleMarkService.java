@@ -76,6 +76,45 @@ public class SimpleMarkService implements MarkService {
     }
 
     @Override
+    public void addMarksForGroup(CRUDMarksDTO crudMarksDTO) {
+        Long numberMark = markRepository.findLargestMarkNumberBySubject(crudMarksDTO.getIdGroup(), crudMarksDTO.getIdSt());
+        if (numberMark == null) {
+            numberMark = 0L;
+        }
+
+        if (subgroupRepository.findTeacherSubgroupBySubject(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher()) != null) {
+            Change change = new Change();
+            change.setDateTime(LocalDateTime.now());
+            change.setAction("добавление оценки");
+            change.setTeacherOrStudent(true);
+            Long idChange = changeRepository.save(change).getId();
+
+            Subgroup subgroup = subgroupRepository.findTeacherSubgroupBySubject(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher());
+            List<Student> students = studentRepository.findStudentsByGroup(crudMarksDTO.getIdGroup());
+
+            for (Student student : students) {
+                if (subgroup.getStudents().contains(student)) {
+                    markRepository.addMarksColumnToSubgroup(
+                            crudMarksDTO.getIdSt(),
+                            student.getId(),
+                            numberMark + 1,
+                            crudMarksDTO.getIdLesson(),
+                            idChange
+                    );
+                }
+            }
+        } else {
+            markRepository.addMarksColumnToGroup(
+                    crudMarksDTO.getIdGroup(),
+                    crudMarksDTO.getIdSt(),
+                    numberMark + 1,
+                    crudMarksDTO.getIdLesson(),
+                    LocalDateTime.now()
+            );
+        }
+    }
+
+    @Override
     public SemesterMarkDTO updateMarks(SemesterMarkDTO updateSemesterMarks) {
         SemesterMark semesterMark = markRepository.findStudentSemesterMarkBySubject(
                 updateSemesterMarks.getId().getIdStudent(),
@@ -171,45 +210,6 @@ public class SimpleMarkService implements MarkService {
                     crudMarksDTO.getIdSt(),
                     crudMarksDTO.getIdGroup(),
                     crudMarksDTO.getNumber()
-            );
-        }
-    }
-
-    @Override
-    public void addMarksForGroup(CRUDMarksDTO crudMarksDTO) {
-        Long numberMark = markRepository.findLargestMarkNumberBySubject(crudMarksDTO.getIdGroup(), crudMarksDTO.getIdSt());
-        if (numberMark == null) {
-            numberMark = 0L;
-        }
-
-        if (subgroupRepository.findTeacherSubgroupBySubject(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher()) != null) {
-            Change change = new Change();
-            change.setDateTime(LocalDateTime.now());
-            change.setAction("добавление оценки");
-            change.setTeacherOrStudent(true);
-            Long idChange = changeRepository.save(change).getId();
-
-            Subgroup subgroup = subgroupRepository.findTeacherSubgroupBySubject(crudMarksDTO.getIdSt(), crudMarksDTO.getIdTeacher());
-            List<Student> students = studentRepository.findStudentsByGroup(crudMarksDTO.getIdGroup());
-
-            for (Student student : students) {
-                if (subgroup.getStudents().contains(student)) {
-                    markRepository.addMarksColumnToSubgroup(
-                            crudMarksDTO.getIdSt(),
-                            student.getId(),
-                            numberMark + 1,
-                            crudMarksDTO.getIdLesson(),
-                            idChange
-                    );
-                }
-            }
-        } else {
-            markRepository.addMarksColumnToGroup(
-                    crudMarksDTO.getIdGroup(),
-                    crudMarksDTO.getIdSt(),
-                    numberMark + 1,
-                    crudMarksDTO.getIdLesson(),
-                    LocalDateTime.now()
             );
         }
     }
