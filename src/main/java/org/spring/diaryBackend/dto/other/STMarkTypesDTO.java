@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class STNumberMarkTypeMarkDTO {
+public class STMarkTypesDTO {
     private Long number;
     private String nameTypeMark;
     private Long weight;

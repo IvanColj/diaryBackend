@@ -2,7 +2,7 @@ package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.ScheduleDTO;
-import org.spring.diaryBackend.dto.other.ScheduleWeekGroupDTO;
+import org.spring.diaryBackend.dto.other.GroupScheduleDTO;
 import org.spring.diaryBackend.service.ScheduleService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,12 +21,12 @@ public class ScheduleController {
     }
 
     @GetMapping("group/{id}")
-    public List<ScheduleWeekGroupDTO> findScheduleWeekGroup(@PathVariable Long id) {
+    public List<GroupScheduleDTO> findScheduleWeekGroup(@PathVariable Long id) {
         return scheduleService.findScheduleWeekGroup(id);
     }
 
     @GetMapping("teacher/{id}")
-    public List<ScheduleWeekGroupDTO> getSchedule(@PathVariable Long id) {
+    public List<GroupScheduleDTO> getSchedule(@PathVariable Long id) {
         return scheduleService.findBySchedule(id);
     }
 

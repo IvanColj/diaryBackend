@@ -2,8 +2,8 @@ package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.SubjectTeacherDTO;
-import org.spring.diaryBackend.dto.other.STGroupsDTO;
-import org.spring.diaryBackend.dto.other.STNumberMarkTypeMarkDTO;
+import org.spring.diaryBackend.dto.other.STMarkTypesDTO;
+import org.spring.diaryBackend.dto.other.SubjectGroupsDTO;
 import org.spring.diaryBackend.service.STService;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,65 +14,69 @@ import java.util.List;
 @AllArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class STController {
-    private final STService service;
+    private final STService stService;
 
     @GetMapping
     public List<SubjectTeacherDTO> getAllSubjectTeachers() {
-        return service.findAllSubjectTeacher();
+        return stService.findAllSubjectTeacher();
     }
 
     @GetMapping("teacher/{id}")
     public List<SubjectTeacherDTO> getTeachers(@PathVariable Long id) {
-        return service.findByTeacher(id);
+        return stService.findByTeacher(id);
     }
 
     @GetMapping("teacherGroups/{id}")
-    public List<STGroupsDTO> getSTGroups(@PathVariable Long id) {
-        return service.findBySTGroups(id);
+    public List<SubjectGroupsDTO> getSTGroups(@PathVariable Long id) {
+        return stService.findBySTGroups(id);
     }
 
     @GetMapping("id/{id}")
     public SubjectTeacherDTO getSubjectTeacher(@PathVariable Long id) {
-        return service.findById(id);
+        return stService.findById(id);
     }
 
     @GetMapping("typeMark/id/{id}")
-    public List<STNumberMarkTypeMarkDTO> findByStNumberMarkType(@PathVariable Long id) {
-        return service.findByStNumberMarkType(id);
+    public List<STMarkTypesDTO> findByStNumberMarkType(@PathVariable Long id) {
+        return stService.findByStNumberMarkType(id);
     }
 
     @PostMapping("save")
     public SubjectTeacherDTO saveSubjectTeacher(@RequestBody SubjectTeacherDTO subjectTeacher) {
-        return service.saveSubjectTeacher(subjectTeacher);
+        return stService.saveSubjectTeacher(subjectTeacher);
     }
 
     @PostMapping("add/id/{id}/group/{group}")
-    public void addGroup(@PathVariable Long id, @PathVariable Long group) {
-        service.addingSTGroup(id, group);
+    public void addGroup(@PathVariable Long id,
+                         @PathVariable Long group) {
+        stService.addingSTGroup(id, group);
     }
 
     @PostMapping("add/id/{id}/teacher/{teacher}")
-    public void addTeacher(@PathVariable Long id, @PathVariable Long teacher) {
-        service.addingTeacher(id, teacher);
+    public void addTeacher(@PathVariable Long id,
+                           @PathVariable Long teacher) {
+        stService.addingTeacher(id, teacher);
     }
 
     @PatchMapping("update")
     public SubjectTeacherDTO updateSubjectTeacher(@RequestBody SubjectTeacherDTO subjectTeacher) {
-        return service.updateSubjectTeacher(subjectTeacher);
+        return stService.updateSubjectTeacher(subjectTeacher);
     }
 
     @DeleteMapping("delete/{id}")
     public void deleteSubjectTeacher(@PathVariable Long id) {
-        service.deleteSubjectTeacher(id);
+        stService.deleteSubjectTeacher(id);
     }
 
     @DeleteMapping("delete/id/{id}/group/{group}")
-    public void deleteGroup(@PathVariable Long id, @PathVariable Long group) {
-        service.deleteSTGroup(id, group);
+    public void deleteGroup(@PathVariable Long id,
+                            @PathVariable Long group) {
+        stService.deleteSTGroup(id, group);
     }
 
     @DeleteMapping("delete/id/{id}/teacher/{teacher}")
-    public void deleteTeacher(@PathVariable Long id, @PathVariable Long teacher) {
-        service.deleteSTTeacher(id, teacher);
+    public void deleteTeacher(@PathVariable Long id,
+                              @PathVariable Long teacher) {
+        stService.deleteSTTeacher(id, teacher);
     }
 }

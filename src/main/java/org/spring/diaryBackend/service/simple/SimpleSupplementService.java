@@ -23,34 +23,33 @@ import java.util.Objects;
 @AllArgsConstructor
 public class SimpleSupplementService implements SupplementService {
     private final SupplementRepository supplementRepository;
-
-    private final PathService pathService;
-
-    private final SupplementDTOMapper supplementDTOMapper;
-
     private final LessonRepository lessonRepository;
-
     private final ChangeRepository changeRepository;
+    private final PathService pathService;
+    private final SupplementDTOMapper supplementDTOMapper;
 
     @Override
     public List<SupplementDTO> findAllSupplement() {
-        return supplementRepository.findAll().stream().map(supplementDTOMapper).toList();
+        return supplementRepository.findAll()
+                .stream()
+                .map(supplementDTOMapper)
+                .toList();
     }
 
     @Override
     public List<FilesDTO> findAllFilesSupplement(Long id) {
-        return supplementRepository.findAllFilesSupplement(id);
+        return supplementRepository.findAllSupplementFiles(id);
     }
 
     @Override
     public void addFileSupplement(Long id, MultipartFile file) throws IOException {
         Path path = pathService.uploadFile(file, null, null);
-        supplementRepository.addingFileSupplement(id, path.getId());
+        supplementRepository.addSupplementFile(id, path.getId());
     }
 
     @Override
     public void deleteFileSupplement(Long idSupplement, Long idFile) {
-        supplementRepository.deleteFileSupplement(idSupplement, idFile);
+        supplementRepository.deleteSupplementFile(idSupplement, idFile);
         pathService.deleteFile(idFile);
     }
 
@@ -70,10 +69,10 @@ public class SimpleSupplementService implements SupplementService {
     @Transactional
     public void delete(Long id) {
         changeRepository.updateChange(id);
-        lessonRepository.updateLesson(id);
-        List<FilesDTO> filesDTOS = supplementRepository.findAllFilesSupplement(id);
+        lessonRepository.updateLessonSupplement(id);
+        List<FilesDTO> filesDTOS = supplementRepository.findAllSupplementFiles(id);
         filesDTOS.forEach(filesDTO -> {
-            supplementRepository.deleteFileSupplement(id, filesDTO.getId());
+            supplementRepository.deleteSupplementFile(id, filesDTO.getId());
             pathService.deleteFile(filesDTO.getId());
         });
         supplementRepository.deleteById(id);

@@ -18,12 +18,17 @@ public class SimpleSubjectService implements SubjectService {
 
     @Override
     public List<SubjectDTO> findAllSubject() {
-        return subjectRepository.findAll().stream().map(subjectDTOMapper).toList();
+        return subjectRepository.findAll()
+                .stream()
+                .map(subjectDTOMapper)
+                .toList();
     }
 
     @Override
     public SubjectDTO findById(Long id) {
-        return subjectRepository.findById(id).map(subjectDTOMapper).orElse(null);
+        return subjectRepository.findById(id)
+                .map(subjectDTOMapper)
+                .orElse(null);
     }
 
     @Override

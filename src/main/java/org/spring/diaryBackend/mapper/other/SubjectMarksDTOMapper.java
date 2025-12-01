@@ -1,16 +1,16 @@
 package org.spring.diaryBackend.mapper.other;
 
-import org.spring.diaryBackend.dto.other.SubjectMarksDTO;
+import org.spring.diaryBackend.dto.other.SubjectMarksInfoDTO;
 import org.spring.diaryBackend.model.RegularMark;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
 
 @Service
-public class SubjectMarksDTOMapper implements Function<RegularMark, SubjectMarksDTO> {
+public class SubjectMarksDTOMapper implements Function<RegularMark, SubjectMarksInfoDTO> {
     @Override
-    public SubjectMarksDTO apply(RegularMark regularMark) {
-        return new SubjectMarksDTO(
+    public SubjectMarksInfoDTO apply(RegularMark regularMark) {
+        return new SubjectMarksInfoDTO(
                 regularMark.getId().getNumber(),
                 regularMark.getValue(),
                 regularMark.getIdLesson() != null ?

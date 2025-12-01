@@ -3,8 +3,8 @@ package org.spring.diaryBackend.controller;
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StaffDTO;
 import org.spring.diaryBackend.dto.entity.SubjectDTO;
-import org.spring.diaryBackend.dto.other.SubjectCourseDTO;
-import org.spring.diaryBackend.dto.other.SubjectGroupDTO;
+import org.spring.diaryBackend.dto.other.CourseSubjectsDTO;
+import org.spring.diaryBackend.dto.other.GroupSubjectsDTO;
 import org.spring.diaryBackend.service.StaffService;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +28,8 @@ public class StaffController {
     }
 
     @GetMapping("login/{login}/password/{password}")
-    public StaffDTO getByLogin(@PathVariable String login, @PathVariable String password) {
+    public StaffDTO getByLogin(@PathVariable String login,
+                               @PathVariable String password) {
         return staffService.findByLoginOrPassword(login, password);
     }
 
@@ -38,22 +39,24 @@ public class StaffController {
     }
 
     @GetMapping("subjects/course/{id}")
-    public List<SubjectCourseDTO> findBySubjectCourse(@PathVariable Long id) {
+    public List<CourseSubjectsDTO> findBySubjectCourse(@PathVariable Long id) {
         return staffService.findBySubjectCourse(id);
     }
 
     @GetMapping("subjects/group/{id}")
-    public List<SubjectGroupDTO> findBySubjectGroup(@PathVariable Long id) {
+    public List<GroupSubjectsDTO> findBySubjectGroup(@PathVariable Long id) {
         return staffService.findByGroup(id);
     }
 
     @PostMapping("addJob/id/{idStaff}/job/{idJob}")
-    public void addStaffJob(@PathVariable Long idStaff, @PathVariable Long idJob) {
+    public void addStaffJob(@PathVariable Long idStaff,
+                            @PathVariable Long idJob) {
         staffService.addStaffJob(idStaff, idJob);
     }
 
     @DeleteMapping("deleteJob/id/{idStaff}/job/{idJob}")
-    public void deleteStaffJob(@PathVariable Long idStaff, @PathVariable Long idJob) {
+    public void deleteStaffJob(@PathVariable Long idStaff,
+                               @PathVariable Long idJob) {
         staffService.deleteStaffJob(idStaff, idJob);
     }
 

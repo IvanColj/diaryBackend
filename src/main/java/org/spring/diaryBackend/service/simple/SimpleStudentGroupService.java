@@ -9,7 +9,7 @@ import org.jsoup.select.Elements;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
 import org.spring.diaryBackend.dto.entity.StudentGroupDTO;
 import org.spring.diaryBackend.dto.other.GroupMarksDTO;
-import org.spring.diaryBackend.dto.other.NameSubjectTeachersDTO;
+import org.spring.diaryBackend.dto.other.STTeachersDTO;
 import org.spring.diaryBackend.logic.GenerateSecurePassword;
 import org.spring.diaryBackend.mapper.entity.StudentGroupDTOMapper;
 import org.spring.diaryBackend.mapper.other.MarksStudentDTOMapper;
@@ -41,43 +41,53 @@ public class SimpleStudentGroupService implements StudentGroupService {
     private final StudentService studentService;
     private final StudentGroupRepository studentGroupRepository;
     private final StaffRepository staffRepository;
-    private final StudentGroupDTOMapper studentGroupDTOMapper;
-
-    private final NameSubjectTeachersDTOMapper nameSubjectTeachersDTOMapper;
-
-    private final MarksStudentDTOMapper marksStudentDTOMapper;
-
     private final SubgroupRepository subgroupRepository;
-
     private final MarkRepository markRepository;
+    private final StudentGroupDTOMapper studentGroupDTOMapper;
+    private final NameSubjectTeachersDTOMapper nameSubjectTeachersDTOMapper;
+    private final MarksStudentDTOMapper marksStudentDTOMapper;
 
     @Override
     public List<StudentGroupDTO> findAll() {
-        return studentGroupRepository.findAll().stream().map(studentGroupDTOMapper).toList();
+        return studentGroupRepository.findAll()
+                .stream()
+                .map(studentGroupDTOMapper)
+                .toList();
     }
 
     @Override
     public StudentGroupDTO findStudentGroupByNumberGroupAndAdmissionYear(Long numberGroup, Long admissionYear) {
-        return studentGroupDTOMapper.apply(studentGroupRepository.findStudentGroupByNumberGroupAndAdmissionYear(numberGroup, admissionYear));
+        return studentGroupDTOMapper.apply(
+                studentGroupRepository.findGroupByNumberAndAdmissionYear(numberGroup, admissionYear)
+        );
     }
 
     @Override
     public List<StudentGroupDTO> findStudentGroupByNumberGroup(Long numberGroup) {
-        return studentGroupRepository.findStudentGroupByNumberGroup(numberGroup).stream().map(studentGroupDTOMapper).toList();
+        return studentGroupRepository.findGroupByNumber(numberGroup)
+                .stream()
+                .map(studentGroupDTOMapper)
+                .toList();
     }
 
     @Override
     public StudentGroupDTO findStudentGroupByIdGroup(Long idGroup) {
-        return studentGroupDTOMapper.apply(studentGroupRepository.findStudentGroupByIdGroup(idGroup));
+        return studentGroupDTOMapper.apply(
+                studentGroupRepository.findGroupById(idGroup)
+        );
     }
 
     @Override
-    public List<NameSubjectTeachersDTO> findBySubject(Long group) {
-        List<NameSubjectTeachersDTO> nameSubjectTeachersDTOS = studentGroupRepository.findBySubject(group).stream().map(nameSubjectTeachersDTOMapper).toList();
-        return nameSubjectTeachersDTOS.stream()
+    public List<STTeachersDTO> findBySubject(Long group) {
+        List<STTeachersDTO> STTeachersDTOS = studentGroupRepository.findGroupSubjects(group)
+                .stream()
+                .map(nameSubjectTeachersDTOMapper)
+                .toList();
+
+        return STTeachersDTOS.stream()
                 .collect(Collectors.toMap(
-                        NameSubjectTeachersDTO::getIdSt,
-                        dto -> new NameSubjectTeachersDTO(
+                        STTeachersDTO::getIdSt,
+                        dto -> new STTeachersDTO(
                                 dto.getIdSt(),
                                 dto.getIdSubject(),
                                 dto.getNameSubject(),
@@ -94,19 +104,31 @@ public class SimpleStudentGroupService implements StudentGroupService {
 
     @Override
     public List<GroupMarksDTO> getGroupMarksBySubject(Long idGroup, Long idSt, Long idTeacher) {
-        List<GroupMarksDTO> marksGroupBySubject = studentGroupRepository.findBaseInfo(idGroup);
-        if (subgroupRepository.findByIdStAndIdTeacher(idSt, idTeacher) != null) {
-            List<Long> studentsId = subgroupRepository.findByIdStAndIdTeacher(idSt, idTeacher).getStudents().stream().map(Student::getId).toList();
+        List<GroupMarksDTO> marksGroupBySubject = studentGroupRepository.findStudentsFIO(idGroup);
+
+        if (subgroupRepository.findTeacherSubgroupBySubject(idSt, idTeacher) != null) {
+            List<Long> studentsId = subgroupRepository
+                    .findTeacherSubgroupBySubject(idSt, idTeacher)
+                    .getStudents()
+                    .stream()
+                    .map(Student::getId)
+                    .toList();
+
             marksGroupBySubject = marksGroupBySubject.stream()
                     .filter(groupMarksDTO -> studentsId.contains(groupMarksDTO.getIdStudent()))
                     .toList();
         }
+
         for (GroupMarksDTO groupMarksDTO : marksGroupBySubject) {
-            groupMarksDTO.setMarks(markRepository.findByStudentSubject(groupMarksDTO.getIdStudent(), idSt).stream().map(marksStudentDTOMapper).toList());
+            groupMarksDTO.setMarks(
+                    markRepository.findStudentRegularsMarkBySubject(groupMarksDTO.getIdStudent(), idSt)
+                            .stream()
+                            .map(marksStudentDTOMapper)
+                            .toList()
+            );
         }
         return marksGroupBySubject;
     }
-
 
     @Override
     public List<StudentDTO> fetchStudentsGroup(Long groupNumber) throws IOException {
@@ -139,9 +161,11 @@ public class SimpleStudentGroupService implements StudentGroupService {
                     student.setName(fioParts[1]);
                     student.setPatronymic(fioParts[2]);
                     student.setIdGroup(group.getId());
-                    student.setLogin(toLatinTrans.transliterate(fioParts[0]) +
-                            toLatinTrans.transliterate(String.valueOf(fioParts[1].charAt(0))) +
-                            toLatinTrans.transliterate(String.valueOf(fioParts[2].charAt(0))));
+                    student.setLogin(
+                            toLatinTrans.transliterate(fioParts[0]) +
+                                    toLatinTrans.transliterate(String.valueOf(fioParts[1].charAt(0))) +
+                                    toLatinTrans.transliterate(String.valueOf(fioParts[2].charAt(0)))
+                    );
                     password = GenerateSecurePassword.generatePassword(10);
                     student.setPassword(password);
                     studentsReturn.add(student);
@@ -160,9 +184,10 @@ public class SimpleStudentGroupService implements StudentGroupService {
 
         if (findStudentGroupByNumberGroupAndAdmissionYear(group.getNumberGroup(), group.getAdmissionYear()).getId() == null) {
             studentGroupRepository.save(group);
-            group.setId(studentGroupRepository.findStudentGroupByNumberGroupAndAdmissionYear(
+            group.setId(studentGroupRepository.findGroupByNumberAndAdmissionYear(
                     group.getNumberGroup(),
                     group.getAdmissionYear()).getId());
+
             for (StudentDTO addStudent : studentsAdd) {
                 addStudent.setIdGroup(group.getId());
                 studentService.saveStudent(addStudent);
@@ -210,6 +235,7 @@ public class SimpleStudentGroupService implements StudentGroupService {
         List<StudentDTO> oldStudents = studentService.findByIdGroup(group.getId());
         List<StudentDTO> newStudents = new ArrayList<>();
         boolean exist;
+
         for (StudentDTO newStudent : newAndOldStudents) {
             exist = false;
             for (StudentDTO oldStudent : oldStudents) {
@@ -233,7 +259,8 @@ public class SimpleStudentGroupService implements StudentGroupService {
 
     @Override
     public StudentGroupDTO updateGroup(StudentGroupDTO studentGroupNew) {
-        StudentGroup studentGroupUpdate = studentGroupRepository.findStudentGroupByIdGroup(studentGroupNew.getId());
+        StudentGroup studentGroupUpdate = studentGroupRepository.findGroupById(studentGroupNew.getId());
+
         if (studentGroupNew.getNumberGroup() != null) {
             studentGroupUpdate.setNumberGroup(studentGroupNew.getNumberGroup());
         }
@@ -241,7 +268,9 @@ public class SimpleStudentGroupService implements StudentGroupService {
             studentGroupUpdate.setAdmissionYear(studentGroupNew.getAdmissionYear());
         }
         if (studentGroupNew.getIdCurator() != null) {
-            studentGroupUpdate.setIdCurator(staffRepository.findById(studentGroupNew.getIdCurator()).orElse(null));
+            studentGroupUpdate.setIdCurator(
+                    staffRepository.findById(studentGroupNew.getIdCurator()).orElse(null)
+            );
             if (studentGroupUpdate.getIdCurator() == null) {
                 return new StudentGroupDTO();
             }
@@ -264,6 +293,6 @@ public class SimpleStudentGroupService implements StudentGroupService {
     @Override
     @Transactional
     public void deleteIdGroup(Long idGroup) {
-        studentGroupRepository.deleteIdGroup(idGroup);
+        studentGroupRepository.deleteGroupById(idGroup);
     }
 }

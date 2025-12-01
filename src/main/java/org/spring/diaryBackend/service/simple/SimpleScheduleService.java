@@ -2,7 +2,7 @@ package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.ScheduleDTO;
-import org.spring.diaryBackend.dto.other.ScheduleWeekGroupDTO;
+import org.spring.diaryBackend.dto.other.GroupScheduleDTO;
 import org.spring.diaryBackend.mapper.entity.ScheduleDTOMapper;
 import org.spring.diaryBackend.model.Schedule;
 import org.spring.diaryBackend.model.Staff;
@@ -21,53 +21,49 @@ import java.util.Objects;
 @AllArgsConstructor
 public class SimpleScheduleService implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
-
-    private final ScheduleDTOMapper scheduleDTOMapper;
-
     private final STRepository sTRepository;
-
     private final StudentGroupRepository studentGroupRepository;
-
     private final StaffRepository staffRepository;
-
     private final SubgroupRepository subgroupRepository;
-
     private final StudentRepository studentRepository;
+    private final ScheduleDTOMapper scheduleDTOMapper;
 
     @Override
     public List<ScheduleDTO> findAllSchedule() {
-        return scheduleRepository.findAll().stream().map(scheduleDTOMapper).toList();
+        return scheduleRepository.findAll()
+                .stream()
+                .map(scheduleDTOMapper)
+                .toList();
     }
 
     @Override
-    public List<ScheduleWeekGroupDTO> findScheduleWeekGroup(Long id) {
-        List<ScheduleWeekGroupDTO> scheduleDTOS = scheduleRepository.findScheduleWeekGroup(id);
+    public List<GroupScheduleDTO> findScheduleWeekGroup(Long id) {
+        List<GroupScheduleDTO> scheduleDTOS = scheduleRepository.findGroupSchedule(id);
         Subgroup subgroup;
         Student student;
         Staff teacher;
         Long idTeacher;
-        for (ScheduleWeekGroupDTO scheduleDTO : scheduleDTOS) {
+
+        for (GroupScheduleDTO scheduleDTO : scheduleDTOS) {
             if (scheduleDTO.getSubgroup() != null) {
                 scheduleDTO.setIdTeacher(scheduleDTO.getSubgroup());
                 teacher = staffRepository.findById(scheduleDTO.getSubgroup()).orElse(null);
                 scheduleDTO.setLastnameTeacher(Objects.requireNonNull(teacher).getLastName());
                 scheduleDTO.setNameTeacher(Objects.requireNonNull(teacher).getName());
                 scheduleDTO.setPatronymicTeacher(Objects.requireNonNull(teacher).getPatronymic());
-                subgroup = subgroupRepository.findByIdStAndIdTeacher(scheduleDTO.getIdSt(), scheduleDTO.getSubgroup());
+                subgroup = subgroupRepository.findTeacherSubgroupBySubject(scheduleDTO.getIdSt(), scheduleDTO.getSubgroup());
                 if (subgroup.getStudents() != null) {
-                    student = studentRepository.findByIdGroup(scheduleDTO.getIdGroup()).get(0);
+                    student = studentRepository.findStudentsByGroup(scheduleDTO.getIdGroup()).get(0);
                     if (subgroup.getStudents().contains(student)) {
                         scheduleDTO.setSubgroup(1L);
-                    }
-                    else {
+                    } else {
                         scheduleDTO.setSubgroup(2L);
                     }
                 }
-
-            }
-            else {
+            } else {
                 if (sTRepository.findById(scheduleDTO.getIdSt()).orElse(null).getTeachers().size() != 0) {
-                    idTeacher = sTRepository.findById(scheduleDTO.getIdSt()).orElse(null).getTeachers().stream().toList().get(0).getId();
+                    idTeacher = sTRepository.findById(scheduleDTO.getIdSt()).orElse(null)
+                            .getTeachers().stream().toList().get(0).getId();
                     teacher = staffRepository.findById(idTeacher).orElse(null);
                     scheduleDTO.setIdTeacher(scheduleDTO.getSubgroup());
                     scheduleDTO.setIdTeacher(idTeacher);
@@ -81,12 +77,13 @@ public class SimpleScheduleService implements ScheduleService {
     }
 
     @Override
-    public List<ScheduleWeekGroupDTO> findBySchedule(Long teacherId) {
-        List<ScheduleWeekGroupDTO> scheduleWeekGroupDTOs = new ArrayList<>();
-        List<Object[]> schedules = scheduleRepository.findBySchedule(teacherId);
+    public List<GroupScheduleDTO> findBySchedule(Long teacherId) {
+        List<GroupScheduleDTO> groupScheduleDTOS = new ArrayList<>();
+        List<Object[]> schedules = scheduleRepository.findTeacherSchedule(teacherId);
+
         schedules.forEach(schedule -> {
             if (schedule != null) {
-                ScheduleWeekGroupDTO dto = new ScheduleWeekGroupDTO(
+                GroupScheduleDTO dto = new GroupScheduleDTO(
                         (Long) ((Object[]) schedule)[0],
                         (String) ((Object[]) schedule)[1],
                         (String) ((Object[]) schedule)[2],
@@ -107,36 +104,34 @@ public class SimpleScheduleService implements ScheduleService {
                                 ((java.sql.Date) schedule[16]).toLocalDate() :
                                 (LocalDate) schedule[16]
                 );
-                scheduleWeekGroupDTOs.add(dto);
+                groupScheduleDTOS.add(dto);
             }
         });
-
 
         Subgroup subgroup;
         Student student;
         Staff teacher;
         Long idTeacher;
-        for (ScheduleWeekGroupDTO scheduleDTO : scheduleWeekGroupDTOs) {
+
+        for (GroupScheduleDTO scheduleDTO : groupScheduleDTOS) {
             if (scheduleDTO.getSubgroup() != null) {
                 scheduleDTO.setIdTeacher(scheduleDTO.getSubgroup());
                 teacher = staffRepository.findById(scheduleDTO.getSubgroup()).orElse(null);
                 scheduleDTO.setLastnameTeacher(Objects.requireNonNull(teacher).getLastName());
                 scheduleDTO.setNameTeacher(Objects.requireNonNull(teacher).getName());
                 scheduleDTO.setPatronymicTeacher(Objects.requireNonNull(teacher).getPatronymic());
-                subgroup = subgroupRepository.findByIdStAndIdTeacher(scheduleDTO.getIdSt(), scheduleDTO.getSubgroup());
+                subgroup = subgroupRepository.findTeacherSubgroupBySubject(scheduleDTO.getIdSt(), scheduleDTO.getSubgroup());
                 if (subgroup.getStudents() != null) {
-                    student = studentRepository.findByIdGroup(scheduleDTO.getIdGroup()).get(0);
+                    student = studentRepository.findStudentsByGroup(scheduleDTO.getIdGroup()).get(0);
                     if (subgroup.getStudents().contains(student)) {
                         scheduleDTO.setSubgroup(1L);
-                    }
-                    else {
+                    } else {
                         scheduleDTO.setSubgroup(2L);
                     }
                 }
-
-            }
-            else {
-                idTeacher = Objects.requireNonNull(sTRepository.findById(scheduleDTO.getIdSt()).orElse(null)).getTeachers().stream().toList().get(0).getId();
+            } else {
+                idTeacher = Objects.requireNonNull(sTRepository.findById(scheduleDTO.getIdSt()).orElse(null))
+                        .getTeachers().stream().toList().get(0).getId();
                 teacher = staffRepository.findById(idTeacher).orElse(null);
                 scheduleDTO.setIdTeacher(scheduleDTO.getSubgroup());
                 scheduleDTO.setIdTeacher(idTeacher);
@@ -145,7 +140,7 @@ public class SimpleScheduleService implements ScheduleService {
                 scheduleDTO.setPatronymicTeacher(Objects.requireNonNull(teacher).getPatronymic());
             }
         }
-        return scheduleWeekGroupDTOs;
+        return groupScheduleDTOS;
     }
 
     @Override
@@ -162,7 +157,8 @@ public class SimpleScheduleService implements ScheduleService {
         if (studentGroupRepository.findById(scheduleDTO.getIdGroup()).orElse(null) != null) {
             schedule.setIdGroup(studentGroupRepository.findById(scheduleDTO.getIdGroup()).orElse(null));
         }
-        if (scheduleDTO.getSubgroup() != null && staffRepository.findById(scheduleDTO.getSubgroup()).orElse(null) != null) {
+        if (scheduleDTO.getSubgroup() != null &&
+                staffRepository.findById(scheduleDTO.getSubgroup()).orElse(null) != null) {
             schedule.setSubgroup(staffRepository.findById(scheduleDTO.getSubgroup()).orElse(null));
         }
         schedule.setReplacement(scheduleDTO.getReplacement());

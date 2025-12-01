@@ -34,8 +34,10 @@ public class PathController {
     }
 
     @PutMapping("/upload")
-    public Path uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("student") Long student, @RequestParam("type") String type) throws IOException {
-            return pathService.uploadFile(file, student, type);
+    public Path uploadFile(@RequestParam("file") MultipartFile file,
+                           @RequestParam("student") Long student,
+                           @RequestParam("type") String type) throws IOException {
+        return pathService.uploadFile(file, student, type);
     }
 
     @GetMapping("/id/{id}")

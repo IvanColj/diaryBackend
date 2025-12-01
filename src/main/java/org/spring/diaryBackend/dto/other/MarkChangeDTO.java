@@ -5,22 +5,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ColumnMarkDTO {
-    private LocalDate dateLesson;
-    private String typeMark;
-    private Long numberWeek;
-    private String dayWeek;
-    private String typeWeek;
-    private Long numPair;
-    private Boolean replacement;
+public class MarkChangeDTO {
+    private Long id;
+    private LocalDateTime dateTime;
+    private String action;
     private Long idSupplement;
     private String comment;
     private List<FilesDTO> files;
+    private Boolean teacherOrStudent;
+    private Double newValue;
 }

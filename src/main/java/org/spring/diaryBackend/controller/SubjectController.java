@@ -12,30 +12,30 @@ import java.util.List;
 @RequestMapping("/api/v1/subjects")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SubjectController {
-    private SubjectService service;
+    private SubjectService subjectService;
 
     @GetMapping
     public List<SubjectDTO> getAllSubjects() {
-        return service.findAllSubject();
+        return subjectService.findAllSubject();
     }
 
     @GetMapping("id/{id}")
     public SubjectDTO getById(@PathVariable Long id) {
-        return service.findById(id);
+        return subjectService.findById(id);
     }
 
     @PostMapping("save")
     public SubjectDTO save(@RequestBody SubjectDTO subject) {
-        return service.saveSubject(subject);
+        return subjectService.saveSubject(subject);
     }
 
     @PatchMapping("update")
     public SubjectDTO update(@RequestBody SubjectDTO subject) {
-        return service.updateSubject(subject);
+        return subjectService.updateSubject(subject);
     }
 
     @DeleteMapping("delete/{id}")
     public void delete(@PathVariable Long id) {
-        service.deleteSubject(id);
+        subjectService.deleteSubject(id);
     }
 }

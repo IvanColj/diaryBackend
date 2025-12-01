@@ -2,8 +2,8 @@ package org.spring.diaryBackend.service;
 
 import org.spring.diaryBackend.dto.entity.StaffDTO;
 import org.spring.diaryBackend.dto.entity.SubjectDTO;
-import org.spring.diaryBackend.dto.other.SubjectCourseDTO;
-import org.spring.diaryBackend.dto.other.SubjectGroupDTO;
+import org.spring.diaryBackend.dto.other.CourseSubjectsDTO;
+import org.spring.diaryBackend.dto.other.GroupSubjectsDTO;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ public interface StaffService {
 
     List<SubjectDTO> findByAllSubject(Long id);
 
-    List<SubjectCourseDTO> findBySubjectCourse(Long idTeacher);
+    List<CourseSubjectsDTO> findBySubjectCourse(Long idTeacher);
 
-    List<SubjectGroupDTO> findByGroup(Long idTeacher);
+    List<GroupSubjectsDTO> findByGroup(Long idTeacher);
 
     StaffDTO findStaffById(Long id);
 

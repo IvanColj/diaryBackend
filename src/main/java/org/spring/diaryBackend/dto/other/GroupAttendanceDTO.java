@@ -16,5 +16,5 @@ public class GroupAttendanceDTO {
     private String lastName;
     private String name;
     private String patronymic;
-    private List<AttendanceStudentDTO> attendances;
+    private List<SingleSubjectAttendanceDTO> attendances;
 }

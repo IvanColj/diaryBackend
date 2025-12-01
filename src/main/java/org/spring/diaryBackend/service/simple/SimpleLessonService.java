@@ -21,16 +21,16 @@ import java.util.Objects;
 @AllArgsConstructor
 public class SimpleLessonService implements LessonService {
     private final LessonRepository lessonRepository;
-
     private final SupplementRepository supplementRepository;
-
-    private final LessonDTOMapper lessonDTOMapper;
-
     private final SupplementService supplementService;
+    private final LessonDTOMapper lessonDTOMapper;
 
     @Override
     public List<LessonDTO> findAllLesson() {
-        return lessonRepository.findAll().stream().map(lessonDTOMapper).toList();
+        return lessonRepository.findAll()
+                .stream()
+                .map(lessonDTOMapper)
+                .toList();
     }
 
     @Override
@@ -45,11 +45,11 @@ public class SimpleLessonService implements LessonService {
 
     @Override
     public List<LessonInfoDTO> findByLessonInfo(Long idSt, Long idGroup, Long idTeacher) {
-        return lessonRepository.findByLessonInfo(idSt, idGroup, idTeacher);
+        return lessonRepository.findLessonInfo(idSt, idGroup, idTeacher);
     }
 
     @Override
     public List<LessonDateDTO> findByLessonSubject(Long idSt, Long idGroup, Long idTeacher) {
-        return lessonRepository.findByLessonDate(idSt, idGroup, idTeacher);
+        return lessonRepository.findLessonDates(idSt, idGroup, idTeacher);
     }
 }

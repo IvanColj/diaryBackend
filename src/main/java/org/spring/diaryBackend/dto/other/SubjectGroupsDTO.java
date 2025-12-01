@@ -5,12 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubjectCourseDTO {
+public class SubjectGroupsDTO {
+    private Long idSt;
     private String subjectName;
-    private Long course;
-    private Long countGroup;
+    private List<Long> idGroups;
 }

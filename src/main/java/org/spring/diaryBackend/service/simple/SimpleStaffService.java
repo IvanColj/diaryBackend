@@ -3,12 +3,11 @@ package org.spring.diaryBackend.service.simple;
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StaffDTO;
 import org.spring.diaryBackend.dto.entity.SubjectDTO;
-import org.spring.diaryBackend.dto.other.SubjectCourseDTO;
-import org.spring.diaryBackend.dto.other.SubjectGroupDTO;
+import org.spring.diaryBackend.dto.other.CourseSubjectsDTO;
+import org.spring.diaryBackend.dto.other.GroupSubjectsDTO;
 import org.spring.diaryBackend.mapper.entity.StaffDTOMapper;
 import org.spring.diaryBackend.mapper.entity.SubjectDTOMapper;
 import org.spring.diaryBackend.model.Staff;
-import org.spring.diaryBackend.repository.StaffPositionRepository;
 import org.spring.diaryBackend.repository.StaffRepository;
 import org.spring.diaryBackend.service.StaffService;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
@@ -23,34 +22,39 @@ public class SimpleStaffService implements StaffService {
     private final StaffRepository staffRepository;
     private final StaffDTOMapper staffDTOMapper;
     private final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
-
     private final SubjectDTOMapper subjectDTOMapper;
-
-    private final StaffPositionRepository staffPositionRepository;
 
     @Override
     public List<StaffDTO> findAllStaff() {
-        return staffRepository.findAll().stream().map(staffDTOMapper).toList();
+        return staffRepository.findAll()
+                .stream()
+                .map(staffDTOMapper)
+                .toList();
     }
 
     @Override
     public List<SubjectDTO> findByAllSubject(Long id) {
-        return staffRepository.findByAllSubject(id).stream().map(subjectDTOMapper).toList();
+        return staffRepository.findTeacherSubjects(id)
+                .stream()
+                .map(subjectDTOMapper)
+                .toList();
     }
 
     @Override
-    public List<SubjectCourseDTO> findBySubjectCourse(Long idTeacher) {
-        return staffRepository.findBySubjectCourse(idTeacher);
+    public List<CourseSubjectsDTO> findBySubjectCourse(Long idTeacher) {
+        return staffRepository.findSubjectsWithGroupCountByCourse(idTeacher);
     }
 
     @Override
-    public List<SubjectGroupDTO> findByGroup(Long idTeacher) {
-        return staffRepository.findByGroup(idTeacher);
+    public List<GroupSubjectsDTO> findByGroup(Long idTeacher) {
+        return staffRepository.findGroupsAndSubjects(idTeacher);
     }
 
     @Override
     public StaffDTO findStaffById(Long id) {
-        return staffRepository.findById(id).map(staffDTOMapper).orElse(null);
+        return staffRepository.findById(id)
+                .map(staffDTOMapper)
+                .orElse(null);
     }
 
     @Override
@@ -81,6 +85,7 @@ public class SimpleStaffService implements StaffService {
         if (staffUpdate == null) {
             return new StaffDTO();
         }
+
         if (staffNew.getPatronymic() != null) {
             staffUpdate.setPassword(staffNew.getPassword());
         }
@@ -94,9 +99,9 @@ public class SimpleStaffService implements StaffService {
             Staff staffLogin = staffRepository.findByLogin(staffNew.getLogin());
             if (staffLogin == null) {
                 staffUpdate.setLogin(staffNew.getLogin());
-            }
-            else {
-                return new StaffDTO(null, null, null, null, "Такой логин уже есть, придумайте другой", null, null, null);
+            } else {
+                return new StaffDTO(null, null, null, null,
+                        "Такой логин уже есть, придумайте другой", null, null, null);
             }
         }
         if (staffNew.getPassword() != null) {
@@ -113,8 +118,7 @@ public class SimpleStaffService implements StaffService {
         Staff staff = staffRepository.findByLoginOrPassword(login, password);
         if (staff != null && encoder.matches(password, staff.getPassword())) {
             return staffDTOMapper.apply(staff);
-        }
-        else {
+        } else {
             return new StaffDTO();
         }
     }

@@ -22,12 +22,16 @@ public class LessonController {
     }
 
     @GetMapping("info/st/{st}/group/{group}/teacher/{id}")
-    public List<LessonInfoDTO> findAllLessonInfo(@PathVariable("st") Long idSt, @PathVariable("group") Long idGroup, @PathVariable("id") Long idTeacher) {
+    public List<LessonInfoDTO> findAllLessonInfo(@PathVariable("st") Long idSt,
+                                                 @PathVariable("group") Long idGroup,
+                                                 @PathVariable("id") Long idTeacher) {
         return lessonService.findByLessonInfo(idSt, idGroup, idTeacher);
     }
 
     @GetMapping("date/st/{st}/group/{group}/teacher/{id}")
-    public List<LessonDateDTO> findAllDate(@PathVariable("st") Long idSt, @PathVariable("group") Long idGroup, @PathVariable("id") Long idTeacher) {
+    public List<LessonDateDTO> findAllDate(@PathVariable("st") Long idSt,
+                                           @PathVariable("group") Long idGroup,
+                                           @PathVariable("id") Long idTeacher) {
         return lessonService.findByLessonSubject(idSt, idGroup, idTeacher);
     }
 

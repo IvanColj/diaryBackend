@@ -2,7 +2,7 @@ package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.ChangeDTO;
-import org.spring.diaryBackend.dto.other.ChangeInfoDTO;
+import org.spring.diaryBackend.dto.other.MarkChangeDTO;
 import org.spring.diaryBackend.service.ChangeService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +21,9 @@ public class ChangeController {
     }
 
     @GetMapping("mark/st/{idSt}/student/{idStudent}/number/{number}")
-    public List<ChangeInfoDTO> findAllChangeMark(@PathVariable Long idSt, @PathVariable Long idStudent, @PathVariable Long number) {
+    public List<MarkChangeDTO> findAllChangeMark(@PathVariable Long idSt,
+                                                 @PathVariable Long idStudent,
+                                                 @PathVariable Long number) {
         return changeService.findByAllChangeMark(idSt, idStudent, number);
     }
 
@@ -31,12 +33,16 @@ public class ChangeController {
     }
 
     @PostMapping("add/student/st/{idSt}/student/{idStudent}/number/{number}")
-    public ChangeDTO saveStudent(@PathVariable Long idSt, @PathVariable Long idStudent, @PathVariable Long number) {
+    public ChangeDTO saveStudent(@PathVariable Long idSt,
+                                 @PathVariable Long idStudent,
+                                 @PathVariable Long number) {
         return changeService.saveStudent(idSt, idStudent, number);
     }
 
     @PostMapping("add/teacher/st/{idSt}/student/{idStudent}/number/{number}")
-    public ChangeDTO saveTeacher(@PathVariable Long idSt, @PathVariable Long idStudent, @PathVariable Long number) {
+    public ChangeDTO saveTeacher(@PathVariable Long idSt,
+                                 @PathVariable Long idStudent,
+                                 @PathVariable Long number) {
         return changeService.saveTeacher(idSt, idStudent, number);
     }
 }
