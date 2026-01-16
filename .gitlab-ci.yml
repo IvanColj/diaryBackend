@@ -19,3 +19,4 @@ deploy-job:
   environment: production
   script:
     - docker compose up -d
+
