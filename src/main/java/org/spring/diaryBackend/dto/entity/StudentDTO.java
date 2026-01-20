@@ -26,4 +26,5 @@ public class StudentDTO {
     private LocalDate birthDate;
     private String address;
     private String email;
+    private Long code;
 }
