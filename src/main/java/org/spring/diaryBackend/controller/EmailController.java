@@ -1,8 +1,6 @@
 package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spring.diaryBackend.service.EmailService;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,8 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/email")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class EmailController {
-    EmailService emailService;
-    private static final Logger LOG = LoggerFactory.getLogger(EmailController.class);
+    private final EmailService emailService;
 
     @GetMapping("password/id/{id}/change/{code}")
     public Boolean sendSimpleEmail(@PathVariable("id") Long id, @PathVariable("code") Long code) {
