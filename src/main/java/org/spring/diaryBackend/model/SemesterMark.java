@@ -28,6 +28,12 @@ public class SemesterMark {
     @Column(name = "certification")
     private Long certification;
 
+    @Column(name = "is_retake")
+    private boolean isRetake;
+
+    @Column(name = "initial_certification")
+    private Long initialCertification;
+
     @OneToMany(mappedBy = "semesterMark", fetch = FetchType.LAZY)
     private Set<RegularMark> regularMarks = new LinkedHashSet<>();
 }

@@ -61,6 +61,9 @@ public class Student {
     @Column(name = "code")
     private Long code;
 
+    @Column(name = "is_leader")
+    private boolean isLeader;
+
     @OneToMany(mappedBy = "idStudent")
     private Set<Attendance> attendances = new LinkedHashSet<>();
 

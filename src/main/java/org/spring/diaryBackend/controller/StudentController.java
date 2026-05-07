@@ -41,6 +41,11 @@ public class StudentController {
         return studentService.getStudentMarks(id);
     }
 
+    @PatchMapping("leader/{id}")
+    public void updateLeaderStatus(@PathVariable Long id, @RequestParam("status") Boolean status) {
+        studentService.updateLeaderStatus(id, status);
+    }
+
     @PatchMapping("update")
     public StudentDTO updateStudent(@RequestBody StudentDTO student) {
         return studentService.updateStudent(student);

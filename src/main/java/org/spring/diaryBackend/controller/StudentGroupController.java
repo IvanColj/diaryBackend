@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
 import org.spring.diaryBackend.dto.entity.StudentGroupDTO;
 import org.spring.diaryBackend.dto.other.GroupMarksDTO;
+import org.spring.diaryBackend.dto.other.GroupReportDTO;
 import org.spring.diaryBackend.dto.other.STTeachersDTO;
+import org.spring.diaryBackend.dto.other.StudentCategoryGroupDTO;
 import org.spring.diaryBackend.service.StudentGroupService;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +51,16 @@ public class StudentGroupController {
     @GetMapping("subjects/group/{group}")
     public List<STTeachersDTO> getBySubject(@PathVariable Long group) {
         return studentGroupService.findBySubject(group);
+    }
+
+    @GetMapping("report/{groupId}")
+    public GroupReportDTO getGroupReport(@PathVariable Long groupId) {
+        return studentGroupService.getFullGroupReport(groupId);
+    }
+
+    @GetMapping("categories/{groupId}")
+    public List<StudentCategoryGroupDTO> getStudentsByCategory(@PathVariable Long groupId) {
+        return studentGroupService.getStudentsByScholarshipCategory(groupId);
     }
 
     @PatchMapping("update")

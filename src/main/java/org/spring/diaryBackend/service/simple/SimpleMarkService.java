@@ -135,6 +135,14 @@ public class SimpleMarkService implements MarkService {
             semesterMark.setCertification(updateSemesterMarks.getCertification());
         }
 
+        if (!Objects.equals(updateSemesterMarks.getIsRetake(), semesterMark.isRetake())) {
+            semesterMark.setRetake(updateSemesterMarks.getIsRetake());
+        }
+
+        if (!Objects.equals(updateSemesterMarks.getInitialCertification(), semesterMark.getInitialCertification())) {
+            semesterMark.setInitialCertification(updateSemesterMarks.getInitialCertification());
+        }
+
         semesterMark.setRegularMarks(new HashSet<>(regularMarkList));
 
         return semesterMarkDTOMapper.apply(markRepository.save(semesterMark));
@@ -147,6 +155,13 @@ public class SimpleMarkService implements MarkService {
                 semesterMarkDTO.getId().getIdSt()
         );
         semesterMark.setCertification(semesterMarkDTO.getCertification());
+
+        if (semesterMarkDTO.getIsRetake() != null) {
+            semesterMark.setRetake(semesterMarkDTO.getIsRetake());
+        }
+        if (semesterMark.getInitialCertification() == null) {
+            semesterMark.setInitialCertification(semesterMark.getCertification());
+        }
         markRepository.save(semesterMark);
     }
 

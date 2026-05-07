@@ -1,5 +1,6 @@
 package org.spring.diaryBackend.service.simple;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibm.icu.text.Transliterator;
 import lombok.AllArgsConstructor;
 import org.jsoup.Jsoup;
@@ -8,8 +9,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
 import org.spring.diaryBackend.dto.entity.StudentGroupDTO;
-import org.spring.diaryBackend.dto.other.GroupMarksDTO;
-import org.spring.diaryBackend.dto.other.STTeachersDTO;
+import org.spring.diaryBackend.dto.other.*;
 import org.spring.diaryBackend.logic.GenerateSecurePassword;
 import org.spring.diaryBackend.mapper.entity.StudentGroupDTOMapper;
 import org.spring.diaryBackend.mapper.other.MarksStudentDTOMapper;
@@ -23,14 +23,13 @@ import org.spring.diaryBackend.repository.SubgroupRepository;
 import org.spring.diaryBackend.service.StudentGroupService;
 import org.spring.diaryBackend.service.StudentService;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,6 +45,10 @@ public class SimpleStudentGroupService implements StudentGroupService {
     private final StudentGroupDTOMapper studentGroupDTOMapper;
     private final NameSubjectTeachersDTOMapper nameSubjectTeachersDTOMapper;
     private final MarksStudentDTOMapper marksStudentDTOMapper;
+
+    private final JdbcTemplate jdbcTemplate;
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public List<StudentGroupDTO> findAll() {
@@ -255,6 +258,123 @@ public class SimpleStudentGroupService implements StudentGroupService {
         for (StudentDTO addStudent : newStudents) {
             studentService.saveStudent(addStudent);
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public GroupReportDTO getFullGroupReport(Long groupId) {
+        // 1. Получаем названия предметов в нужном порядке
+        String subjectsSql = "SELECT s.subject_name FROM subject s " +
+                "JOIN subject_teacher st ON s.id = st.id_subject " +
+                "JOIN groups_st gs ON st.id = gs.id_st " +
+                "WHERE gs.id_group = ? ORDER BY st.id ASC";
+
+        List<String> subjectNames = jdbcTemplate.queryForList(subjectsSql, String.class, groupId);
+
+        // 2. Вызываем функцию получения отчета по студентам
+        String reportSql = "SELECT get_group_report(?)";
+
+        // Используем jdbcTemplate.query вместо queryForList, чтобы избежать автоматического
+        // приведения jsonb -> Map, которое вызывает ошибку TypeMismatchDataAccessException
+        List<Map<String, Object>> rawData = jdbcTemplate.query(reportSql, (rs, rowNum) -> {
+            Map<String, Object> row = new java.util.HashMap<>();
+            // Получаем объект из первой колонки результата функции
+            row.put("result", rs.getObject(1));
+            return row;
+        }, groupId);
+
+        // 3. Превращаем PGobject (JSON-строку) в JsonNode для корректной отправки в API
+        List<Object> extractedData = Collections.singletonList(rawData.stream()
+                .map(row -> {
+                    // Достаем объект из нашей временной карты
+                    Object pgObject = row.get("result");
+
+                    // PGobject при вызове toString() возвращает чистую JSON-строку
+                    String jsonString = (pgObject != null) ? pgObject.toString() : null;
+
+                    if (jsonString != null) {
+                        try {
+                            // Превращаем строку в JsonNode, чтобы Spring отправил её как JSON-объект, а не как строку
+                            return objectMapper.readTree(jsonString);
+                        } catch (Exception e) {
+                            // В случае ошибки парсинга возвращаем null, который позже отфильтруем
+                            return null;
+                        }
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .toList());
+
+        // 4. Собираем всё в итоговый DTO
+        GroupReportDTO report = new GroupReportDTO();
+        report.setSubjectNames(subjectNames);
+        report.setStudentsData(extractedData);
+
+        return report;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<StudentCategoryGroupDTO> getStudentsByScholarshipCategory(Long groupId) {
+        String sql = """
+        WITH student_stats AS (
+            SELECT
+                s.id,
+                s.last_name || ' ' || s.name || ' ' || s.patronymic AS fio,
+                MIN(sm.initial_certification) as min_init,
+                MAX(sm.initial_certification) as max_init
+            FROM student s
+            JOIN semester_mark sm ON s.id = sm.id_student
+            WHERE s.id_group = ?
+              AND sm.id_st IN (
+                SELECT id_st
+                FROM groups_st
+                WHERE id_group = ?
+            )
+            GROUP BY s.id, s.last_name, s.name, s.patronymic
+        )
+        SELECT
+            fio,
+            CASE
+                WHEN min_init = 5 AND max_init = 5 THEN '5'
+                WHEN min_init = 4 AND max_init = 5 THEN '4-5'
+                WHEN min_init = 4 AND max_init = 4 THEN '4'
+                ELSE 'Другое'
+                END as category
+        FROM student_stats
+        WHERE (min_init = 5 AND max_init = 5)
+           OR (min_init = 4 AND max_init = 4)
+           OR (min_init = 4 AND max_init = 5)
+        ORDER BY category, fio;
+        """;
+
+        // 1. Получаем «плоский» список из базы
+        List<StudentCategoryDTO> flatList = jdbcTemplate.query(sql, (rs, rowNum) -> {
+            StudentCategoryDTO dto = new StudentCategoryDTO();
+            dto.setFio(rs.getString("fio"));
+            dto.setCategory(rs.getString("category"));
+            return dto;
+        }, groupId, groupId);
+
+        // 2. Группируем студентов по категориям с помощью Java Stream API
+        // groupingBy создаст Map<String, List<StudentCategoryDTO>>
+        Map<String, List<StudentCategoryDTO>> grouped = flatList.stream()
+                .collect(Collectors.groupingBy(
+                        StudentCategoryDTO::getCategory,
+                        LinkedHashMap::new, // Используем LinkedHashMap, чтобы сохранить порядок категорий
+                        Collectors.toList()
+                ));
+
+        // 3. Преобразуем Map в список объектов StudentCategoryGroupDTO
+        return grouped.entrySet().stream()
+                .map(entry -> {
+                    List<String> names = entry.getValue().stream()
+                            .map(StudentCategoryDTO::getFio)
+                            .toList();
+                    return new StudentCategoryGroupDTO(entry.getKey(), names);
+                })
+                .toList();
     }
 
     @Override

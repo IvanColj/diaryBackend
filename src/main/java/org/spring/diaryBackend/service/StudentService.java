@@ -13,6 +13,7 @@ public interface StudentService {
     StudentDTO findById(Long id);
     StudentDTO findByLoginOrPassword(String login, String password);
 
+    void updateLeaderStatus(Long id, boolean isLeader);
     void saveStudent(StudentDTO student);
     StudentDTO updateStudent(StudentDTO studentDTO);
     void deleteStudent(Long id);

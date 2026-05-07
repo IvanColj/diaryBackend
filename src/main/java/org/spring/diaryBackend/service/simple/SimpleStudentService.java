@@ -1,5 +1,6 @@
 package org.spring.diaryBackend.service.simple;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
 import org.spring.diaryBackend.dto.other.MarksStudentDTO;
@@ -15,6 +16,7 @@ import org.spring.diaryBackend.repository.StudentGroupRepository;
 import org.spring.diaryBackend.repository.StudentRepository;
 import org.spring.diaryBackend.service.StudentService;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,8 @@ import java.util.stream.Collectors;
 @Primary
 public class SimpleStudentService implements StudentService {
     private final Argon2PasswordEncoder encoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
+    private final JdbcTemplate jdbcTemplate;
+    private final ObjectMapper objectMapper;
     private final StudentRepository studentRepository;
     private final StudentGroupRepository studentGroupRepository;
     private final StudentDTOMapper studentDTOMapper;
@@ -135,6 +139,17 @@ public class SimpleStudentService implements StudentService {
     }
 
     @Override
+    @Transactional
+    public void updateLeaderStatus(Long id, boolean isLeader) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
+
+        student.setLeader(isLeader);
+
+        studentRepository.save(student);
+    }
+
+    @Override
     public void saveStudent(StudentDTO studentDTO) {
         Student student;
         if (studentDTO.getId() != null) {
@@ -153,6 +168,7 @@ public class SimpleStudentService implements StudentService {
         student.setBirthDate(studentDTO.getBirthDate());
         student.setAddress(studentDTO.getAddress());
         student.setEmail(studentDTO.getEmail());
+        student.setLeader(studentDTO.getIsLeader());
 
         if (studentDTO.getIdGroup() != null) {
             StudentGroup group = studentGroupRepository.findGroupById(studentDTO.getIdGroup());
@@ -211,6 +227,9 @@ public class SimpleStudentService implements StudentService {
         }
         if (studentNew.getEmail() != null) {
             student.setEmail(studentNew.getEmail());
+        }
+        if (studentNew.getIsLeader() != null) {
+            student.setLeader(studentNew.getIsLeader());
         }
         return studentDTOMapper.apply(studentRepository.save(student));
     }
