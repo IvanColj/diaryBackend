@@ -76,6 +76,7 @@ public class SimpleStaffService implements StaffService {
         staff.setLogin(staffDTO.getLogin());
         staff.setPassword(encoder.encode(staffDTO.getPassword()));
         staff.setEmail(staffDTO.getEmail());
+        staff.setTelephone(staffDTO.getTelephone());
         return staffDTOMapper.apply(staffRepository.save(staff));
     }
 
@@ -106,7 +107,7 @@ public class SimpleStaffService implements StaffService {
                 staffUpdate.setLogin(staffNew.getLogin());
             } else {
                 return new StaffDTO(null, null, null, null,
-                        "Такой логин уже есть, придумайте другой", null, null, null);
+                        "Такой логин уже есть, придумайте другой", null, null, null, null);
             }
         }
         if (staffNew.getPassword() != null) {
@@ -114,6 +115,9 @@ public class SimpleStaffService implements StaffService {
         }
         if (staffNew.getEmail() != null) {
             staffUpdate.setEmail(staffNew.getEmail());
+        }
+        if (staffNew.getTelephone() != null) {
+            staffUpdate.setTelephone(staffNew.getTelephone());
         }
         return staffDTOMapper.apply(staffRepository.save(staffUpdate));
     }

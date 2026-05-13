@@ -21,7 +21,9 @@ public class StudentGroupDTOMapper implements Function<StudentGroup, StudentGrou
                 studentGroup.getCourse(),
                 studentGroup.getFormEducation(),
                 studentGroup.getProfile(),
-                studentGroup.getSpecialty()
+                studentGroup.getSpecialty(),
+                studentGroup.getDepartmentHead() != null ? studentGroup.getDepartmentHead().getId(): null,
+                studentGroup.getCurrentSemester()
         );
     }
 }

@@ -35,6 +35,9 @@ public class Staff {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "telephone")
+    private String telephone;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "staff_job_position",

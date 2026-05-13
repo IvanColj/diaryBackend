@@ -407,6 +407,17 @@ public class SimpleStudentGroupService implements StudentGroupService {
         if (studentGroupNew.getSpecialty() != null) {
             studentGroupUpdate.setSpecialty(studentGroupNew.getSpecialty());
         }
+        if (studentGroupNew.getDepartmentHead() != null) {
+            studentGroupUpdate.setDepartmentHead(
+                    staffRepository.findById(studentGroupNew.getDepartmentHead()).orElse(null)
+            );
+            if (studentGroupUpdate.getDepartmentHead() == null) {
+                return new StudentGroupDTO();
+            }
+        }
+        if (studentGroupNew.getCurrentSemester() != null) {
+            studentGroupUpdate.setCurrentSemester(studentGroupNew.getCurrentSemester());
+        }
         return studentGroupDTOMapper.apply(studentGroupRepository.save(studentGroupUpdate));
     }
 

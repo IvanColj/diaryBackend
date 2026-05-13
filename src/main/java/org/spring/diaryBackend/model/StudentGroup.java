@@ -39,6 +39,13 @@ public class StudentGroup {
     @Column(name = "specialty")
     private String specialty;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department")
+    private Staff departmentHead;
+
+    @JoinColumn(name = "current_semester")
+    private Long currentSemester;
+
     @OneToMany(mappedBy = "idGroup")
     private Set<Student> students = new LinkedHashSet<>();
 
