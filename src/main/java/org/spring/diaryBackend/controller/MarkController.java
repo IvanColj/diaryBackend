@@ -33,6 +33,15 @@ public class MarkController {
         return markService.findColumnMarkInfo(idStudent, idSt, number);
     }
 
+    @GetMapping("/groups/semester-marks/group")
+    public List<StudentFinalMarkDTO> getFinalMarksGroup(
+            @RequestParam("idGroup") Long idGroup,
+            @RequestParam("idSt") Long idSt,
+            @RequestParam(value = "idTeacher", required = false) Long idTeacher) {
+
+        return markService.getFinalMarksForGroup(idGroup, idSt);
+    }
+
     @GetMapping("info/mark/student/{idStudent}/st/{idSt}/number/{number}")
     public MarkInfoDTO findMarkInfo(@PathVariable Long idStudent,
                                     @PathVariable Long idSt,

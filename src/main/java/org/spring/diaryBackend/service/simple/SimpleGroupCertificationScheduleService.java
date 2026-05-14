@@ -4,55 +4,41 @@ import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.GroupCertificationScheduleDTO;
 import org.spring.diaryBackend.mapper.entity.GroupCertificationScheduleDTOMapper;
 import org.spring.diaryBackend.model.GroupCertificationSchedule;
-import org.spring.diaryBackend.model.StudentGroup;
-import org.spring.diaryBackend.model.SubjectTeacher;
+import org.spring.diaryBackend.model.GroupCertificationScheduleId;
 import org.spring.diaryBackend.repository.GroupCertificationScheduleRepository;
-import org.spring.diaryBackend.repository.STRepository;
-import org.spring.diaryBackend.repository.StudentGroupRepository;
 import org.spring.diaryBackend.service.GroupCertificationScheduleService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
 public class SimpleGroupCertificationScheduleService implements GroupCertificationScheduleService {
-    private final GroupCertificationScheduleRepository groupCertificationSchedulerepository;
-    private final StudentGroupRepository studentGroupRepository;
-    private final STRepository stRepository;
+    private final GroupCertificationScheduleRepository groupCertificationScheduleRepository;
     private final GroupCertificationScheduleDTOMapper mapper;
 
-    public GroupCertificationScheduleDTO create(GroupCertificationScheduleDTO dto) {
-        GroupCertificationSchedule entity = new GroupCertificationSchedule();
-        SubjectTeacher subjectTeacher = stRepository.findById(dto.getIdSt()).orElse(null);
-        StudentGroup studentGroup = studentGroupRepository.findGroupById(dto.getIdGroup());
-        entity.setSubjectTeacher(subjectTeacher);
-        entity.setStudentGroup(studentGroup);
-        entity.setSemester(dto.getSemester());
-        entity.setCertificationType(dto.getCertificationType());
-        return mapper.apply(groupCertificationSchedulerepository.save(entity));
+    public void create(GroupCertificationScheduleDTO dto) {
+        groupCertificationScheduleRepository.saveCertification(dto.getId().getIdSt(), dto.getId().getIdGroup(), dto.getId().getSemester(), dto.getCertificationType());
     }
 
-    public void delete(Long id) {
-        groupCertificationSchedulerepository.deleteById(id);
+    public void delete(Long idSt, Long idGroup, Long semester) {
+        GroupCertificationScheduleId key = new GroupCertificationScheduleId(idSt, idGroup, semester);
+        groupCertificationScheduleRepository.deleteById(key);
     }
 
-    public GroupCertificationScheduleDTO update(Long id, GroupCertificationScheduleDTO dto) {
-        GroupCertificationSchedule entity = groupCertificationSchedulerepository.findById(id).orElseThrow();
-        entity.setSemester(dto.getSemester());
+    @Override
+    @Transactional
+    public GroupCertificationScheduleDTO update(GroupCertificationScheduleDTO dto) {
+        GroupCertificationScheduleId key = new GroupCertificationScheduleId(dto.getId().getIdSt(), dto.getId().getIdGroup(), dto.getId().getSemester());
+        GroupCertificationSchedule entity = groupCertificationScheduleRepository.findById(key)
+                .orElseThrow(() -> new RuntimeException("Запись не найдена"));
+
         entity.setCertificationType(dto.getCertificationType());
-        return mapper.apply(groupCertificationSchedulerepository.save(entity));
+        return mapper.apply(groupCertificationScheduleRepository.save(entity));
     }
 
     @Override
     public String getCurrentCertification(Long idSt, Long groupId) {
-        StudentGroup group = studentGroupRepository.findById(groupId)
-                .orElseThrow(() -> new RuntimeException("Группа с id " + groupId + " не найдена"));
-
-        Long currentSemester = group.getCurrentSemester();
-
-        if (currentSemester == null) {
-            return "Семестр не определен";
-        }
-        return groupCertificationSchedulerepository.findCertificationType(idSt, groupId, currentSemester)
+        return groupCertificationScheduleRepository.findCertificationType(idSt, groupId)
                 .orElse("Аттестация не назначена");
     }
 }

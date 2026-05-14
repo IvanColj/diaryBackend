@@ -28,4 +28,5 @@ public class StudentDTO {
     private String email;
     private Long code;
     private Boolean isLeader;
+    private String educationBasis;
 }

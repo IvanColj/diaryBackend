@@ -11,19 +11,19 @@ import org.springframework.web.bind.annotation.*;
 public class GroupCertificationScheduleController {
     private final GroupCertificationScheduleService service;
 
-    @PostMapping("save")
-    public GroupCertificationScheduleDTO save(@RequestBody GroupCertificationScheduleDTO dto) {
-        return service.create(dto);
+    @DeleteMapping("delete/st/{idSt}/gpoup/{idGroup}/semester/{semester}")
+    public void delete(@PathVariable Long idSt, @PathVariable Long idGroup, @PathVariable Long semester) {
+        service.delete(idSt, idGroup, semester);
     }
 
-    @DeleteMapping("delete/{id}")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
+    @PostMapping("save")
+    public void save(@RequestBody GroupCertificationScheduleDTO dto) {
+        service.create(dto);
     }
 
     @PatchMapping("update")
     public GroupCertificationScheduleDTO update(@RequestBody GroupCertificationScheduleDTO dto) {
-        return service.update(dto.getId(), dto);
+        return service.update(dto);
     }
 
     @GetMapping("current/{idSt}/{groupId}")

@@ -9,16 +9,13 @@ import lombok.Setter;
 @Entity
 @Table(name = "group_certification_schedule")
 public class GroupCertificationSchedule {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private GroupCertificationScheduleId id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_st")
+    @ManyToOne @JoinColumn(name = "id_st")
     private SubjectTeacher subjectTeacher;
 
-    @ManyToOne
-    @JoinColumn(name = "id_group")
+    @ManyToOne @JoinColumn(name = "id_group")
     private StudentGroup studentGroup;
 
     private Long semester;

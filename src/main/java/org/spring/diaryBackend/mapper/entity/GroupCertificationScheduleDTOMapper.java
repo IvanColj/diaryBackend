@@ -12,9 +12,6 @@ public class GroupCertificationScheduleDTOMapper implements Function<GroupCertif
     public GroupCertificationScheduleDTO apply(GroupCertificationSchedule entity) {
         return new GroupCertificationScheduleDTO(
                 entity.getId(),
-                entity.getSubjectTeacher().getId(),
-                entity.getStudentGroup().getId(),
-                entity.getSemester(),
                 entity.getCertificationType()
         );
     }
