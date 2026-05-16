@@ -3,10 +3,7 @@ package org.spring.diaryBackend.controller;
 import lombok.RequiredArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
 import org.spring.diaryBackend.dto.entity.StudentGroupDTO;
-import org.spring.diaryBackend.dto.other.GroupMarksDTO;
-import org.spring.diaryBackend.dto.other.GroupReportDTO;
-import org.spring.diaryBackend.dto.other.STTeachersDTO;
-import org.spring.diaryBackend.dto.other.StudentCategoryGroupDTO;
+import org.spring.diaryBackend.dto.other.*;
 import org.spring.diaryBackend.service.StudentGroupService;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,9 +26,19 @@ public class StudentGroupController {
         return studentGroupService.findStudentGroupByIdGroup(idGroup);
     }
 
+    @GetMapping("general-stats")
+    public GeneralStatsDTO getGeneralStats() {
+        return studentGroupService.getGeneralStats();
+    }
+
     @GetMapping("number/{groupNumber}")
     public List<StudentGroupDTO> findStudentGroupByNumberGroup(@PathVariable Long groupNumber) {
         return studentGroupService.findStudentGroupByNumberGroup(groupNumber);
+    }
+
+    @GetMapping("stats/{groupId}")
+    public GroupStatsDTO getGroupStats(@PathVariable Long groupId) {
+        return studentGroupService.getGroupDetailedStats(groupId);
     }
 
     @GetMapping("add/{groupNumber}")

@@ -1,5 +1,6 @@
 package org.spring.diaryBackend.repository;
 
+import org.spring.diaryBackend.dto.other.getCurrentCertificationGroupDTO;
 import org.spring.diaryBackend.model.GroupCertificationSchedule;
 import org.spring.diaryBackend.model.GroupCertificationScheduleId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -23,6 +25,25 @@ public interface GroupCertificationScheduleRepository extends JpaRepository<Grou
 """)
     Optional<String> findCertificationType(@Param("idSt") Long idSt,
                                            @Param("groupId") Long groupId);
+
+    @Query("""
+    SELECT st.id, st.idSubject.subjectName, gcs.certificationType
+    FROM GroupCertificationSchedule gcs
+    JOIN SubjectTeacher st ON gcs.id.idSt = st.id
+    JOIN gcs.studentGroup sg
+    WHERE gcs.id.idGroup = :groupId
+      AND gcs.id.semester = sg.currentSemester
+""")
+    List<getCurrentCertificationGroupDTO> findCurrentCertificationGroup(@Param("groupId") Long groupId);
+
+    @Query("""
+    SELECT st.id, st.idSubject.subjectName, gcs.certificationType, gcs.id.semester
+    FROM GroupCertificationSchedule gcs
+    JOIN SubjectTeacher st ON gcs.id.idSt = st.id
+    JOIN gcs.studentGroup sg
+    WHERE gcs.id.idGroup = :groupId
+""")
+    List<getCurrentCertificationGroupDTO> findAllCertificationGroup(@Param("groupId") Long groupId);
 
     @Modifying
     @Transactional

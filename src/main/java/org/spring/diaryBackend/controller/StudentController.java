@@ -2,7 +2,9 @@ package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
+import org.spring.diaryBackend.dto.other.OverallStatsDTO;
 import org.spring.diaryBackend.dto.other.StudentAllMarksDTO;
+import org.spring.diaryBackend.dto.other.StudentLeaderDTO;
 import org.spring.diaryBackend.service.StudentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +22,19 @@ public class StudentController {
         return studentService.findAllStudent();
     }
 
+    @GetMapping("overall-stats")
+    public OverallStatsDTO getOverallStats() {
+        return studentService.getOverallStats();
+    }
+
     @GetMapping("id/{id}")
     public StudentDTO getById(@PathVariable Long id) {
         return studentService.findById(id);
+    }
+
+    @GetMapping("group/{groupId}/leaders")
+    public List<StudentLeaderDTO> getGroupLeaders(@PathVariable Long groupId) {
+        return studentService.getGroupLeaders(groupId);
     }
 
     @GetMapping("login/{login}/password/{password}")

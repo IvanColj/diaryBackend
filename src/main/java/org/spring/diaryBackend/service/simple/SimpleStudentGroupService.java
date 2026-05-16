@@ -16,10 +16,7 @@ import org.spring.diaryBackend.mapper.other.MarksStudentDTOMapper;
 import org.spring.diaryBackend.mapper.other.NameSubjectTeachersDTOMapper;
 import org.spring.diaryBackend.model.Student;
 import org.spring.diaryBackend.model.StudentGroup;
-import org.spring.diaryBackend.repository.MarkRepository;
-import org.spring.diaryBackend.repository.StaffRepository;
-import org.spring.diaryBackend.repository.StudentGroupRepository;
-import org.spring.diaryBackend.repository.SubgroupRepository;
+import org.spring.diaryBackend.repository.*;
 import org.spring.diaryBackend.service.StudentGroupService;
 import org.spring.diaryBackend.service.StudentService;
 import org.springframework.context.annotation.Primary;
@@ -42,6 +39,7 @@ public class SimpleStudentGroupService implements StudentGroupService {
     private final StaffRepository staffRepository;
     private final SubgroupRepository subgroupRepository;
     private final MarkRepository markRepository;
+    private final StudentRepository studentRepository;
     private final StudentGroupDTOMapper studentGroupDTOMapper;
     private final NameSubjectTeachersDTOMapper nameSubjectTeachersDTOMapper;
     private final MarksStudentDTOMapper marksStudentDTOMapper;
@@ -56,6 +54,18 @@ public class SimpleStudentGroupService implements StudentGroupService {
                 .stream()
                 .map(studentGroupDTOMapper)
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public GeneralStatsDTO getGeneralStats() {
+        long groupsCount = studentGroupRepository.count();
+        long studentsCount = studentRepository.count();
+
+        return GeneralStatsDTO.builder()
+                .totalGroups(groupsCount)
+                .totalStudents(studentsCount)
+                .build();
     }
 
     @Override
@@ -131,6 +141,31 @@ public class SimpleStudentGroupService implements StudentGroupService {
             );
         }
         return marksGroupBySubject;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public GroupStatsDTO getGroupDetailedStats(Long groupId) {
+        List<Object[]> results = studentGroupRepository.getDetailedStats(groupId);
+
+        if (results.isEmpty()) {
+            throw new RuntimeException("Данные для группы с ID " + groupId + " не найдены");
+        }
+
+        // Берем первую (и единственную) строку результата
+        Object[] row = results.get(0);
+
+        return GroupStatsDTO.builder()
+                .groupNumber(((Number) row[0]).longValue())
+                .course(((Number) row[1]).longValue())
+                .specialty((String) row[2])
+                .studentsCount(((Number) row[3]).longValue())
+                .totalSocialCategories(((Number) row[4]).longValue())
+                .leadersFio((String) row[5]) // Здесь будет строка с ФИО через запятую
+                .curatorFio((String) row[6])
+                .averageGrade(row[7] != null ? ((Number) row[7]).doubleValue() : 0.0)
+                .attendancePercentage(row[8] != null ? ((Number) row[8]).doubleValue() : 0.0)
+                .build();
     }
 
     @Override

@@ -71,4 +71,52 @@ public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long
             AND g.id = :group
     """)
     List<STInfoDTO> findGroupSubjects(@Param("group") Long group);
+
+    @Query(value = """
+        WITH 
+        student_info AS (
+            SELECT 
+                COUNT(*) as total_students,
+                STRING_AGG(CASE WHEN s.is_leader = true THEN s.last_name || ' ' || s.name || ' ' || s.patronymic END, ', ' ORDER BY s.last_name) as leaders
+            FROM student s
+            WHERE s.id_group = :groupId
+        ),
+        social_info AS (
+            SELECT COUNT(*) as total_social 
+            FROM student_social_category ssc
+            JOIN student s ON ssc.id_student = s.id
+            WHERE s.id_group = :groupId
+        ),
+        grade_info AS (
+            SELECT AVG(sm.certification) as avg_grade
+            FROM semester_mark sm
+            JOIN student s ON sm.id_student = s.id
+            WHERE s.id_group = :groupId
+        ),
+        attendance_info AS (
+            SELECT 
+                (COUNT(*) FILTER (WHERE a.status = 'п') * 100.0 / NULLIF(COUNT(*), 0)) as attendance_pct
+            FROM attendance a
+            JOIN student s ON a.id_student = s.id
+            WHERE s.id_group = :groupId
+        )
+        SELECT 
+            sg.number_group,
+            sg.course,
+            sg.specialty,
+            si.total_students,
+            soc.total_social,
+            si.leaders,
+            cur.last_name || ' ' || cur.name || ' ' || cur.patronymic as curator_fio,
+            gi.avg_grade,
+            ai.attendance_pct
+        FROM student_group sg
+        JOIN staff cur ON sg.id_curator = cur.id
+        CROSS JOIN student_info si
+        CROSS JOIN social_info soc
+        CROSS JOIN grade_info gi
+        CROSS JOIN attendance_info ai
+        WHERE sg.id = :groupId
+        """, nativeQuery = true)
+    List<Object[]> getDetailedStats(@Param("groupId") Long groupId);
 }

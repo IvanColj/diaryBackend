@@ -2,9 +2,7 @@ package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
-import org.spring.diaryBackend.dto.other.MarksStudentDTO;
-import org.spring.diaryBackend.dto.other.STTeachersDTO;
-import org.spring.diaryBackend.dto.other.StudentAllMarksDTO;
+import org.spring.diaryBackend.dto.other.*;
 import org.spring.diaryBackend.mapper.entity.StudentDTOMapper;
 import org.spring.diaryBackend.mapper.other.MarksStudentDTOMapper;
 import org.spring.diaryBackend.mapper.other.NameSubjectTeachersDTOMapper;
@@ -15,6 +13,7 @@ import org.spring.diaryBackend.repository.StudentGroupRepository;
 import org.spring.diaryBackend.repository.StudentRepository;
 import org.spring.diaryBackend.service.StudentService;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +32,7 @@ public class SimpleStudentService implements StudentService {
     private final StudentRepository studentRepository;
     private final StudentGroupRepository studentGroupRepository;
     private final StudentDTOMapper studentDTOMapper;
+    private final JdbcTemplate jdbcTemplate;
     private final MarksStudentDTOMapper marksStudentDTOMapper;
     private final NameSubjectTeachersDTOMapper nameSubjectTeachersDTOMapper;
 
@@ -46,6 +46,39 @@ public class SimpleStudentService implements StudentService {
         }
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<StudentLeaderDTO> getGroupLeaders(Long groupId) {
+        String sql = """
+        SELECT
+            last_name || ' ' || name || ' ' || patronymic as fio,
+            telephone, 
+            email 
+        FROM student 
+        WHERE id_group = ? AND is_leader = true
+        """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> StudentLeaderDTO.builder()
+                .fio(rs.getString("fio"))
+                .telephone(rs.getString("telephone"))
+                .email(rs.getString("email"))
+                .build(), groupId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OverallStatsDTO getOverallStats() {
+        String sql = """
+        SELECT
+            (SELECT AVG(certification) FROM semester_mark) as total_avg,
+            (SELECT COUNT(*) FILTER (WHERE status = 'п') * 100.0 / NULLIF(COUNT(*), 0) FROM attendance) as total_att
+        """;
+
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> OverallStatsDTO.builder()
+                .averageGrade(rs.getDouble("total_avg"))
+                .attendancePercentage(rs.getDouble("total_att"))
+                .build());
+    }
 
     @Override
     public StudentDTO findById(Long id) {

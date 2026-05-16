@@ -2,6 +2,7 @@ package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.SocialCategoryDTO;
+import org.spring.diaryBackend.dto.other.SocialCategoryStatsDTO;
 import org.spring.diaryBackend.service.SocialCategoryService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,11 @@ public class SocialCategoryController {
     @GetMapping
     public List<SocialCategoryDTO> getAll() {
         return socialCategoryService.findAll();
+    }
+
+    @GetMapping("stats")
+    public List<SocialCategoryStatsDTO> getCategoryStats() {
+        return socialCategoryService.getCategoryStats();
     }
 
     @PostMapping("save")

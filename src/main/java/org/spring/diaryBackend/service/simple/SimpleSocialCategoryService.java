@@ -2,11 +2,14 @@ package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.SocialCategoryDTO;
+import org.spring.diaryBackend.dto.other.SocialCategoryStatsDTO;
 import org.spring.diaryBackend.mapper.entity.SocialCategoryDTOMapper;
 import org.spring.diaryBackend.model.SocialCategory;
 import org.spring.diaryBackend.repository.SocialCategoryRepository;
 import org.spring.diaryBackend.service.SocialCategoryService;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SimpleSocialCategoryService implements SocialCategoryService {
     private final SocialCategoryRepository socialCategoryRepository;
-
+    private final JdbcTemplate jdbcTemplate;
     private final SocialCategoryDTOMapper socialCategoryDTOMapper;
 
     @Override
@@ -23,6 +26,27 @@ public class SimpleSocialCategoryService implements SocialCategoryService {
                 .stream()
                 .map(socialCategoryDTOMapper)
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SocialCategoryStatsDTO> getCategoryStats() {
+        String sql = """
+        SELECT
+            sc.name as category_name,
+            COUNT(ssc.id_student) as student_count,
+            (COUNT(ssc.id_student) * 100.0 / NULLIF((SELECT COUNT(*) FROM student_social_category), 0)) as percentage
+        FROM social_category sc
+        LEFT JOIN student_social_category ssc ON sc.id = ssc.id_category
+        GROUP BY sc.id, sc.name
+        ORDER BY student_count DESC;
+        """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> SocialCategoryStatsDTO.builder()
+                .categoryName(rs.getString("category_name"))
+                .studentsCount(rs.getLong("student_count"))
+                .percentage(rs.getDouble("percentage"))
+                .build());
     }
 
     @Override

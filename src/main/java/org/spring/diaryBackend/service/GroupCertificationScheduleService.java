@@ -1,13 +1,18 @@
 package org.spring.diaryBackend.service;
 
 import org.spring.diaryBackend.dto.entity.GroupCertificationScheduleDTO;
+import org.spring.diaryBackend.dto.other.getAllCertificationGroupDTO;
+import org.spring.diaryBackend.dto.other.getCurrentCertificationGroupDTO;
+
+import java.util.List;
 
 public interface GroupCertificationScheduleService {
-    void delete(Long idSt, Long idGroup, Long semester);
+    String getCurrentCertification(Long idSt, Long groupId);
+    List<getCurrentCertificationGroupDTO> getCurrentCertificationGroup(Long idGroup);
+    List<getAllCertificationGroupDTO> getAllCertificationGroup(Long idGroup);
 
-    void create(GroupCertificationScheduleDTO dto);
 
     GroupCertificationScheduleDTO update(GroupCertificationScheduleDTO dto);
-
-    String getCurrentCertification(Long idSt, Long groupId);
+    void create(GroupCertificationScheduleDTO dto);
+    void delete(Long idSt, Long idGroup, Long semester);
 }

@@ -1,7 +1,9 @@
 package org.spring.diaryBackend.service;
 
 import org.spring.diaryBackend.dto.entity.StudentDTO;
+import org.spring.diaryBackend.dto.other.OverallStatsDTO;
 import org.spring.diaryBackend.dto.other.StudentAllMarksDTO;
+import org.spring.diaryBackend.dto.other.StudentLeaderDTO;
 
 import java.util.List;
 
@@ -10,7 +12,9 @@ public interface StudentService {
     List<StudentDTO> findAllStudent();
     List<StudentDTO> findByIdGroup(Long group);
     List<StudentAllMarksDTO> getStudentMarks(Long id);
+    OverallStatsDTO getOverallStats();
     StudentDTO findById(Long id);
+    List<StudentLeaderDTO> getGroupLeaders(Long groupId);
     StudentDTO findByLoginOrPassword(String login, String password);
 
     void updateLeaderStatus(Long id, boolean isLeader);
