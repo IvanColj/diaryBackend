@@ -13,6 +13,14 @@ import java.util.List;
 public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long> {
 
     @Query("""
+        SELECT sg
+        FROM StudentGroup sg
+        WHERE sg.departmentHead.id = :idStaff
+        ORDER BY sg.numberGroup
+    """)
+    List<StudentGroup> findGroupsDepartment(@Param("idStaff") Long idStaff);
+
+    @Query("""
         SELECT NEW org.spring.diaryBackend.dto.other.GroupMarksDTO(
             s.id, s.lastName, s.name, s.patronymic, null
         )
@@ -72,17 +80,35 @@ public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long
     """)
     List<STInfoDTO> findGroupSubjects(@Param("group") Long group);
 
+    @Query("""
+        SELECT DISTINCT NEW org.spring.diaryBackend.dto.other.STInfoDTO(
+            st.id,
+            s.id,
+            s.subjectName,
+            t.id,
+            t.lastName,
+            t.name,
+            t.patronymic
+        )
+        FROM GroupCertificationSchedule gcs
+        JOIN gcs.subjectTeacher st
+        JOIN st.idSubject s
+        JOIN st.teachers t
+        WHERE gcs.studentGroup.id = :group
+    """)
+    List<STInfoDTO> findGroupCertificationSubjects(@Param("group") Long group);
+
     @Query(value = """
-        WITH 
+        WITH
         student_info AS (
-            SELECT 
+            SELECT
                 COUNT(*) as total_students,
                 STRING_AGG(CASE WHEN s.is_leader = true THEN s.last_name || ' ' || s.name || ' ' || s.patronymic END, ', ' ORDER BY s.last_name) as leaders
             FROM student s
             WHERE s.id_group = :groupId
         ),
         social_info AS (
-            SELECT COUNT(*) as total_social 
+            SELECT COUNT(*) as total_social
             FROM student_social_category ssc
             JOIN student s ON ssc.id_student = s.id
             WHERE s.id_group = :groupId
@@ -94,13 +120,13 @@ public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long
             WHERE s.id_group = :groupId
         ),
         attendance_info AS (
-            SELECT 
+            SELECT
                 (COUNT(*) FILTER (WHERE a.status = 'п') * 100.0 / NULLIF(COUNT(*), 0)) as attendance_pct
             FROM attendance a
             JOIN student s ON a.id_student = s.id
             WHERE s.id_group = :groupId
         )
-        SELECT 
+        SELECT
             sg.number_group,
             sg.course,
             sg.specialty,

@@ -9,9 +9,11 @@ import java.util.List;
 
 public interface StudentGroupService {
     List<StudentGroupDTO> findAll();
+    List<StudentGroupDTO> findGroupsDepartment(Long idStaff);
     GeneralStatsDTO getGeneralStats();
     List<GroupMarksDTO> getGroupMarksBySubject(Long idGroup, Long idSt, Long idTeacher);
     List<STTeachersDTO> findBySubject(Long group);
+    List<STTeachersDTO> findByCertificationSubject(Long group);
     GroupStatsDTO getGroupDetailedStats(Long groupId);
     List<StudentDTO> fetchStudentsGroup(Long groupNumber) throws IOException;
     List<StudentGroupDTO> findStudentGroupByNumberGroup(Long numberGroup);

@@ -1,6 +1,6 @@
 package org.spring.diaryBackend.repository;
 
-import org.spring.diaryBackend.dto.other.getCurrentCertificationGroupDTO;
+import org.spring.diaryBackend.dto.other.CurrentCertificationGroupDTO;
 import org.spring.diaryBackend.model.GroupCertificationSchedule;
 import org.spring.diaryBackend.model.GroupCertificationScheduleId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,23 +27,19 @@ public interface GroupCertificationScheduleRepository extends JpaRepository<Grou
                                            @Param("groupId") Long groupId);
 
     @Query("""
-    SELECT st.id, st.idSubject.subjectName, gcs.certificationType
+    SELECT NEW org.spring.diaryBackend.dto.other.CurrentCertificationGroupDTO(
+            st.id,
+            st.idSubject.subjectName,
+            gcs.certificationType,
+            gcs.semester
+        )
     FROM GroupCertificationSchedule gcs
     JOIN SubjectTeacher st ON gcs.id.idSt = st.id
     JOIN gcs.studentGroup sg
     WHERE gcs.id.idGroup = :groupId
       AND gcs.id.semester = sg.currentSemester
 """)
-    List<getCurrentCertificationGroupDTO> findCurrentCertificationGroup(@Param("groupId") Long groupId);
-
-    @Query("""
-    SELECT st.id, st.idSubject.subjectName, gcs.certificationType, gcs.id.semester
-    FROM GroupCertificationSchedule gcs
-    JOIN SubjectTeacher st ON gcs.id.idSt = st.id
-    JOIN gcs.studentGroup sg
-    WHERE gcs.id.idGroup = :groupId
-""")
-    List<getCurrentCertificationGroupDTO> findAllCertificationGroup(@Param("groupId") Long groupId);
+    List<CurrentCertificationGroupDTO> findCurrentCertificationGroup(@Param("groupId") Long groupId);
 
     @Modifying
     @Transactional

@@ -26,6 +26,11 @@ public class StudentGroupController {
         return studentGroupService.findStudentGroupByIdGroup(idGroup);
     }
 
+    @GetMapping("id-head/{idStaff}")
+    public List<StudentGroupDTO> findGroupsDepartment(@PathVariable Long idStaff) {
+        return studentGroupService.findGroupsDepartment(idStaff);
+    }
+
     @GetMapping("general-stats")
     public GeneralStatsDTO getGeneralStats() {
         return studentGroupService.getGeneralStats();
@@ -58,6 +63,11 @@ public class StudentGroupController {
     @GetMapping("subjects/group/{group}")
     public List<STTeachersDTO> getBySubject(@PathVariable Long group) {
         return studentGroupService.findBySubject(group);
+    }
+
+    @GetMapping("certification-subjects/group/{group}")
+    public List<STTeachersDTO> getCertificationSubjects(@PathVariable Long group) {
+        return studentGroupService.findByCertificationSubject(group);
     }
 
     @GetMapping("report/{groupId}")

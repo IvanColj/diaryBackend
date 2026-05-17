@@ -5,13 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class getAllCertificationGroupDTO {
+public class CurrentCertificationGroupDTO {
+    private Long idSt;
+    private String nameSubject;
+    private String certificationType;
     private Long semester;
-    private List<getCurrentCertificationGroupDTO> certificationGroupDTOS;
 }

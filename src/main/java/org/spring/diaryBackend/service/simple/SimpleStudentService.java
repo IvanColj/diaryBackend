@@ -48,13 +48,55 @@ public class SimpleStudentService implements StudentService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<CourseStatsDTO> getStatsByCourse() {
+        String sql = """
+        WITH
+        grade_stats AS (
+            -- Считаем средний балл по каждому курсу
+            SELECT
+                sg.course,
+                AVG(sm.certification) as avg_grade
+            FROM student_group sg
+            LEFT JOIN student s ON s.id_group = sg.id
+            LEFT JOIN semester_mark sm ON s.id = sm.id_student
+            GROUP BY sg.course
+        ),
+        attendance_stats AS (
+            -- Считаем % посещаемости по каждому курсу
+            SELECT
+                sg.course,
+                (COUNT(*) FILTER (WHERE a.status = 'п') * 100.0 / NULLIF(COUNT(*), 0)) as att_pct
+            FROM student_group sg
+            LEFT JOIN student s ON s.id_group = sg.id
+            LEFT JOIN attendance a ON s.id = a.id_student
+            GROUP BY sg.course
+        )
+        -- Соединяем две статистики по номеру курса
+        SELECT
+            gs.course,
+            gs.avg_grade,
+            as_stats.att_pct
+        FROM grade_stats gs
+        JOIN attendance_stats as_stats ON gs.course = as_stats.course
+        ORDER BY gs.course ASC
+        """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> CourseStatsDTO.builder()
+                .course(rs.getLong("course"))
+                .averageGrade(rs.getDouble("avg_grade"))
+                .attendancePercentage(rs.getDouble("att_pct"))
+                .build());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<StudentLeaderDTO> getGroupLeaders(Long groupId) {
         String sql = """
         SELECT
             last_name || ' ' || name || ' ' || patronymic as fio,
-            telephone, 
-            email 
-        FROM student 
+            telephone,
+            email
+        FROM student
         WHERE id_group = ? AND is_leader = true
         """;
 
@@ -271,5 +313,19 @@ public class SimpleStudentService implements StudentService {
     @Transactional
     public void deleteStudent(Long id) {
         studentRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<GroupPerformanceDTO> getGroupPerformance(Long groupId) {
+        List<Object[]> results = studentRepository.findGroupPerformance(groupId);
+        return results.stream().map(row -> new GroupPerformanceDTO(
+                (Long) row[0],
+                (String) row[1],
+                (String) row[2],
+                (String) row[3],
+                row[4] != null ? ((Number) row[4]).doubleValue() : 0.0,
+                row[5] != null ? ((Number) row[5]).longValue() : 0L
+        )).toList();
     }
 }

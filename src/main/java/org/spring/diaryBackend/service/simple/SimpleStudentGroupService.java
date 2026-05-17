@@ -57,6 +57,14 @@ public class SimpleStudentGroupService implements StudentGroupService {
     }
 
     @Override
+    public List<StudentGroupDTO> findGroupsDepartment(Long idStaff) {
+        return studentGroupRepository.findGroupsDepartment(idStaff)
+                .stream()
+                .map(studentGroupDTOMapper)
+                .toList();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public GeneralStatsDTO getGeneralStats() {
         long groupsCount = studentGroupRepository.count();
@@ -166,6 +174,34 @@ public class SimpleStudentGroupService implements StudentGroupService {
                 .averageGrade(row[7] != null ? ((Number) row[7]).doubleValue() : 0.0)
                 .attendancePercentage(row[8] != null ? ((Number) row[8]).doubleValue() : 0.0)
                 .build();
+    }
+
+    @Override
+    public List<STTeachersDTO> findByCertificationSubject(Long group) {
+        return processSTInfoList(studentGroupRepository.findGroupCertificationSubjects(group));
+    }
+
+    private List<STTeachersDTO> processSTInfoList(List<org.spring.diaryBackend.dto.other.STInfoDTO> stInfos) {
+        List<STTeachersDTO> stTeachersDTOS = stInfos.stream()
+                .map(nameSubjectTeachersDTOMapper)
+                .toList();
+
+        return stTeachersDTOS.stream()
+                .collect(Collectors.toMap(
+                        STTeachersDTO::getIdSt,
+                        dto -> new STTeachersDTO(
+                                dto.getIdSt(),
+                                dto.getIdSubject(),
+                                dto.getNameSubject(),
+                                new ArrayList<>(dto.getTeachers())
+                        ),
+                        (existing, replacement) -> {
+                            existing.getTeachers().addAll(replacement.getTeachers());
+                            return existing;
+                        }
+                ))
+                .values().stream()
+                .toList();
     }
 
     @Override
