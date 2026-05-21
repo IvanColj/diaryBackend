@@ -131,7 +131,7 @@ public class SimpleStaffService implements StaffService {
     public String getStaffNote(Long id) {
         return staffRepository.findById(id)
                 .map(Staff::getNote)
-                .orElseThrow(() -> new RuntimeException("Сотрудник не найден"));
+                .orElse(null);
     }
 
     @Override
