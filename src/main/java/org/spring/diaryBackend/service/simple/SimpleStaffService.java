@@ -107,7 +107,7 @@ public class SimpleStaffService implements StaffService {
                 staffUpdate.setLogin(staffNew.getLogin());
             } else {
                 return new StaffDTO(null, null, null, null,
-                        "Такой логин уже есть, придумайте другой", null, null, null, null);
+                        "Такой логин уже есть, придумайте другой", null, null, null, null, null);
             }
         }
         if (staffNew.getPassword() != null) {
@@ -119,7 +119,19 @@ public class SimpleStaffService implements StaffService {
         if (staffNew.getTelephone() != null) {
             staffUpdate.setTelephone(staffNew.getTelephone());
         }
+
+        if (staffNew.getNote() != null) {
+            staffUpdate.setNote(staffNew.getNote());
+        }
         return staffDTOMapper.apply(staffRepository.save(staffUpdate));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String getStaffNote(Long id) {
+        return staffRepository.findById(id)
+                .map(Staff::getNote)
+                .orElseThrow(() -> new RuntimeException("Сотрудник не найден"));
     }
 
     @Override

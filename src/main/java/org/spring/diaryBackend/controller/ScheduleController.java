@@ -34,4 +34,15 @@ public class ScheduleController {
     public void save(@RequestBody ScheduleDTO scheduleDTO) {
         scheduleService.save(scheduleDTO);
     }
+
+    @DeleteMapping("delete/{id}")
+    public void deleteSchedule(@PathVariable Long id) {
+        scheduleService.deleteSchedule(id);
+    }
+
+    @PatchMapping("update-ignored/{id}")
+    public void updateIgnored(@PathVariable Long id, @RequestBody java.util.Map<String, Boolean> body) {
+        Boolean isIgnored = body.get("isIgnored");
+        scheduleService.updateIgnoredStatus(id, isIgnored);
+    }
 }

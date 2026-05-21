@@ -48,6 +48,11 @@ public class StaffController {
         return staffService.findByGroup(id);
     }
 
+    @GetMapping("note/{id}")
+    public String getStaffNote(@PathVariable Long id) {
+        return staffService.getStaffNote(id);
+    }
+
     @PostMapping("addJob/id/{idStaff}/job/{idJob}")
     public void addStaffJob(@PathVariable Long idStaff,
                             @PathVariable Long idJob) {

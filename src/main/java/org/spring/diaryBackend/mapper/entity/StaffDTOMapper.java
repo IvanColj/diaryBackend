@@ -27,6 +27,7 @@ public class StaffDTOMapper implements Function<Staff, StaffDTO> {
                 staff.getPassword(),
                 staff.getEmail(),
                 staff.getTelephone(),
+                staff.getNote(),
                 staff.getStaffPositions() != null ?
                 staff.getStaffPositions().stream().toList().stream().map(staffPositionDTOMapper).toList() : null
         );

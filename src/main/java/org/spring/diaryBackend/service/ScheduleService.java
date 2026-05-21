@@ -11,4 +11,6 @@ public interface ScheduleService {
     List<GroupScheduleDTO> findBySchedule(Long idTeacher);
 
     void save(ScheduleDTO scheduleDTO);
+    void deleteSchedule(Long id);
+    void updateIgnoredStatus(Long id, Boolean isIgnored);
 }

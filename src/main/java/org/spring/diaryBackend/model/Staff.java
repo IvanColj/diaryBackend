@@ -38,6 +38,9 @@ public class Staff {
     @Column(name = "telephone")
     private String telephone;
 
+    @Column(name = "note", length = Integer.MAX_VALUE)
+    private String note;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "staff_job_position",

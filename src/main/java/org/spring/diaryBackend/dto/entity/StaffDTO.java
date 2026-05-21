@@ -20,5 +20,6 @@ public class StaffDTO {
     private String password;
     private String email;
     private String telephone;
+    private String note;
     private List<StaffPositionDTO> StaffPosition;
 }

@@ -14,6 +14,7 @@ public interface StaffService {
     List<GroupSubjectsDTO> findByGroup(Long idTeacher);
     StaffDTO findStaffById(Long id);
     StaffDTO findByLoginOrPassword(String login, String password);
+    String getStaffNote(Long id);
 
     StaffDTO saveStaff(StaffDTO staffDTO);
     StaffDTO updateStaff(StaffDTO staff);

@@ -11,6 +11,7 @@ import org.spring.diaryBackend.model.Subgroup;
 import org.spring.diaryBackend.repository.*;
 import org.spring.diaryBackend.service.ScheduleService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -165,6 +166,29 @@ public class SimpleScheduleService implements ScheduleService {
         schedule.setDateReplacement(scheduleDTO.getDateReplacement());
         schedule.setIsIgnored(scheduleDTO.getIsIgnored());
 
+        scheduleRepository.save(schedule);
+    }
+
+    @Override
+    @Transactional
+    public void deleteSchedule(Long id) {
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Запись расписания не найдена"));
+
+        // Проверяем, есть ли связанные уроки в таблице lesson
+        if (schedule.getLessons() != null && !schedule.getLessons().isEmpty()) {
+            throw new RuntimeException("Невозможно удалить запись: существуют связанные уроки");
+        }
+
+        scheduleRepository.delete(schedule);
+    }
+
+    @Override
+    @Transactional
+    public void updateIgnoredStatus(Long id, Boolean isIgnored) {
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Запись расписания не найдена"));
+        schedule.setIsIgnored(isIgnored);
         scheduleRepository.save(schedule);
     }
 }
