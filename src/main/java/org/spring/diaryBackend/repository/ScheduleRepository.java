@@ -18,7 +18,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
             s.idGroup.numberGroup, s.subgroup.id, s.replacement, s.dateReplacement
         )
         FROM Schedule s
-        WHERE s.idGroup.id = :idGroup
+        WHERE s.idGroup.id = :idGroup AND s.isIgnored = false
     """)
     List<GroupScheduleDTO> findGroupSchedule(@Param("idGroup") Long idGroup);
 
@@ -35,7 +35,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
             JOIN staff s2 ON s2.id = ts.id_teacher
             JOIN subject s3 ON st.id_subject = s3.id
             JOIN student_group sg ON s.id_group = sg.id
-            WHERE s.subgroup = :id_teacher AND ts.id_teacher = :id_teacher
+            WHERE s.subgroup = :id_teacher AND ts.id_teacher = :id_teacher AND s.is_ignored = false
            
             UNION
            
@@ -52,7 +52,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
             JOIN student_group sg ON s.id_group = sg.id
             WHERE st.id NOT IN (
                 SELECT sub.id_st FROM subgroup sub WHERE sub.id_st = st.id
-            ) AND ts.id_teacher = :id_teacher
+            ) AND ts.id_teacher = :id_teacher AND s.is_ignored = false
            """)
     List<Object[]> findTeacherSchedule(@Param("id_teacher") Long idTeacher);
 }

@@ -163,6 +163,7 @@ public class SimpleScheduleService implements ScheduleService {
         }
         schedule.setReplacement(scheduleDTO.getReplacement());
         schedule.setDateReplacement(scheduleDTO.getDateReplacement());
+        schedule.setIsIgnored(scheduleDTO.getIsIgnored());
 
         scheduleRepository.save(schedule);
     }

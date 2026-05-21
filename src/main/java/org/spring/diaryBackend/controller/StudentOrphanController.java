@@ -2,6 +2,7 @@ package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StudentOrphanDTO;
+import org.spring.diaryBackend.dto.other.ExportStudentOrphanDTO;
 import org.spring.diaryBackend.service.StudentOrphanService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +16,7 @@ public class StudentOrphanController {
     private final StudentOrphanService service;
 
     @GetMapping("all")
-    public List<StudentOrphanDTO> getAll() {
+    public List<ExportStudentOrphanDTO> getAll() {
         return service.findAll();
     }
 

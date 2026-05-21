@@ -21,4 +21,5 @@ public class ScheduleDTO {
     private Long subgroup;
     private Boolean replacement;
     private LocalDate dateReplacement;
+    private Boolean isIgnored;
 }

@@ -15,8 +15,16 @@ public class StudentOrphan {
     private String specialty;
     private LocalDate birthDate;
     private String parentInfo;
-    private String residenceAddressPhone;
+    private String telephone;
     private String registrationAddress;
     private String guardian;
     private String educationForm;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_group")
+    private StudentGroup studentGroup;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_student")
+    private Student student;
 }

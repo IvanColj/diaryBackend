@@ -51,4 +51,7 @@ public class Schedule {
     @OneToMany(mappedBy = "idSchedule")
     private Set<Lesson> lessons = new LinkedHashSet<>();
 
+    @Column(name = "is_ignored")
+    private Boolean isIgnored = false;
+
 }

@@ -17,8 +17,10 @@ public class StudentOrphanDTO {
     private String specialty;
     private LocalDate birthDate;
     private String parentInfo;
-    private String residenceAddressPhone;
+    private String telephone;
     private String registrationAddress;
     private String guardian;
     private String educationForm;
+    private Long idGroup;
+    private Long idStudent;
 }

@@ -19,4 +19,14 @@ public class StudentInvalid {
     private LocalDate birthDate;
     private String address;
     private String educationForm;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_group")
+    private StudentGroup studentGroup;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_student")
+    private Student student;
+
+    private String telephone;
 }

@@ -2,9 +2,15 @@ package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StudentInvalidDTO;
+import org.spring.diaryBackend.dto.other.ExportStudentInvalidDTO;
 import org.spring.diaryBackend.mapper.entity.StudentInvalidDTOMapper;
+import org.spring.diaryBackend.mapper.other.ExportStudentInvalidDTOMapper;
+import org.spring.diaryBackend.model.Student;
+import org.spring.diaryBackend.model.StudentGroup;
 import org.spring.diaryBackend.model.StudentInvalid;
+import org.spring.diaryBackend.repository.StudentGroupRepository;
 import org.spring.diaryBackend.repository.StudentInvalidRepository;
+import org.spring.diaryBackend.repository.StudentRepository;
 import org.spring.diaryBackend.service.StudentInvalidService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +21,15 @@ import java.util.List;
 @AllArgsConstructor
 public class SimpleStudentInvalidService implements StudentInvalidService {
     private final StudentInvalidRepository repository;
-    private final StudentInvalidDTOMapper mapper;
+    private final StudentGroupRepository studentGroupRepository;
+    private final StudentInvalidDTOMapper studentInvalidDTOMapper;
+    private final ExportStudentInvalidDTOMapper exportStudentInvalidDTOMapper;
+
+    private final StudentRepository studentRepository;
 
     @Override
-    public List<StudentInvalidDTO> findAll() {
-        return repository.findAll().stream().map(mapper).toList();
+    public List<ExportStudentInvalidDTO> findAll() {
+        return repository.findAll().stream().map(exportStudentInvalidDTOMapper).toList();
     }
 
     @Override
@@ -34,7 +44,18 @@ public class SimpleStudentInvalidService implements StudentInvalidService {
         entity.setBirthDate(dto.getBirthDate());
         entity.setAddress(dto.getAddress());
         entity.setEducationForm(dto.getEducationForm());
-        return mapper.apply(repository.save(entity));
+        if (dto.getIdGroup() != null) {
+            StudentGroup group = studentGroupRepository.findById(dto.getIdGroup())
+                    .orElseThrow(() -> new RuntimeException("Группа не найдена"));
+            entity.setStudentGroup(group);
+        }
+        if (dto.getIdStudent() != null) {
+            Student student = studentRepository.findById(dto.getId())
+                    .orElseThrow(() -> new RuntimeException("Группа не найдена"));
+            entity.setStudent(student);
+        }
+        entity.setTelephone(dto.getTelephone());
+        return studentInvalidDTOMapper.apply(repository.save(entity));
     }
 
     @Override
@@ -51,8 +72,19 @@ public class SimpleStudentInvalidService implements StudentInvalidService {
         entity.setBirthDate(dto.getBirthDate());
         entity.setAddress(dto.getAddress());
         entity.setEducationForm(dto.getEducationForm());
+        entity.setTelephone(dto.getTelephone());
+        if (dto.getIdGroup() != null) {
+            StudentGroup group = studentGroupRepository.findById(dto.getIdGroup())
+                    .orElseThrow(() -> new RuntimeException("Группа не найдена"));
+            entity.setStudentGroup(group);
+        }
+        if (dto.getIdStudent() != null) {
+            Student student = studentRepository.findById(dto.getId())
+                    .orElseThrow(() -> new RuntimeException("Группа не найдена"));
+            entity.setStudent(student);
+        }
 
-        return mapper.apply(repository.save(entity));
+        return studentInvalidDTOMapper.apply(repository.save(entity));
     }
 
     @Override

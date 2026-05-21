@@ -1,4 +1,4 @@
-package org.spring.diaryBackend.dto.entity;
+package org.spring.diaryBackend.dto.other;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentInvalidDTO {
+public class ExportStudentInvalidDTO {
     private Long id;
     private String fio;
     private String specialty;
@@ -22,6 +22,7 @@ public class StudentInvalidDTO {
     private String address;
     private String educationForm;
     private Long idGroup;
+    private Long numberGroup;
     private Long idStudent;
     private String telephone;
 }

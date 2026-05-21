@@ -1,16 +1,16 @@
-package org.spring.diaryBackend.mapper.entity;
+package org.spring.diaryBackend.mapper.other;
 
-import org.spring.diaryBackend.dto.entity.StudentInvalidDTO;
+import org.spring.diaryBackend.dto.other.ExportStudentInvalidDTO;
 import org.spring.diaryBackend.model.StudentInvalid;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
 
 @Component
-public class StudentInvalidDTOMapper implements Function<StudentInvalid, StudentInvalidDTO> {
+public class ExportStudentInvalidDTOMapper implements Function<StudentInvalid, ExportStudentInvalidDTO> {
     @Override
-    public StudentInvalidDTO apply(StudentInvalid entity) {
-        return new StudentInvalidDTO(
+    public ExportStudentInvalidDTO apply(StudentInvalid entity) {
+        return new ExportStudentInvalidDTO(
                 entity.getId(),
                 entity.getFio(),
                 entity.getSpecialty(),
@@ -21,6 +21,7 @@ public class StudentInvalidDTOMapper implements Function<StudentInvalid, Student
                 entity.getAddress(),
                 entity.getEducationForm(),
                 entity.getStudentGroup() != null ? entity.getStudentGroup().getId() : null,
+                entity.getStudentGroup() != null ? entity.getStudentGroup().getNumberGroup() : null,
                 entity.getStudent() != null ? entity.getStudent().getId() : null,
                 entity.getTelephone()
         );
