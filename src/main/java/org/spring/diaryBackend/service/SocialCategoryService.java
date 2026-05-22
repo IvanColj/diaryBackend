@@ -11,4 +11,5 @@ public interface SocialCategoryService {
     List<SocialCategoryStatsDTO> getCategoryStats();
     SocialCategory save(SocialCategoryDTO dto);
     void delete(Long id);
+    void updateStudentCategoryData(org.spring.diaryBackend.dto.other.UpdateSocialCategoryDataDTO dto);
 }

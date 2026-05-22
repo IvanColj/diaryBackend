@@ -15,6 +15,7 @@ public interface StudentGroupService {
     List<STTeachersDTO> findBySubject(Long group);
     List<STTeachersDTO> findByCertificationSubject(Long group);
     GroupStatsDTO getGroupDetailedStats(Long groupId);
+    List<GroupStatsDTO> getCuratorDetailedStats(Long curatorId);
     List<StudentDTO> fetchStudentsGroup(Long groupNumber) throws IOException;
     List<StudentGroupDTO> findStudentGroupByNumberGroup(Long numberGroup);
     StudentGroupDTO findStudentGroupByNumberGroupAndAdmissionYear(Long numberGroup, Long admissionYear);

@@ -16,7 +16,6 @@ public class GroupStatsDTO {
     private Long studentsCount;
     private Long totalSocialCategories;
     private String leadersFio;
-    private String curatorFio;
     private Double averageGrade;
     private Double attendancePercentage;
 }

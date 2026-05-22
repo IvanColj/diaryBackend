@@ -46,6 +46,11 @@ public class StudentGroupController {
         return studentGroupService.getGroupDetailedStats(groupId);
     }
 
+    @GetMapping("stats/curator/{curatorId}")
+    public List<GroupStatsDTO> getCuratorStats(@PathVariable Long curatorId) {
+        return studentGroupService.getCuratorDetailedStats(curatorId);
+    }
+
     @GetMapping("add/{groupNumber}")
     public List<StudentDTO> fetchStudents(@PathVariable Long groupNumber) throws IOException {
         return studentGroupService.fetchStudentsGroup(groupNumber);

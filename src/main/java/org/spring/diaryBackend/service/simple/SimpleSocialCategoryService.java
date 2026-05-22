@@ -3,6 +3,7 @@ package org.spring.diaryBackend.service.simple;
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.SocialCategoryDTO;
 import org.spring.diaryBackend.dto.other.SocialCategoryStatsDTO;
+import org.spring.diaryBackend.dto.other.UpdateSocialCategoryDataDTO;
 import org.spring.diaryBackend.mapper.entity.SocialCategoryDTOMapper;
 import org.spring.diaryBackend.model.SocialCategory;
 import org.spring.diaryBackend.repository.SocialCategoryRepository;
@@ -59,5 +60,16 @@ public class SimpleSocialCategoryService implements SocialCategoryService {
     @Override
     public void delete(Long id) {
         socialCategoryRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void updateStudentCategoryData(UpdateSocialCategoryDataDTO dto) {
+        String sql = """
+                UPDATE student_social_category
+                SET data = ?::jsonb
+                WHERE id_student = ? AND id_category = ?
+                """;
+        jdbcTemplate.update(sql, dto.getData(), dto.getStudentId(), dto.getCategoryId());
     }
 }

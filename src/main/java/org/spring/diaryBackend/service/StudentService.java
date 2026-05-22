@@ -26,4 +26,5 @@ public interface StudentService {
     void deleteStudent(Long id);
 
     List<GroupPerformanceDTO> getGroupPerformance(Long groupId);
+    org.spring.diaryBackend.dto.other.StudentDetailsDTO getStudentDetails(Long studentId);
 }

@@ -65,6 +65,11 @@ public class StudentController {
         return studentService.getGroupPerformance(groupId);
     }
 
+    @GetMapping("details/{id}")
+    public org.spring.diaryBackend.dto.other.StudentDetailsDTO getStudentDetails(@PathVariable Long id) {
+        return studentService.getStudentDetails(id);
+    }
+
     @PatchMapping("leader/{id}")
     public void updateLeaderStatus(@PathVariable Long id, @RequestParam("status") Boolean status) {
         studentService.updateLeaderStatus(id, status);

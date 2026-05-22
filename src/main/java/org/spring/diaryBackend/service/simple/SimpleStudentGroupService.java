@@ -163,16 +163,28 @@ public class SimpleStudentGroupService implements StudentGroupService {
         // Берем первую (и единственную) строку результата
         Object[] row = results.get(0);
 
+        return mapRowToGroupStatsDTO(row);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<GroupStatsDTO> getCuratorDetailedStats(Long curatorId) {
+        List<Object[]> results = studentGroupRepository.getCuratorDetailedStats(curatorId);
+        return results.stream()
+                .map(this::mapRowToGroupStatsDTO)
+                .toList();
+    }
+
+    private GroupStatsDTO mapRowToGroupStatsDTO(Object[] row) {
         return GroupStatsDTO.builder()
                 .groupNumber(((Number) row[0]).longValue())
                 .course(((Number) row[1]).longValue())
                 .specialty((String) row[2])
-                .studentsCount(((Number) row[3]).longValue())
-                .totalSocialCategories(((Number) row[4]).longValue())
-                .leadersFio((String) row[5]) // Здесь будет строка с ФИО через запятую
-                .curatorFio((String) row[6])
-                .averageGrade(row[7] != null ? ((Number) row[7]).doubleValue() : 0.0)
-                .attendancePercentage(row[8] != null ? ((Number) row[8]).doubleValue() : 0.0)
+                .studentsCount(row[3] != null ? ((Number) row[3]).longValue() : 0L)
+                .totalSocialCategories(row[4] != null ? ((Number) row[4]).longValue() : 0L)
+                .leadersFio((String) row[5])
+                .averageGrade(row[6] != null ? ((Number) row[6]).doubleValue() : 0.0)
+                .attendancePercentage(row[7] != null ? ((Number) row[7]).doubleValue() : 0.0)
                 .build();
     }
 

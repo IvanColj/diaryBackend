@@ -328,4 +328,41 @@ public class SimpleStudentService implements StudentService {
                 row[5] != null ? ((Number) row[5]).longValue() : 0L
         )).toList();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public StudentDetailsDTO getStudentDetails(Long studentId) {
+        String studentSql = """
+                SELECT birth_date, telephone, email, address, education_basis
+                FROM student
+                WHERE id = ?
+                """;
+
+        StudentDetailsDTO details = jdbcTemplate.queryForObject(studentSql, (rs, rowNum) -> StudentDetailsDTO.builder()
+                        .birthDate(rs.getDate("birth_date") != null ? rs.getDate("birth_date").toLocalDate() : null)
+                        .telephone(rs.getString("telephone"))
+                        .email(rs.getString("email"))
+                        .address(rs.getString("address"))
+                        .educationBasis(rs.getString("education_basis"))
+                        .build(), studentId);
+
+        if (details == null) {
+            throw new RuntimeException("Студент с ID " + studentId + " не найден");
+        }
+
+        String socialSql = """
+                SELECT sc.name, ssc.data
+                FROM student_social_category ssc
+                JOIN social_category sc ON ssc.id_category = sc.id
+                WHERE ssc.id_student = ?
+                """;
+
+        List<SocialCategoryInfoDTO> categories = jdbcTemplate.query(socialSql, (rs, rowNum) -> new SocialCategoryInfoDTO(
+                        rs.getString("name"),
+                        rs.getString("data")
+                ), studentId);
+
+        details.setSocialCategories(categories);
+        return details;
+    }
 }
