@@ -25,7 +25,8 @@ public class SecurityConfig {
                     "http://localhost:5173",
                     "http://localhost:3000",
                     "http://localhost:8081",
-                    "http://80.93.62.33:3000"
+                    "http://80.93.62.33:3000",
+                    "http://84.242.245.112:3000"
             ));
             corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
             corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));

@@ -183,8 +183,9 @@ public class SimpleStudentGroupService implements StudentGroupService {
                 .studentsCount(row[3] != null ? ((Number) row[3]).longValue() : 0L)
                 .totalSocialCategories(row[4] != null ? ((Number) row[4]).longValue() : 0L)
                 .leadersFio((String) row[5])
-                .averageGrade(row[6] != null ? ((Number) row[6]).doubleValue() : 0.0)
-                .attendancePercentage(row[7] != null ? ((Number) row[7]).doubleValue() : 0.0)
+                .curatorFio((String) row[6])
+                .averageGrade(row[7] != null ? ((Number) row[7]).doubleValue() : 0.0)
+                .attendancePercentage(row[8] != null ? ((Number) row[8]).doubleValue() : 0.0)
                 .build();
     }
 

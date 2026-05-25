@@ -139,6 +139,7 @@ public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long
             si.total_students,
             soc.total_social,
             si.leaders,
+            cur.last_name || ' ' || cur.name || ' ' || cur.patronymic as curator_fio,
             gi.avg_grade,
             ai.attendance_pct
         FROM student_group sg
@@ -186,6 +187,7 @@ public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long
             si.total_students,
             soc.total_social,
             si.leaders,
+            cur.last_name || ' ' || cur.name || ' ' || cur.patronymic as curator_fio,
             gi.avg_grade,
             ai.attendance_pct
         FROM student_group sg
