@@ -20,7 +20,8 @@ public class ScheduleDTOMapper implements Function<Schedule, ScheduleDTO> {
                 schedule.getIdGroup() != null ? schedule.getIdGroup().getId() : null,
                 schedule.getSubgroup() != null ? schedule.getSubgroup().getId() : null,
                 schedule.getReplacement(),
-                schedule.getDateReplacement()
+                schedule.getDateReplacement(),
+                schedule.getIsIgnored()
         );
     }
 }

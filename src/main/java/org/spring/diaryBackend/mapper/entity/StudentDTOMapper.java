@@ -27,7 +27,10 @@ public class StudentDTOMapper implements Function<Student, StudentDTO>{
                 student.getTelephone(),
                 student.getBirthDate(),
                 student.getAddress(),
-                student.getEmail()
+                student.getEmail(),
+                student.getCode(),
+                student.isLeader(),
+                student.getEducationBasis()
         );
     }
 }

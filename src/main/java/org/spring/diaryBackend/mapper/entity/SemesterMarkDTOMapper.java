@@ -21,6 +21,8 @@ public class SemesterMarkDTOMapper implements Function<SemesterMark, SemesterMar
         return new SemesterMarkDTO(
                 semesterMark.getId(),
                 semesterMark.getCertification(),
+                semesterMark.isRetake(),
+                semesterMark.getInitialCertification(),
                 semesterMark.getRegularMarks() != null ? semesterMark.getRegularMarks().stream().toList().stream().map(regularMarkDTOMapper).toList() : null
         );
     }

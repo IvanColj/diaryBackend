@@ -59,4 +59,19 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             ))
     """)
     List<STInfoDTO> findStudentMarksInSubgroup(@Param("idStudent") Long idStudent);
+
+    @Query(nativeQuery = true,
+            value = """
+            SELECT
+                s.id,
+                s.last_name,
+                s.name,
+                s.patronymic,
+                (SELECT AVG(certification) FROM semester_mark WHERE id_student = s.id) as avg_grade,
+                (SELECT COUNT(*) FROM attendance WHERE id_student = s.id AND status = 'п') as attendance_count
+            FROM student s
+            WHERE s.id_group = :idGroup
+            ORDER BY s.last_name, s.name, s.patronymic
+            """)
+    List<Object[]> findGroupPerformance(@Param("idGroup") Long idGroup);
 }

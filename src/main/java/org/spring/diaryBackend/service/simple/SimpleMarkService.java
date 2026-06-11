@@ -11,6 +11,7 @@ import org.spring.diaryBackend.mapper.other.SubjectMarksDTOMapper;
 import org.spring.diaryBackend.model.*;
 import org.spring.diaryBackend.repository.*;
 import org.spring.diaryBackend.service.MarkService;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class SimpleMarkService implements MarkService {
     private final SemesterMarkDTOMapper semesterMarkDTOMapper;
     private final SubjectMarksDTOMapper subjectMarksDTOMapper;
     private final ChangeInfoDTOMapper changeInfoDTOMapper;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public MarksColumnDataDTO findColumnMarkInfo(Long idStudent, Long idSt, Long number) {
@@ -57,6 +59,27 @@ public class SimpleMarkService implements MarkService {
             return markInfoDTO;
         }
         return null;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<StudentFinalMarkDTO> getFinalMarksForGroup(Long idGroup, Long idSt) {
+        String sql = """
+        SELECT
+            sm.id_student,
+            sm.certification,
+            sm.is_retake,
+            sm.initial_certification
+        FROM semester_mark sm
+        JOIN student s ON sm.id_student = s.id
+        WHERE s.id_group = ? AND sm.id_st = ?
+        """;
+        return jdbcTemplate.query(sql, (rs, rowNum) -> StudentFinalMarkDTO.builder()
+                .idStudent(rs.getLong("id_student"))
+                .certification(rs.getLong("certification"))
+                .isRetake(rs.getBoolean("is_retake"))
+                .initialCertification(rs.getLong("initial_certification"))
+                .build(), idGroup, idSt);
     }
 
     @Override
@@ -135,6 +158,14 @@ public class SimpleMarkService implements MarkService {
             semesterMark.setCertification(updateSemesterMarks.getCertification());
         }
 
+        if (!Objects.equals(updateSemesterMarks.getIsRetake(), semesterMark.isRetake())) {
+            semesterMark.setRetake(updateSemesterMarks.getIsRetake());
+        }
+
+        if (!Objects.equals(updateSemesterMarks.getInitialCertification(), semesterMark.getInitialCertification())) {
+            semesterMark.setInitialCertification(updateSemesterMarks.getInitialCertification());
+        }
+
         semesterMark.setRegularMarks(new HashSet<>(regularMarkList));
 
         return semesterMarkDTOMapper.apply(markRepository.save(semesterMark));
@@ -147,6 +178,13 @@ public class SimpleMarkService implements MarkService {
                 semesterMarkDTO.getId().getIdSt()
         );
         semesterMark.setCertification(semesterMarkDTO.getCertification());
+
+        if (semesterMarkDTO.getIsRetake() != null) {
+            semesterMark.setRetake(semesterMarkDTO.getIsRetake());
+        }
+        if (semesterMark.getInitialCertification() == null) {
+            semesterMark.setInitialCertification(semesterMark.getCertification());
+        }
         markRepository.save(semesterMark);
     }
 

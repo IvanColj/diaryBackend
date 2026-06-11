@@ -18,4 +18,6 @@ public class StudentGroupDTO {
     private String formEducation;
     private String profile;
     private String specialty;
+    private Long departmentHead;
+    private Long currentSemester;
 }

@@ -15,5 +15,7 @@ import java.util.List;
 public class SemesterMarkDTO {
     private SemesterMarkId id;
     private Long certification;
+    private Boolean isRetake;
+    private Long initialCertification;
     private List<RegularMarkDTO> regularMarks;
 }

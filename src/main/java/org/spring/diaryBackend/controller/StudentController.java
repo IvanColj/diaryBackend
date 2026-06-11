@@ -2,7 +2,11 @@ package org.spring.diaryBackend.controller;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
+import org.spring.diaryBackend.dto.other.CourseStatsDTO;
+import org.spring.diaryBackend.dto.other.OverallStatsDTO;
 import org.spring.diaryBackend.dto.other.StudentAllMarksDTO;
+import org.spring.diaryBackend.dto.other.StudentLeaderDTO;
+import org.spring.diaryBackend.dto.other.GroupPerformanceDTO;
 import org.spring.diaryBackend.service.StudentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +24,24 @@ public class StudentController {
         return studentService.findAllStudent();
     }
 
+    @GetMapping("overall-stats")
+    public OverallStatsDTO getOverallStats() {
+        return studentService.getOverallStats();
+    }
+
     @GetMapping("id/{id}")
     public StudentDTO getById(@PathVariable Long id) {
         return studentService.findById(id);
+    }
+
+    @GetMapping("group/{groupId}/leaders")
+    public List<StudentLeaderDTO> getGroupLeaders(@PathVariable Long groupId) {
+        return studentService.getGroupLeaders(groupId);
+    }
+
+    @GetMapping("stats/by-course")
+    public List<CourseStatsDTO> getStatsByCourse() {
+        return studentService.getStatsByCourse();
     }
 
     @GetMapping("login/{login}/password/{password}")
@@ -39,6 +58,21 @@ public class StudentController {
     @GetMapping("marks/id/{id}")
     public List<StudentAllMarksDTO> getGroupMarks(@PathVariable Long id) {
         return studentService.getStudentMarks(id);
+    }
+
+    @GetMapping("group/{groupId}/performance")
+    public List<GroupPerformanceDTO> getGroupPerformance(@PathVariable Long groupId) {
+        return studentService.getGroupPerformance(groupId);
+    }
+
+    @GetMapping("details/{id}")
+    public org.spring.diaryBackend.dto.other.StudentDetailsDTO getStudentDetails(@PathVariable Long id) {
+        return studentService.getStudentDetails(id);
+    }
+
+    @PatchMapping("leader/{id}")
+    public void updateLeaderStatus(@PathVariable Long id, @RequestParam("status") Boolean status) {
+        studentService.updateLeaderStatus(id, status);
     }
 
     @PatchMapping("update")

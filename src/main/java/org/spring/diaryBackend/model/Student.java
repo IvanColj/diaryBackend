@@ -58,6 +58,15 @@ public class Student {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "code")
+    private Long code;
+
+    @Column(name = "is_leader")
+    private boolean isLeader;
+
+    @Column(name = "education_basis")
+    private String educationBasis;
+
     @OneToMany(mappedBy = "idStudent")
     private Set<Attendance> attendances = new LinkedHashSet<>();
 

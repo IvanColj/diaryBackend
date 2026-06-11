@@ -2,9 +2,7 @@ package org.spring.diaryBackend.service.simple;
 
 import lombok.AllArgsConstructor;
 import org.spring.diaryBackend.dto.entity.StudentDTO;
-import org.spring.diaryBackend.dto.other.MarksStudentDTO;
-import org.spring.diaryBackend.dto.other.STTeachersDTO;
-import org.spring.diaryBackend.dto.other.StudentAllMarksDTO;
+import org.spring.diaryBackend.dto.other.*;
 import org.spring.diaryBackend.mapper.entity.StudentDTOMapper;
 import org.spring.diaryBackend.mapper.other.MarksStudentDTOMapper;
 import org.spring.diaryBackend.mapper.other.NameSubjectTeachersDTOMapper;
@@ -15,6 +13,7 @@ import org.spring.diaryBackend.repository.StudentGroupRepository;
 import org.spring.diaryBackend.repository.StudentRepository;
 import org.spring.diaryBackend.service.StudentService;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +32,7 @@ public class SimpleStudentService implements StudentService {
     private final StudentRepository studentRepository;
     private final StudentGroupRepository studentGroupRepository;
     private final StudentDTOMapper studentDTOMapper;
+    private final JdbcTemplate jdbcTemplate;
     private final MarksStudentDTOMapper marksStudentDTOMapper;
     private final NameSubjectTeachersDTOMapper nameSubjectTeachersDTOMapper;
 
@@ -46,6 +46,81 @@ public class SimpleStudentService implements StudentService {
         }
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<CourseStatsDTO> getStatsByCourse() {
+        String sql = """
+        WITH
+        grade_stats AS (
+            -- Считаем средний балл по каждому курсу
+            SELECT
+                sg.course,
+                AVG(sm.certification) as avg_grade
+            FROM student_group sg
+            LEFT JOIN student s ON s.id_group = sg.id
+            LEFT JOIN semester_mark sm ON s.id = sm.id_student
+            GROUP BY sg.course
+        ),
+        attendance_stats AS (
+            -- Считаем % посещаемости по каждому курсу
+            SELECT
+                sg.course,
+                (COUNT(*) FILTER (WHERE a.status = 'п') * 100.0 / NULLIF(COUNT(*), 0)) as att_pct
+            FROM student_group sg
+            LEFT JOIN student s ON s.id_group = sg.id
+            LEFT JOIN attendance a ON s.id = a.id_student
+            GROUP BY sg.course
+        )
+        -- Соединяем две статистики по номеру курса
+        SELECT
+            gs.course,
+            gs.avg_grade,
+            as_stats.att_pct
+        FROM grade_stats gs
+        JOIN attendance_stats as_stats ON gs.course = as_stats.course
+        ORDER BY gs.course ASC
+        """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> CourseStatsDTO.builder()
+                .course(rs.getLong("course"))
+                .averageGrade(rs.getDouble("avg_grade"))
+                .attendancePercentage(rs.getDouble("att_pct"))
+                .build());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<StudentLeaderDTO> getGroupLeaders(Long groupId) {
+        String sql = """
+        SELECT
+            last_name || ' ' || name || ' ' || patronymic as fio,
+            telephone,
+            email
+        FROM student
+        WHERE id_group = ? AND is_leader = true
+        """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> StudentLeaderDTO.builder()
+                .fio(rs.getString("fio"))
+                .telephone(rs.getString("telephone"))
+                .email(rs.getString("email"))
+                .build(), groupId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OverallStatsDTO getOverallStats() {
+        String sql = """
+        SELECT
+            (SELECT AVG(certification) FROM semester_mark) as total_avg,
+            (SELECT COUNT(*) FILTER (WHERE status = 'п') * 100.0 / NULLIF(COUNT(*), 0) FROM attendance) as total_att
+        """;
+
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> OverallStatsDTO.builder()
+                .averageGrade(rs.getDouble("total_avg"))
+                .attendancePercentage(rs.getDouble("total_att"))
+                .build());
+    }
 
     @Override
     public StudentDTO findById(Long id) {
@@ -135,6 +210,17 @@ public class SimpleStudentService implements StudentService {
     }
 
     @Override
+    @Transactional
+    public void updateLeaderStatus(Long id, boolean isLeader) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
+
+        student.setLeader(isLeader);
+
+        studentRepository.save(student);
+    }
+
+    @Override
     public void saveStudent(StudentDTO studentDTO) {
         Student student;
         if (studentDTO.getId() != null) {
@@ -153,6 +239,8 @@ public class SimpleStudentService implements StudentService {
         student.setBirthDate(studentDTO.getBirthDate());
         student.setAddress(studentDTO.getAddress());
         student.setEmail(studentDTO.getEmail());
+        student.setLeader(studentDTO.getIsLeader());
+        student.setEducationBasis(studentDTO.getEducationBasis());
 
         if (studentDTO.getIdGroup() != null) {
             StudentGroup group = studentGroupRepository.findGroupById(studentDTO.getIdGroup());
@@ -212,6 +300,12 @@ public class SimpleStudentService implements StudentService {
         if (studentNew.getEmail() != null) {
             student.setEmail(studentNew.getEmail());
         }
+        if (studentNew.getIsLeader() != null) {
+            student.setLeader(studentNew.getIsLeader());
+        }
+        if (studentNew.getEducationBasis() != null) {
+            student.setEducationBasis(studentNew.getEducationBasis());
+        }
         return studentDTOMapper.apply(studentRepository.save(student));
     }
 
@@ -219,5 +313,56 @@ public class SimpleStudentService implements StudentService {
     @Transactional
     public void deleteStudent(Long id) {
         studentRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<GroupPerformanceDTO> getGroupPerformance(Long groupId) {
+        List<Object[]> results = studentRepository.findGroupPerformance(groupId);
+        return results.stream().map(row -> new GroupPerformanceDTO(
+                (Long) row[0],
+                (String) row[1],
+                (String) row[2],
+                (String) row[3],
+                row[4] != null ? ((Number) row[4]).doubleValue() : 0.0,
+                row[5] != null ? ((Number) row[5]).longValue() : 0L
+        )).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public StudentDetailsDTO getStudentDetails(Long studentId) {
+        String studentSql = """
+                SELECT birth_date, telephone, email, address, education_basis
+                FROM student
+                WHERE id = ?
+                """;
+
+        StudentDetailsDTO details = jdbcTemplate.queryForObject(studentSql, (rs, rowNum) -> StudentDetailsDTO.builder()
+                        .birthDate(rs.getDate("birth_date") != null ? rs.getDate("birth_date").toLocalDate() : null)
+                        .telephone(rs.getString("telephone"))
+                        .email(rs.getString("email"))
+                        .address(rs.getString("address"))
+                        .educationBasis(rs.getString("education_basis"))
+                        .build(), studentId);
+
+        if (details == null) {
+            throw new RuntimeException("Студент с ID " + studentId + " не найден");
+        }
+
+        String socialSql = """
+                SELECT sc.name, ssc.data
+                FROM student_social_category ssc
+                JOIN social_category sc ON ssc.id_category = sc.id
+                WHERE ssc.id_student = ?
+                """;
+
+        List<SocialCategoryInfoDTO> categories = jdbcTemplate.query(socialSql, (rs, rowNum) -> new SocialCategoryInfoDTO(
+                        rs.getString("name"),
+                        rs.getString("data")
+                ), studentId);
+
+        details.setSocialCategories(categories);
+        return details;
     }
 }
