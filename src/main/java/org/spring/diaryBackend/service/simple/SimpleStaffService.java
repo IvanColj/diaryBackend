@@ -93,7 +93,7 @@ public class SimpleStaffService implements StaffService {
         }
 
         if (staffNew.getPatronymic() != null) {
-            staffUpdate.setPassword(staffNew.getPassword());
+            staffUpdate.setPatronymic(staffNew.getPatronymic());
         }
         if (staffNew.getName() != null) {
             staffUpdate.setName(staffNew.getName());
